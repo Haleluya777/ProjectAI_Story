@@ -5,17 +5,19 @@ using UnityEngine;
 using UnityEngine.UI;
 using KoreanTyper;
 using System.Linq;
+using TMPro;
 
 public class DialogueRunner : MonoBehaviour
 {
     [Header("UI Elements")]
     [SerializeField] private GameObject Panel;
-    [SerializeField] private Text SpeakerName;
-    [SerializeField] private Text DialogueText;
+    [SerializeField] private TextMeshProUGUI SpeakerName;
+    [SerializeField] private TextMeshProUGUI DialogueText;
     [SerializeField] private Image NextImg;
-    [SerializeField] private GameObject ChoiceOptionPanel;
+    //[SerializeField] private GameObject ChoiceOptionPanel;
+    [SerializeField] private GameObject DialoguePanel;
     [SerializeField] private GameObject ChoiceButtonPrefab;
-    [SerializeField] private Transform OptionContainer;
+    [SerializeField] private Transform OptionContainer; // ChoiceButton들의 부모 오브젝트
 
     [Header("DialogueFile")]
     [SerializeField] private TextAsset DialogueFile;
@@ -53,14 +55,14 @@ public class DialogueRunner : MonoBehaviour
 
     private void RunDialogue()
     {
-        Panel.SetActive(true);
+        //Panel.SetActive(true);
         currentLineNum = 0;
         ProccessNextLine();
     }
 
     private void EndDialogue()
     {
-        Panel.SetActive(false);
+        //Panel.SetActive(false);
     }
 
     private void ProccessNextLine()
@@ -201,7 +203,8 @@ public class DialogueRunner : MonoBehaviour
     private void HandleChoices()
     {
         isWaiting = true;
-        ChoiceOptionPanel.SetActive(true);
+        //ChoiceOptionPanel.SetActive(true);
+        DialoguePanel.SetActive(false);
         int buttonCount = 0;
 
         foreach (Transform child in OptionContainer)
@@ -220,9 +223,8 @@ public class DialogueRunner : MonoBehaviour
             {
                 Debug.Log("선택지 발견! 버튼 생성!");
                 var buttonObj = Instantiate(ChoiceButtonPrefab, OptionContainer);
-                buttonObj.GetComponent<RectTransform>().anchoredPosition = new Vector2(-30, 0 + (-100 * buttonCount));
 
-                var buttonText = buttonObj.GetComponentInChildren<Text>();
+                var buttonText = buttonObj.GetComponentInChildren<TextMeshProUGUI>();
                 var button = buttonObj.GetComponent<Button>();
 
                 string optionText = line.Args[0];
@@ -268,7 +270,8 @@ public class DialogueRunner : MonoBehaviour
     private void OptionSelected(int lineIndex)
     {
         isWaiting = false;
-        ChoiceOptionPanel.SetActive(false);
+        //ChoiceOptionPanel.SetActive(false);
+        DialoguePanel.SetActive(true);
         currentLineNum = lineIndex;
 
         foreach (Transform child in OptionContainer)

@@ -1,0 +1,23 @@
+Dialogue,,,
+,???,안녕하세요? 저는 고속 승강기의 안내를 맡은 AI. 디아나라고 해요. \n이동하실 건가요? 원하시는 플랫폼의 버튼을 누르면 제가 순식간에 데려다 드릴게요.,
+DialogueEnd,,,
+Selector,,,
+>>,무슨 일이야?,,
+,Result,,
+,,Dialogue,
+,,디아나,어머! 알아보셨군요. 오늘은 짝수 날이니까 파란색 리본을 매봤어요. \n어때요. 예쁘죠?
+,,DialogueEnd,
+,ResultEnd,,
+>>,....,,
+,Result,,
+,,Dialogue,
+,,디아나,어....이거 아닌가요?
+,,DialogueEnd,
+,ResultEnd,,
+>>,엘리베이터.,,
+,Result,,
+,,Dialogue,
+,,디아나,안내해드리겠습니다.
+,,DialogueEnd,
+,ResultEnd,,
+SelectorEnd,,,
