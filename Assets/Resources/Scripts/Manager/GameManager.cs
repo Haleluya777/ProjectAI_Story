@@ -27,8 +27,13 @@ public class GameManager : MonoBehaviour
             Destroy(this.gameObject);
         }
 
-        //OperandInit(operandDic);
-        //dialogueFunc.InitMethods();
+        OperandInit(operandDic);
+        dialogueFunc.InitMethods();
+    }
+
+    private void OperandInit(Dictionary<string, object> dic)
+    {
+        dic.Add("Level", 15);
     }
 
     private void Update()

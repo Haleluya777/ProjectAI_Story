@@ -409,7 +409,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 508823457}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 786586160}
+        m_TargetAssemblyTypeName: DialogueRunner, Assembly-CSharp
+        m_MethodName: SkipDialogue
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &508823457
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1013,7 +1025,7 @@ MonoBehaviour:
   DialogueLogPanel: {fileID: 1057603719}
   DialogueLogObj: {fileID: 3672888988007502892, guid: d4ca6be24e7b0a64594b5938559a4e29, type: 3}
   DialogueLogContainer: {fileID: 347649510}
-  DialogueFile: {fileID: 4900000, guid: 0327026da44074046866f9780d59a78c, type: 3}
+  DialogueFile: {fileID: 4900000, guid: 6a3c6c14602bc684085d16fda3fb169f, type: 3}
   parser: {fileID: 1232678628}
   autoTrigger: 0
   autoProccessTime: 0

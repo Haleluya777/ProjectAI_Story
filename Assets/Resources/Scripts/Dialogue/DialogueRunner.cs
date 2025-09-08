@@ -39,7 +39,8 @@ public class DialogueRunner : MonoBehaviour
 
     private const float DIALOGUE_TEXT_SPEED_SKIP = .01f; //텍스트 진행 속도 (스킵 모드)
     private const float DIALOGUE_TEXT_SPEED_NORMAL = .03f; //텍스트 진행 속도 (초기 모드)
-    private const float DIALOGUE_TEXT_AUTOPROCCESS_NORMAL = .5f;
+    private const float DIALOGUE_TEXT_AUTOPROCCESS_NORMAL = .5f; //자동 텍스트 넘김 지연 시간. (일반 모드)
+    private const float DIALOGUE_TEXT_AUTOPROCCESS_SKIP = .01f; //자동 텍스트 넘김 지연 시간. (빠른 모드)
 
     private WaitForSeconds waitDialogueProccessSpeed; //Dialogue 진행 속도에 쓰는 WaitForSeconds
     private WaitForSeconds waitDialogueAutoProccess; //Dialogue 자동 진행에 쓰는 WaitForSeconds
@@ -58,6 +59,8 @@ public class DialogueRunner : MonoBehaviour
         autoProccessTime = DIALOGUE_TEXT_AUTOPROCCESS_NORMAL;
         waitDialogueProccessSpeed = new WaitForSeconds(dialogueTextSpeed);
         waitDialogueAutoProccess = new WaitForSeconds(autoProccessTime);
+
+        RunDialogue();
     }
 
     void Update()
@@ -66,7 +69,7 @@ public class DialogueRunner : MonoBehaviour
         {
             if (currentLineNum == 0)
             {
-                Invoke("ProccessNextLine", 10);
+                Invoke("RunDialogue", autoProccessTime);
                 return;
             }
         }
@@ -82,6 +85,24 @@ public class DialogueRunner : MonoBehaviour
             {
                 RunDialogue();
             }
+        }
+        else if (Input.GetKey(KeyCode.LeftControl))
+        {
+            autoTrigger = true;
+            dialogueTextSpeed = DIALOGUE_TEXT_SPEED_SKIP;
+            autoProccessTime = DIALOGUE_TEXT_AUTOPROCCESS_SKIP;
+            waitDialogueProccessSpeed = new WaitForSeconds(dialogueTextSpeed);
+            waitDialogueAutoProccess = new WaitForSeconds(autoProccessTime);
+
+            ProccessNextLine();
+        }
+        else if (Input.GetKeyUp(KeyCode.LeftControl))
+        {
+            autoTrigger = false;
+            dialogueTextSpeed = DIALOGUE_TEXT_SPEED_NORMAL;
+            autoProccessTime = DIALOGUE_TEXT_AUTOPROCCESS_NORMAL;
+            waitDialogueProccessSpeed = new WaitForSeconds(dialogueTextSpeed);
+            waitDialogueAutoProccess = new WaitForSeconds(autoProccessTime);
         }
     }
 
@@ -364,14 +385,32 @@ public class DialogueRunner : MonoBehaviour
         }
     }
 
-    public void SkipDialogue()
+    public void SkipDialogue() //대화 스킵 모드로 변경.
     {
-        SetAutoMode();
+        SetAutoMode(); //자동 모드 켜기
+        if (dialogueTextSpeed == DIALOGUE_TEXT_SPEED_NORMAL)
+        {
+            dialogueTextSpeed = DIALOGUE_TEXT_SPEED_SKIP;
+            autoProccessTime = DIALOGUE_TEXT_AUTOPROCCESS_SKIP;
+        }
+        else
+        {
+            dialogueTextSpeed = DIALOGUE_TEXT_SPEED_NORMAL;
+            autoProccessTime = DIALOGUE_TEXT_AUTOPROCCESS_NORMAL;
+        }
+
+        waitDialogueProccessSpeed = new WaitForSeconds(dialogueTextSpeed);
+        waitDialogueAutoProccess = new WaitForSeconds(autoProccessTime);
     }
 
-    public void SetAutoMode()
+    public void SetAutoMode() //자동 모드로 변경.
     {
         autoTrigger = !autoTrigger;
+        dialogueTextSpeed = DIALOGUE_TEXT_SPEED_NORMAL;
+        autoProccessTime = DIALOGUE_TEXT_AUTOPROCCESS_NORMAL;
+
+        waitDialogueProccessSpeed = new WaitForSeconds(dialogueTextSpeed);
+        waitDialogueAutoProccess = new WaitForSeconds(autoProccessTime);
     }
 
     //----------------------
@@ -379,7 +418,6 @@ public class DialogueRunner : MonoBehaviour
     private IEnumerator TypingTxt(string args)
     {
         isWaiting = true;
-        if (autoTrigger) yield return waitDialogueAutoProccess;
 
         for (int i = 0; i < args.GetTypingLength() + 1; i++)
         {
@@ -390,5 +428,11 @@ public class DialogueRunner : MonoBehaviour
         yield return null;
         isWaiting = false;
         currentLineNum++;
+
+        if (autoTrigger)
+        {
+            yield return waitDialogueAutoProccess;
+            ProccessNextLine();
+        }
     }
 }
