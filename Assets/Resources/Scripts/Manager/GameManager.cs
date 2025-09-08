@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +12,7 @@ public class GameManager : MonoBehaviour
 
     public DialogueFuncManager dialogueFunc;
     public Dictionary<string, object> operandDic = new Dictionary<string, object>();
+    public List<DialogueParser.ParsedLine> dialogueLog = new List<DialogueParser.ParsedLine>();
 
     private void Awake()
     {
@@ -27,5 +29,10 @@ public class GameManager : MonoBehaviour
 
         //OperandInit(operandDic);
         //dialogueFunc.InitMethods();
+    }
+
+    private void Update()
+    {
+        Debug.Log(dialogueLog.Count);
     }
 }

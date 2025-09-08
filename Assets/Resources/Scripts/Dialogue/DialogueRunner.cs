@@ -15,15 +15,34 @@ public class DialogueRunner : MonoBehaviour
     [SerializeField] private TextMeshProUGUI DialogueText;
     [SerializeField] private Image NextImg;
     //[SerializeField] private GameObject ChoiceOptionPanel;
-    [SerializeField] private GameObject DialoguePanel;
-    [SerializeField] private GameObject ChoiceButtonPrefab;
+
+    //DialogueBox 관련 요소들
+    [SerializeField] private GameObject DialoguePanel; //대화창 전체 부모 오브젝트.
+    [SerializeField] private GameObject ChoiceButtonPrefab; //선택지 버튼 프리팹
     [SerializeField] private Transform OptionContainer; // ChoiceButton들의 부모 오브젝트
+
+    //DialogueLog 관련 요소들.
+    [SerializeField] private GameObject DialogueLogPanel; //대화 로그 창 전체 부모 오브젝트.
+    [SerializeField] private GameObject DialogueLogObj; //대화 로그 창 오브젝트.
+    [SerializeField] private Transform DialogueLogContainer; //대화 로그 창의 부모 오브젝트.
 
     [Header("DialogueFile")]
     [SerializeField] private TextAsset DialogueFile;
 
     [Header("DialogueParse")]
     [SerializeField] private DialogueParser parser;
+
+    [Header("DialogueMenu")]
+    [SerializeField] private bool autoTrigger; //대화가 자동으로 진행될지 체크하는 트리거
+    [SerializeField] private float autoProccessTime; //이 변수의 시간동안 대기 후 자동으로 대화 진행.
+    [SerializeField] private float dialogueTextSpeed; //Dialogue텍스트가 진행되는 속도
+
+    private const float DIALOGUE_TEXT_SPEED_SKIP = .01f; //텍스트 진행 속도 (스킵 모드)
+    private const float DIALOGUE_TEXT_SPEED_NORMAL = .03f; //텍스트 진행 속도 (초기 모드)
+    private const float DIALOGUE_TEXT_AUTOPROCCESS_NORMAL = .5f;
+
+    private WaitForSeconds waitDialogueProccessSpeed; //Dialogue 진행 속도에 쓰는 WaitForSeconds
+    private WaitForSeconds waitDialogueAutoProccess; //Dialogue 자동 진행에 쓰는 WaitForSeconds
 
     private List<DialogueParser.ParsedLine> scriptLine;
     private int currentLineNum = 0;
@@ -35,12 +54,25 @@ public class DialogueRunner : MonoBehaviour
         {
             scriptLine = parser.Parse(DialogueFile.text);
         }
+        dialogueTextSpeed = DIALOGUE_TEXT_SPEED_NORMAL;
+        autoProccessTime = DIALOGUE_TEXT_AUTOPROCCESS_NORMAL;
+        waitDialogueProccessSpeed = new WaitForSeconds(dialogueTextSpeed);
+        waitDialogueAutoProccess = new WaitForSeconds(autoProccessTime);
     }
 
     void Update()
     {
+        if (autoTrigger)
+        {
+            if (currentLineNum == 0)
+            {
+                Invoke("ProccessNextLine", 10);
+                return;
+            }
+        }
+
         // 테스트용
-        if (Input.GetKeyDown(KeyCode.L))
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Mouse0))
         {
             if (currentLineNum != 0)
             {
@@ -123,10 +155,11 @@ public class DialogueRunner : MonoBehaviour
                 CheckingCondition(line.Args);
                 break;
 
-            default:
+            default: //위의 모든 명령어가 아닌 경우에는 캐릭터의 대화로 간주. 대화창에 출력 및 게임 매니저 대화 로그 리스트에 저장.
                 if (line.Args[0].Contains("\\n")) line.Args[0] = line.Args[0].Replace("\\n", "\n");
                 Debug.Log(line.Args[0]);
                 SpeakerName.text = line.Command;
+                GameManager.instance.dialogueLog.Add(line);
                 StartCoroutine(TypingTxt(line.Args[0]));
                 break;
         }
@@ -221,7 +254,7 @@ public class DialogueRunner : MonoBehaviour
 
             if (line.Command == ">>")
             {
-                Debug.Log("선택지 발견! 버튼 생성!");
+                //Debug.Log("선택지 발견! 버튼 생성!");
                 var buttonObj = Instantiate(ChoiceButtonPrefab, OptionContainer);
 
                 var buttonText = buttonObj.GetComponentInChildren<TextMeshProUGUI>();
@@ -231,7 +264,7 @@ public class DialogueRunner : MonoBehaviour
                 buttonText.text = optionText;
 
                 int targetLine = scanIndex + 1;
-                button.onClick.AddListener(() => OptionSelected(targetLine));
+                button.onClick.AddListener(() => OptionSelected(targetLine, line));
 
                 scanIndex = FindEndOfResultBlock(scanIndex);
                 buttonCount++;
@@ -267,8 +300,9 @@ public class DialogueRunner : MonoBehaviour
         return -1;
     }
 
-    private void OptionSelected(int lineIndex)
+    private void OptionSelected(int lineIndex, DialogueParser.ParsedLine line)
     {
+        GameManager.instance.dialogueLog.Add(line);
         isWaiting = false;
         //ChoiceOptionPanel.SetActive(false);
         DialoguePanel.SetActive(true);
@@ -307,15 +341,50 @@ public class DialogueRunner : MonoBehaviour
         }
     }
 
+    //버튼에 할당할 이벤트 집합
+    public void GetDialogueLogs() //GameManager에 저장된 이전까지의 대화 로그.
+    {
+        List<DialogueParser.ParsedLine> logs = GameManager.instance.dialogueLog;
+        DialogueLogPanel.SetActive(true);
+
+        foreach (Transform child in DialogueLogContainer)
+        {
+            Destroy(child.gameObject);
+        }
+
+        foreach (DialogueParser.ParsedLine log in logs)
+        {
+            //대화 로그 오브젝트를 생성하는 명령어. 추후 오브젝트 풀링으로 변경 예정.
+            var logObj = Instantiate(DialogueLogObj, DialogueLogContainer);
+            var speakerLogText = logObj.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+            var dialogueLogText = logObj.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+
+            speakerLogText.text = log.Command;
+            dialogueLogText.text = log.Args[0];
+        }
+    }
+
+    public void SkipDialogue()
+    {
+        SetAutoMode();
+    }
+
+    public void SetAutoMode()
+    {
+        autoTrigger = !autoTrigger;
+    }
+
+    //----------------------
+
     private IEnumerator TypingTxt(string args)
     {
         isWaiting = true;
-        //yield return new WaitForSeconds(.5f);
+        if (autoTrigger) yield return waitDialogueAutoProccess;
 
         for (int i = 0; i < args.GetTypingLength() + 1; i++)
         {
             DialogueText.text = args.Typing(i);
-            yield return new WaitForSeconds(.03f);
+            yield return waitDialogueProccessSpeed;
         }
 
         yield return null;
