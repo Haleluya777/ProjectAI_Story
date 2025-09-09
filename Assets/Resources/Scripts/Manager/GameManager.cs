@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
 
     public DialogueFuncManager dialogueFunc;
+
     public Dictionary<string, object> operandDic = new Dictionary<string, object>();
     public List<DialogueParser.ParsedLine> dialogueLog = new List<DialogueParser.ParsedLine>();
 
@@ -38,6 +39,13 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(dialogueLog.Count);
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            Time.timeScale = 5f;
+        }
+        else if (Input.GetKeyUp(KeyCode.A))
+        {
+            Time.timeScale = 1f;
+        }
     }
 }

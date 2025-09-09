@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using KoreanTyper;
 using System.Linq;
 using TMPro;
+using UnityEditor.SceneTemplate;
 
 public class DialogueRunner : MonoBehaviour
 {
@@ -88,20 +89,18 @@ public class DialogueRunner : MonoBehaviour
         }
         else if (Input.GetKey(KeyCode.LeftControl))
         {
+            Time.timeScale = 5f;
             autoTrigger = true;
-            dialogueTextSpeed = DIALOGUE_TEXT_SPEED_SKIP;
             autoProccessTime = DIALOGUE_TEXT_AUTOPROCCESS_SKIP;
-            waitDialogueProccessSpeed = new WaitForSeconds(dialogueTextSpeed);
             waitDialogueAutoProccess = new WaitForSeconds(autoProccessTime);
 
             ProccessNextLine();
         }
         else if (Input.GetKeyUp(KeyCode.LeftControl))
         {
+            Time.timeScale = 1f;
             autoTrigger = false;
-            dialogueTextSpeed = DIALOGUE_TEXT_SPEED_NORMAL;
             autoProccessTime = DIALOGUE_TEXT_AUTOPROCCESS_NORMAL;
-            waitDialogueProccessSpeed = new WaitForSeconds(dialogueTextSpeed);
             waitDialogueAutoProccess = new WaitForSeconds(autoProccessTime);
         }
     }
@@ -390,16 +389,14 @@ public class DialogueRunner : MonoBehaviour
         SetAutoMode(); //자동 모드 켜기
         if (dialogueTextSpeed == DIALOGUE_TEXT_SPEED_NORMAL)
         {
-            dialogueTextSpeed = DIALOGUE_TEXT_SPEED_SKIP;
+            Time.timeScale = 5f;
             autoProccessTime = DIALOGUE_TEXT_AUTOPROCCESS_SKIP;
         }
         else
         {
-            dialogueTextSpeed = DIALOGUE_TEXT_SPEED_NORMAL;
+            Time.timeScale = 1f;
             autoProccessTime = DIALOGUE_TEXT_AUTOPROCCESS_NORMAL;
         }
-
-        waitDialogueProccessSpeed = new WaitForSeconds(dialogueTextSpeed);
         waitDialogueAutoProccess = new WaitForSeconds(autoProccessTime);
     }
 
