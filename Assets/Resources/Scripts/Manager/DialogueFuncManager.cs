@@ -14,7 +14,6 @@ public class DialogueFuncManager : MonoBehaviour
     {
         //파라미터가 없는 메서드들 초기화
         noParamMethod.Add("Greeting", Greeting);
-        noParamMethod.Add("RunTimeLine", TimeLineStart);
 
         //파라미터가 존재하는 메서드를 초기화
         multiParamMethod.Add("Greeting2", (param) => Greeting2(param[0].ToString(), int.Parse((string)param[1])));
@@ -22,9 +21,9 @@ public class DialogueFuncManager : MonoBehaviour
         multiParamMethod.Add("MultiParamTest", (param) => MultiParamTest(param[0].ToString(), int.Parse((string)param[1])));
     }
 
-    public void TimeLineStart()
+    public void TimeLineStart(int timeLineId)
     {
-        timeLine.Play();
+        // 타임라인 시작 로직
     }
 
     public void Greeting()

@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 023f2ddf248a8994e9b8de1c986b314a, type: 3}
   m_Name: TimeLineMap
   m_EditorClassIdentifier: 
-  infos:
-  - {fileID: 0}
-  - {fileID: 0}
+  timeLineInfos:
+  - id: 0
+    description: Move Pos A to B
+    asset: {fileID: 11400000, guid: 7ba84869593e1d24e862c5aaa39bf6cc, type: 2}
