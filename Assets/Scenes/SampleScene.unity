@@ -262,7 +262,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!320 &187570192
 PlayableDirector:
   m_ObjectHideFlags: 0
@@ -273,7 +273,7 @@ PlayableDirector:
   m_Enabled: 1
   serializedVersion: 3
   m_PlayableAsset: {fileID: 11400000, guid: 7ba84869593e1d24e862c5aaa39bf6cc, type: 2}
-  m_InitialState: 1
+  m_InitialState: 0
   m_WrapMode: 2
   m_DirectorUpdateMode: 1
   m_InitialTime: 0
@@ -315,6 +315,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95b140cc3c133304e89196b193da6c6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  timeLineMap: {fileID: 11400000, guid: 2a9c4c49cd01ff042808127fe1b17e21, type: 2}
 --- !u!224 &258097977 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2383765450426726024, guid: d4ca6be24e7b0a64594b5938559a4e29, type: 3}
@@ -2928,10 +2929,10 @@ PrefabInstance:
     - target: {fileID: 3086089935625842609, guid: 365f3da8ebcddc84fab047515259f7c7, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 99f17ed7db6072241bfac90e489e4b26, type: 3}
+      objectReference: {fileID: 21300000, guid: cfbca4a8e658f0c4d9ba427043fe12be, type: 3}
     - target: {fileID: 3086089935625842609, guid: 365f3da8ebcddc84fab047515259f7c7, type: 3}
       propertyPath: m_Color.a
-      value: 0.38431373
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3086089935625842609, guid: 365f3da8ebcddc84fab047515259f7c7, type: 3}
       propertyPath: m_Color.b

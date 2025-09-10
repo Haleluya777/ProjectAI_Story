@@ -5,5 +5,9 @@ using UnityEngine.Timeline;
 
 public class TimeLineManager : MonoBehaviour
 {
-    
+    [SerializeField] private TimeLineMap timeLineMap;
+    public TimelineAsset GetTimeLine(int timeLineId)
+    {
+        return null;
+    }
 }

@@ -15,4 +15,14 @@ public class TimeLineInfo
 public class TimeLineMap : ScriptableObject
 {
     public TimeLineInfo[] timeLineInfos;
+
+    public TimeLineInfo GetTimeLine(int id)
+    {
+        if (id < 0 || id > timeLineInfos.Length)
+        {
+            Debug.Log($"유효하지 않은 id값. ID : {id}");
+            return null;
+        }
+        return timeLineInfos[id];
+    }
 }

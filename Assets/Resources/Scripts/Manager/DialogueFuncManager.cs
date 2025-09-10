@@ -19,6 +19,7 @@ public class DialogueFuncManager : MonoBehaviour
         multiParamMethod.Add("Greeting2", (param) => Greeting2(param[0].ToString(), int.Parse((string)param[1])));
         multiParamMethod.Add("Add", (param) => Add(int.Parse((string)param[0])));
         multiParamMethod.Add("MultiParamTest", (param) => MultiParamTest(param[0].ToString(), int.Parse((string)param[1])));
+        multiParamMethod.Add("TimeLineStart", (param) => TimeLineRun(int.Parse((string)param[0])));
     }
 
     public void TimeLineRun(int timeLineId)
