@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
 
     public DialogueFuncManager dialogueFunc;
+    public TimeLineManager timeLineManager;
 
     public Dictionary<string, object> operandDic = new Dictionary<string, object>();
     public List<DialogueParser.ParsedLine> dialogueLog = new List<DialogueParser.ParsedLine>();

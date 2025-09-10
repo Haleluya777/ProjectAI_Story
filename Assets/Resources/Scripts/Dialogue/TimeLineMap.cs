@@ -9,6 +9,10 @@ public class TimeLineInfo
     [SerializeField] private int id;
     [SerializeField] private string description;
     [SerializeField] private TimelineAsset asset;
+
+    public int Id => id;
+    public string Description => description;
+    public TimelineAsset Asset => asset;
 }
 
 [CreateAssetMenu(fileName = "TimeLineMap", menuName = "ScriptableObjects/TimeLine/TimeLineMap")]

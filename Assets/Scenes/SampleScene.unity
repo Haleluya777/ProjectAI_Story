@@ -152,7 +152,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8665cf8e430299642a507a5c4899abdc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeLine: {fileID: 187570192}
 --- !u!4 &2560490
 Transform:
   m_ObjectHideFlags: 0
@@ -256,6 +255,7 @@ GameObject:
   - component: {fileID: 187570193}
   - component: {fileID: 187570192}
   - component: {fileID: 187570194}
+  - component: {fileID: 187570195}
   m_Layer: 0
   m_Name: TimeLineManager
   m_TagString: Untagged
@@ -286,6 +286,8 @@ PlayableDirector:
     value: {fileID: 4673964561175206551}
   - key: {fileID: -4271405768158129268, guid: 7ba84869593e1d24e862c5aaa39bf6cc, type: 2}
     value: {fileID: 4673964561175206551}
+  - key: {fileID: 4011786708685771092, guid: 7ba84869593e1d24e862c5aaa39bf6cc, type: 2}
+    value: {fileID: 187570195}
   m_ExposedReferences:
     m_References: []
 --- !u!4 &187570193
@@ -316,6 +318,52 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timeLineMap: {fileID: 11400000, guid: 2a9c4c49cd01ff042808127fe1b17e21, type: 2}
+  timeLine: {fileID: 187570192}
+--- !u!114 &187570195
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 187570191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e52de21a22b6dd44c9cc19f810c65059, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Events:
+    m_Signals:
+    - {fileID: 11400000, guid: 1f92197d07be58d41b349f191083bafd, type: 2}
+    - {fileID: 11400000, guid: f19043b546f28a14e8a3c511550d3025, type: 2}
+    m_Events:
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 786586160}
+          m_TargetAssemblyTypeName: DialogueRunner, Assembly-CSharp
+          m_MethodName: DialoguePause
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 786586160}
+          m_TargetAssemblyTypeName: DialogueRunner, Assembly-CSharp
+          m_MethodName: DialogueResume
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!224 &258097977 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2383765450426726024, guid: d4ca6be24e7b0a64594b5938559a4e29, type: 3}
@@ -847,6 +895,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialogueFunc: {fileID: 2560489}
+  timeLineManager: {fileID: 187570194}
 --- !u!4 &577238749
 Transform:
   m_ObjectHideFlags: 0
@@ -1075,11 +1124,12 @@ MonoBehaviour:
   DialogueLogPanel: {fileID: 1057603719}
   DialogueLogObj: {fileID: 3672888988007502892, guid: d4ca6be24e7b0a64594b5938559a4e29, type: 3}
   DialogueLogContainer: {fileID: 347649510}
-  DialogueFile: {fileID: 4900000, guid: 6a3c6c14602bc684085d16fda3fb169f, type: 3}
+  DialogueFile: {fileID: 4900000, guid: 54ee15a27b9ed9149863b3e6e3e7d8a6, type: 3}
   parser: {fileID: 1232678628}
   autoTrigger: 0
   autoProccessTime: 0
   dialogueTextSpeed: 0
+  isWaiting: 0
 --- !u!1 &957889528
 GameObject:
   m_ObjectHideFlags: 0
@@ -3008,11 +3058,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4072704799732793987, guid: 365f3da8ebcddc84fab047515259f7c7, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 705
+      value: 700
       objectReference: {fileID: 0}
     - target: {fileID: 4072704799732793987, guid: 365f3da8ebcddc84fab047515259f7c7, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -149
+      value: -150
       objectReference: {fileID: 0}
     - target: {fileID: 4072704799732793987, guid: 365f3da8ebcddc84fab047515259f7c7, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

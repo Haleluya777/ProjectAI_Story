@@ -2,11 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Playables;
+using UnityEngine.Timeline;
+
 
 public class DialogueFuncManager : MonoBehaviour
 {
-    [SerializeField] private PlayableDirector timeLine;
     public Dictionary<string, Action> noParamMethod = new Dictionary<string, Action>();
     public Dictionary<string, Action<object[]>> multiParamMethod = new Dictionary<string, Action<object[]>>();
 
@@ -19,12 +19,19 @@ public class DialogueFuncManager : MonoBehaviour
         multiParamMethod.Add("Greeting2", (param) => Greeting2(param[0].ToString(), int.Parse((string)param[1])));
         multiParamMethod.Add("Add", (param) => Add(int.Parse((string)param[0])));
         multiParamMethod.Add("MultiParamTest", (param) => MultiParamTest(param[0].ToString(), int.Parse((string)param[1])));
-        multiParamMethod.Add("TimeLineStart", (param) => TimeLineRun(int.Parse((string)param[0])));
+        multiParamMethod.Add("TimeLineRun", (param) => TimeLineRun(int.Parse((string)param[0])));
     }
 
     public void TimeLineRun(int timeLineId)
     {
         // 타임라인 시작 로직
+        Debug.Log($"타임라인 시작 : {timeLineId}");
+        Debug.Log(GameManager.instance.timeLineManager.timeLineMap.GetTimeLine(timeLineId).Asset == null);
+        TimelineAsset timelineAsset = GameManager.instance.timeLineManager.timeLineMap.GetTimeLine(timeLineId).Asset; // timeLineMap에서 타임라인 가져오기
+        if (timelineAsset != null)
+        {
+            GameManager.instance.timeLineManager.timeLine.Play(timelineAsset);
+        }
     }
 
     public void Greeting()

@@ -1,13 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Timeline;
+using UnityEngine.Playables;
 
 public class TimeLineManager : MonoBehaviour
 {
-    [SerializeField] private TimeLineMap timeLineMap;
-    public TimelineAsset GetTimeLine(int timeLineId)
-    {
-        return null;
-    }
+    public TimeLineMap timeLineMap;
+    public PlayableDirector timeLine;
 }

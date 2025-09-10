@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using KoreanTyper;
 using System.Linq;
 using TMPro;
-using UnityEditor.SceneTemplate;
+using UnityEngine.Playables;
 
 public class DialogueRunner : MonoBehaviour
 {
@@ -48,7 +48,7 @@ public class DialogueRunner : MonoBehaviour
 
     private List<DialogueParser.ParsedLine> scriptLine;
     private int currentLineNum = 0;
-    private bool isWaiting = false;
+    [SerializeField] private bool isWaiting;
 
     private void Start()
     {
@@ -56,6 +56,7 @@ public class DialogueRunner : MonoBehaviour
         {
             scriptLine = parser.Parse(DialogueFile.text);
         }
+        isWaiting = false;
         dialogueTextSpeed = DIALOGUE_TEXT_SPEED_NORMAL;
         autoProccessTime = DIALOGUE_TEXT_AUTOPROCCESS_NORMAL;
         waitDialogueProccessSpeed = new WaitForSeconds(dialogueTextSpeed);
@@ -66,25 +67,12 @@ public class DialogueRunner : MonoBehaviour
 
     void Update()
     {
-        if (autoTrigger)
-        {
-            if (currentLineNum == 0)
-            {
-                Invoke("RunDialogue", autoProccessTime);
-                return;
-            }
-        }
-
-        // 테스트용
+        if (isWaiting) return;
         if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Mouse0))
         {
             if (currentLineNum != 0)
             {
                 ProccessNextLine();
-            }
-            else
-            {
-                RunDialogue();
             }
         }
         else if (Input.GetKey(KeyCode.LeftControl))
@@ -103,6 +91,18 @@ public class DialogueRunner : MonoBehaviour
             autoProccessTime = DIALOGUE_TEXT_AUTOPROCCESS_NORMAL;
             waitDialogueAutoProccess = new WaitForSeconds(autoProccessTime);
         }
+    }
+
+    public void DialoguePause()
+    {
+        Debug.Log("대화 일시정지");
+        isWaiting = true;
+    }
+
+    public void DialogueResume()
+    {
+        Debug.Log("대화 재개");
+        isWaiting = false;
     }
 
     private void RunDialogue()
@@ -423,7 +423,7 @@ public class DialogueRunner : MonoBehaviour
         }
 
         yield return null;
-        isWaiting = false;
+        if (GameManager.instance.timeLineManager.timeLine.state != PlayState.Playing) isWaiting = false;
         currentLineNum++;
 
         if (autoTrigger)
