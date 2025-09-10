@@ -21,7 +21,7 @@ public class DialogueFuncManager : MonoBehaviour
         multiParamMethod.Add("MultiParamTest", (param) => MultiParamTest(param[0].ToString(), int.Parse((string)param[1])));
     }
 
-    public void TimeLineStart(int timeLineId)
+    public void TimeLineRun(int timeLineId)
     {
         // 타임라인 시작 로직
     }

@@ -34,7 +34,7 @@ public class GameManager : MonoBehaviour
 
     private void OperandInit(Dictionary<string, object> dic)
     {
-        dic.Add("Level", 15);
+        dic.Add("Level", 4);
     }
 
     private void Update()
