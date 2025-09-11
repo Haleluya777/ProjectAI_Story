@@ -68,7 +68,7 @@ public class DialogueRunner : MonoBehaviour
     void Update()
     {
         if (isWaiting) return;
-        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Mouse0))
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.KeypadEnter))
         {
             if (currentLineNum != 0)
             {
@@ -118,7 +118,7 @@ public class DialogueRunner : MonoBehaviour
         //Panel.SetActive(false);
     }
 
-    private void ProccessNextLine()
+    public void ProccessNextLine()
     {
         if (currentLineNum >= scriptLine.Count)
         {
