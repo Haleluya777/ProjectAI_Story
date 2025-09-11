@@ -103,6 +103,7 @@ public class DialogueRunner : MonoBehaviour
     {
         Debug.Log("대화 재개");
         isWaiting = false;
+        GameManager.instance.timeLineManager.TimeLinePause();
     }
 
     private void RunDialogue()

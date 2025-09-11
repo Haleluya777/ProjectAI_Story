@@ -274,7 +274,7 @@ PlayableDirector:
   serializedVersion: 3
   m_PlayableAsset: {fileID: 11400000, guid: 7ba84869593e1d24e862c5aaa39bf6cc, type: 2}
   m_InitialState: 0
-  m_WrapMode: 2
+  m_WrapMode: 0
   m_DirectorUpdateMode: 1
   m_InitialTime: 0
   m_SceneBindings:
@@ -1124,7 +1124,7 @@ MonoBehaviour:
   DialogueLogPanel: {fileID: 1057603719}
   DialogueLogObj: {fileID: 3672888988007502892, guid: d4ca6be24e7b0a64594b5938559a4e29, type: 3}
   DialogueLogContainer: {fileID: 347649510}
-  DialogueFile: {fileID: 4900000, guid: 54ee15a27b9ed9149863b3e6e3e7d8a6, type: 3}
+  DialogueFile: {fileID: 4900000, guid: 3041902b5fe7dbe45b3f75413e8abcf7, type: 3}
   parser: {fileID: 1232678628}
   autoTrigger: 0
   autoProccessTime: 0
@@ -2979,7 +2979,7 @@ PrefabInstance:
     - target: {fileID: 3086089935625842609, guid: 365f3da8ebcddc84fab047515259f7c7, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: cfbca4a8e658f0c4d9ba427043fe12be, type: 3}
+      objectReference: {fileID: 21300000, guid: 99f17ed7db6072241bfac90e489e4b26, type: 3}
     - target: {fileID: 3086089935625842609, guid: 365f3da8ebcddc84fab047515259f7c7, type: 3}
       propertyPath: m_Color.a
       value: 1
@@ -3046,15 +3046,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4072704799732793987, guid: 365f3da8ebcddc84fab047515259f7c7, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4072704799732793987, guid: 365f3da8ebcddc84fab047515259f7c7, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4072704799732793987, guid: 365f3da8ebcddc84fab047515259f7c7, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4072704799732793987, guid: 365f3da8ebcddc84fab047515259f7c7, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -3083,7 +3083,11 @@ PrefabInstance:
     - target: {fileID: 7951852761073391180, guid: 365f3da8ebcddc84fab047515259f7c7, type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: 77a6d10d8bccbd54fbcf985ce2986d3a, type: 2}
+      objectReference: {fileID: 0}
+    - target: {fileID: 7951852761073391180, guid: 365f3da8ebcddc84fab047515259f7c7, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

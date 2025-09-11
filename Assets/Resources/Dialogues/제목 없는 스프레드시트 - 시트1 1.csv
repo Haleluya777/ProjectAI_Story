@@ -1,0 +1,11 @@
+Dialogue,,,
+,플레이어,첫 번째 대사,
+,캐릭터,두 번 째 대사,
+,Func,TimeLineRun,0
+,캐릭터,세 번 째 대사,
+,플레이어,네 번 째 대사,
+,너,다섯,
+,나,여섯,
+,너,일곱,
+,Func,TimeLineRun,0
+DialogueEnd,,,
