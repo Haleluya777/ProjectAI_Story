@@ -33,4 +33,9 @@ public class DialoguePanel : MonoBehaviour
             menuChildsPos[i].DOAnchorPosX(dest * (i + 1), .3f);
         }
     }
+
+    public void DialogueLogClose(GameObject obj)
+    {
+        obj.SetActive(false);
+    }
 }

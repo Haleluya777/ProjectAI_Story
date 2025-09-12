@@ -7,6 +7,8 @@ using KoreanTyper;
 using System.Linq;
 using TMPro;
 using UnityEngine.Playables;
+using Unity.Profiling;
+using Unity.VisualScripting;
 
 public class DialogueRunner : MonoBehaviour
 {
@@ -37,6 +39,12 @@ public class DialogueRunner : MonoBehaviour
     [SerializeField] private bool autoTrigger; //대화가 자동으로 진행될지 체크하는 트리거
     [SerializeField] private float autoProccessTime; //이 변수의 시간동안 대기 후 자동으로 대화 진행.
     [SerializeField] private float dialogueTextSpeed; //Dialogue텍스트가 진행되는 속도
+
+    [Header("DialogueCharacters")] //대화에 등장하는 캐릭터 관련 요소들.
+    [SerializeField] private GameObject CharacterPrefab;
+    [SerializeField] private CharacterMap characterMap;
+    [SerializeField] private Transform characterParent; //대화에 등장하는 캐릭터 오브젝트들의 부모 오브젝트.
+    [SerializeField] private Dictionary<int, GameObject> characters = new Dictionary<int, GameObject>(); //대화에 등장하는 캐릭터 오브젝트들.
 
     private const float DIALOGUE_TEXT_SPEED_SKIP = .01f; //텍스트 진행 속도 (스킵 모드)
     private const float DIALOGUE_TEXT_SPEED_NORMAL = .03f; //텍스트 진행 속도 (초기 모드)
@@ -90,6 +98,29 @@ public class DialogueRunner : MonoBehaviour
             autoTrigger = false;
             autoProccessTime = DIALOGUE_TEXT_AUTOPROCCESS_NORMAL;
             waitDialogueAutoProccess = new WaitForSeconds(autoProccessTime);
+        }
+    }
+
+    public void CharacterInit(int index)
+    {
+        foreach (Transform character in characterParent)
+        {
+            character.gameObject.SetActive(false);
+        }
+
+        for (int i = 0; i < 32; i++)
+        {
+            if (((index >> i) & 1) == 1)
+            {
+                GameObject character = Instantiate(CharacterPrefab, characterParent);
+                CharacterData data = characterMap.GetCharacter(i);
+
+                character.GetComponent<Image>().sprite = data.characterSprite;
+                character.name = data.characterName;
+
+                character.SetActive(false);
+                characters.Add(data.id, character);
+            }
         }
     }
 
