@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
 using UnityEngine;
 
 public class DialogueFuncManager : MonoBehaviour
@@ -19,11 +21,17 @@ public class DialogueFuncManager : MonoBehaviour
         multiParamMethod.Add("MultiParamTest", (param) => MultiParamTest(param[0].ToString(), int.Parse((string)param[1])));
         multiParamMethod.Add("TimeLineRun", (param) => TimeLineStart(int.Parse((string)param[0])));
         multiParamMethod.Add("CharacterInit", (param) => CharacterInit(int.Parse((string)param[0])));
+        multiParamMethod.Add("TimeLineInsert", (param) => TimeLineInsert(int.Parse((string)param[0])));
+    }
+
+    public void TimeLineInsert(int characterId)
+    {
+        Animator[] anim = GameManager.instance.dialogueRunner.characters.Values.Where(obj => obj.GetComponent<Animator>() != null).Select(obj => obj.GetComponent<Animator>()).ToArray();
+        GameManager.instance.timeLineManager.TimeLineAnimatorTrackInsert(anim);
     }
 
     public void CharacterInit(int index)
     {
-        Debug.Log("울랄라");
         GameManager.instance.dialogueRunner.CharacterInit(index);
     }
 

@@ -7,8 +7,6 @@ using KoreanTyper;
 using System.Linq;
 using TMPro;
 using UnityEngine.Playables;
-using Unity.Profiling;
-using Unity.VisualScripting;
 
 public class DialogueRunner : MonoBehaviour
 {
@@ -44,11 +42,11 @@ public class DialogueRunner : MonoBehaviour
     [SerializeField] private GameObject CharacterPrefab;
     [SerializeField] private CharacterMap characterMap;
     [SerializeField] private Transform characterParent; //대화에 등장하는 캐릭터 오브젝트들의 부모 오브젝트.
-    [SerializeField] private Dictionary<int, GameObject> characters = new Dictionary<int, GameObject>(); //대화에 등장하는 캐릭터 오브젝트들.
+    [SerializeField] public Dictionary<int, GameObject> characters = new Dictionary<int, GameObject>(); //대화에 등장하는 캐릭터 오브젝트들.
 
     private const float DIALOGUE_TEXT_SPEED_SKIP = .01f; //텍스트 진행 속도 (스킵 모드)
-    private const float DIALOGUE_TEXT_SPEED_NORMAL = .03f; //텍스트 진행 속도 (초기 모드)
-    private const float DIALOGUE_TEXT_AUTOPROCCESS_NORMAL = .5f; //자동 텍스트 넘김 지연 시간. (일반 모드)
+    private float DIALOGUE_TEXT_SPEED_NORMAL = .03f; //텍스트 진행 속도 (초기 모드)
+    private float DIALOGUE_TEXT_AUTOPROCCESS_NORMAL = .5f; //자동 텍스트 넘김 지연 시간. (일반 모드)
     private const float DIALOGUE_TEXT_AUTOPROCCESS_SKIP = .01f; //자동 텍스트 넘김 지연 시간. (빠른 모드)
 
     private WaitForSeconds waitDialogueProccessSpeed; //Dialogue 진행 속도에 쓰는 WaitForSeconds
@@ -101,6 +99,16 @@ public class DialogueRunner : MonoBehaviour
         }
     }
 
+    public void SettingChangeTextSpeed(float value)
+    {
+        DIALOGUE_TEXT_SPEED_NORMAL = value;
+    }
+
+    public void SettingAutoNextLineSpeed(float value)
+    {
+        DIALOGUE_TEXT_AUTOPROCCESS_NORMAL = value;
+    }
+
     public void CharacterInit(int index)
     {
         foreach (Transform character in characterParent)
@@ -118,12 +126,13 @@ public class DialogueRunner : MonoBehaviour
                 character.GetComponent<Image>().sprite = data.characterSprite;
                 character.name = data.characterName;
 
-                character.SetActive(false);
+                //character.SetActive(false);
+                character.GetComponent<RectTransform>().anchoredPosition = new Vector3(0, -150, 0);
                 characters.Add(data.id, character);
             }
         }
     }
-
+    //타임라인 시그널에 쓰일 이벤트--------------------------
     public void DialoguePause()
     {
         Debug.Log("대화 일시정지");
@@ -135,6 +144,10 @@ public class DialogueRunner : MonoBehaviour
         Debug.Log("대화 재개");
         isWaiting = false;
         GameManager.instance.timeLineManager.TimeLinePause();
+        if (autoTrigger && !isWaiting)
+        {
+            ProccessNextLine();
+        }
     }
 
     private void RunDialogue()
@@ -148,7 +161,7 @@ public class DialogueRunner : MonoBehaviour
     {
         //Panel.SetActive(false);
     }
-
+    //------------------------------------------
     public void ProccessNextLine()
     {
         if (currentLineNum >= scriptLine.Count)
@@ -209,12 +222,22 @@ public class DialogueRunner : MonoBehaviour
 
             default: //위의 모든 명령어가 아닌 경우에는 캐릭터의 대화로 간주. 대화창에 출력 및 게임 매니저 대화 로그 리스트에 저장.
                 if (line.Args[0].Contains("\\n")) line.Args[0] = line.Args[0].Replace("\\n", "\n");
-                Debug.Log(line.Args[0]);
+                Debug.Log(line.Args[1]);
+                CharacterEmphasis(int.Parse(line.Args[1]));
                 SpeakerName.text = line.Command;
                 GameManager.instance.dialogueLog.Add(line);
                 StartCoroutine(TypingTxt(line.Args[0]));
                 break;
         }
+    }
+
+    private void CharacterEmphasis(int id)
+    {
+        foreach (Transform character in characterParent)
+        {
+            character.GetComponent<Image>().color = new Color32(140, 140, 140, 255);
+        }
+        characters[id].GetComponent<Image>().color = new Color32(255, 255, 255, 255);
     }
 
     private void CheckingCondition(string[] args)
@@ -375,7 +398,7 @@ public class DialogueRunner : MonoBehaviour
         string methodName = args[0];
 
         object[] parameters = args.Skip(1).ToArray();
-        Debug.Log(parameters.Length);
+        //Debug.Log(parameters.Length);
 
         if (parameters.Length == 0)
         {
@@ -418,6 +441,7 @@ public class DialogueRunner : MonoBehaviour
 
     public void SkipDialogue() //대화 스킵 모드로 변경.
     {
+        autoTrigger = false;
         SetAutoMode(); //자동 모드 켜기
         if (dialogueTextSpeed == DIALOGUE_TEXT_SPEED_NORMAL)
         {
@@ -440,6 +464,11 @@ public class DialogueRunner : MonoBehaviour
 
         waitDialogueProccessSpeed = new WaitForSeconds(dialogueTextSpeed);
         waitDialogueAutoProccess = new WaitForSeconds(autoProccessTime);
+
+        if (autoTrigger && !isWaiting)
+        {
+            ProccessNextLine();
+        }
     }
 
     //----------------------
