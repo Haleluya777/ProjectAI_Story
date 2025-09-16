@@ -35,8 +35,12 @@ public class DialogueRunner : MonoBehaviour
 
     [Header("DialogueMenu")]
     [SerializeField] private bool autoTrigger; //대화가 자동으로 진행될지 체크하는 트리거
-    [SerializeField] private float autoProccessTime; //이 변수의 시간동안 대기 후 자동으로 대화 진행.
-    [SerializeField] private float dialogueTextSpeed; //Dialogue텍스트가 진행되는 속도
+    [SerializeField] private bool skipTrigger; //대화가 스킵 모드로 진행될지 체크하는 트리거
+    [SerializeField] private float currentautoProccessTime; //이 변수의 시간동안 대기 후 자동으로 대화 진행.
+    [SerializeField] private float currentdialogueTextSpeed; //Dialogue텍스트가 진행되는 속도
+
+    [SerializeField] private float settedDialogueTextSpeed; //설정에서 변경된 Dialogue텍스트 진행 속도.
+    [SerializeField] private float settedAutoProccessTime; //설정에서 변경된 자동 대화 진행 속도.
 
     [Header("DialogueCharacters")] //대화에 등장하는 캐릭터 관련 요소들.
     [SerializeField] private GameObject CharacterPrefab;
@@ -45,8 +49,6 @@ public class DialogueRunner : MonoBehaviour
     [SerializeField] public Dictionary<int, GameObject> characters = new Dictionary<int, GameObject>(); //대화에 등장하는 캐릭터 오브젝트들.
 
     private const float DIALOGUE_TEXT_SPEED_SKIP = .01f; //텍스트 진행 속도 (스킵 모드)
-    private float DIALOGUE_TEXT_SPEED_NORMAL = .03f; //텍스트 진행 속도 (초기 모드)
-    private float DIALOGUE_TEXT_AUTOPROCCESS_NORMAL = .5f; //자동 텍스트 넘김 지연 시간. (일반 모드)
     private const float DIALOGUE_TEXT_AUTOPROCCESS_SKIP = .01f; //자동 텍스트 넘김 지연 시간. (빠른 모드)
 
     private WaitForSeconds waitDialogueProccessSpeed; //Dialogue 진행 속도에 쓰는 WaitForSeconds
@@ -63,10 +65,10 @@ public class DialogueRunner : MonoBehaviour
             scriptLine = parser.Parse(DialogueFile.text);
         }
         isWaiting = false;
-        dialogueTextSpeed = DIALOGUE_TEXT_SPEED_NORMAL;
-        autoProccessTime = DIALOGUE_TEXT_AUTOPROCCESS_NORMAL;
-        waitDialogueProccessSpeed = new WaitForSeconds(dialogueTextSpeed);
-        waitDialogueAutoProccess = new WaitForSeconds(autoProccessTime);
+        currentdialogueTextSpeed = .03f;
+        currentautoProccessTime = .5f;
+        waitDialogueProccessSpeed = new WaitForSeconds(currentdialogueTextSpeed);
+        waitDialogueAutoProccess = new WaitForSeconds(currentautoProccessTime);
 
         RunDialogue();
     }
@@ -74,6 +76,12 @@ public class DialogueRunner : MonoBehaviour
     void Update()
     {
         if (isWaiting) return;
+
+        if (skipTrigger)
+        {
+
+        }
+
         if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.KeypadEnter))
         {
             if (currentLineNum != 0)
@@ -85,8 +93,8 @@ public class DialogueRunner : MonoBehaviour
         {
             Time.timeScale = 5f;
             autoTrigger = true;
-            autoProccessTime = DIALOGUE_TEXT_AUTOPROCCESS_SKIP;
-            waitDialogueAutoProccess = new WaitForSeconds(autoProccessTime);
+            currentautoProccessTime = DIALOGUE_TEXT_AUTOPROCCESS_SKIP;
+            waitDialogueAutoProccess = new WaitForSeconds(currentautoProccessTime);
 
             ProccessNextLine();
         }
@@ -94,19 +102,19 @@ public class DialogueRunner : MonoBehaviour
         {
             Time.timeScale = 1f;
             autoTrigger = false;
-            autoProccessTime = DIALOGUE_TEXT_AUTOPROCCESS_NORMAL;
-            waitDialogueAutoProccess = new WaitForSeconds(autoProccessTime);
+            waitDialogueAutoProccess = new WaitForSeconds(currentautoProccessTime);
         }
     }
 
     public void SettingChangeTextSpeed(float value)
     {
-        DIALOGUE_TEXT_SPEED_NORMAL = value;
+        settedDialogueTextSpeed = value;
+        waitDialogueProccessSpeed = new WaitForSeconds(settedDialogueTextSpeed);
     }
 
     public void SettingAutoNextLineSpeed(float value)
     {
-        DIALOGUE_TEXT_AUTOPROCCESS_NORMAL = value;
+        settedAutoProccessTime = value;
     }
 
     public void CharacterInit(int index)
@@ -441,29 +449,26 @@ public class DialogueRunner : MonoBehaviour
 
     public void SkipDialogue() //대화 스킵 모드로 변경.
     {
-        autoTrigger = false;
-        SetAutoMode(); //자동 모드 켜기
-        if (dialogueTextSpeed == DIALOGUE_TEXT_SPEED_NORMAL)
+        autoTrigger = true;
+        skipTrigger = !skipTrigger;
+        if (skipTrigger)
         {
             Time.timeScale = 5f;
-            autoProccessTime = DIALOGUE_TEXT_AUTOPROCCESS_SKIP;
+            currentautoProccessTime = DIALOGUE_TEXT_AUTOPROCCESS_SKIP;
         }
         else
         {
             Time.timeScale = 1f;
-            autoProccessTime = DIALOGUE_TEXT_AUTOPROCCESS_NORMAL;
+            currentautoProccessTime = settedAutoProccessTime;
         }
-        waitDialogueAutoProccess = new WaitForSeconds(autoProccessTime);
+        waitDialogueAutoProccess = new WaitForSeconds(currentautoProccessTime);
     }
 
     public void SetAutoMode() //자동 모드로 변경.
     {
+        if (skipTrigger) skipTrigger = false;
         autoTrigger = !autoTrigger;
-        dialogueTextSpeed = DIALOGUE_TEXT_SPEED_NORMAL;
-        autoProccessTime = DIALOGUE_TEXT_AUTOPROCCESS_NORMAL;
-
-        waitDialogueProccessSpeed = new WaitForSeconds(dialogueTextSpeed);
-        waitDialogueAutoProccess = new WaitForSeconds(autoProccessTime);
+        waitDialogueAutoProccess = new WaitForSeconds(currentautoProccessTime);
 
         if (autoTrigger && !isWaiting)
         {
