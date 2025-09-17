@@ -65,8 +65,13 @@ public class DialogueRunner : MonoBehaviour
             scriptLine = parser.Parse(DialogueFile.text);
         }
         isWaiting = false;
-        currentdialogueTextSpeed = .03f;
-        currentautoProccessTime = .5f;
+
+        settedDialogueTextSpeed = .065f;
+        settedAutoProccessTime = .6f;
+
+        currentdialogueTextSpeed = settedDialogueTextSpeed;
+        currentautoProccessTime = settedAutoProccessTime;
+
         waitDialogueProccessSpeed = new WaitForSeconds(currentdialogueTextSpeed);
         waitDialogueAutoProccess = new WaitForSeconds(currentautoProccessTime);
 
@@ -449,25 +454,41 @@ public class DialogueRunner : MonoBehaviour
 
     public void SkipDialogue() //대화 스킵 모드로 변경.
     {
-        autoTrigger = true;
-        skipTrigger = !skipTrigger;
-        if (skipTrigger)
+        if (skipTrigger) //스킵 상태일 경우 스킵 버튼을 눌면 스킵 상태 해제.
         {
-            Time.timeScale = 5f;
-            currentautoProccessTime = DIALOGUE_TEXT_AUTOPROCCESS_SKIP;
-        }
-        else
-        {
+            skipTrigger = false;
+            autoTrigger = false;
             Time.timeScale = 1f;
             currentautoProccessTime = settedAutoProccessTime;
+            currentdialogueTextSpeed = settedDialogueTextSpeed;
+        }
+        else if (!skipTrigger) //스킵 상태가 아닐 경우 스킵 버튼을 누르면 스킵 상태로 변경.
+        {
+            skipTrigger = true;
+            autoTrigger = true;
+            Time.timeScale = 5f;
+            currentdialogueTextSpeed = DIALOGUE_TEXT_SPEED_SKIP;
+            currentautoProccessTime = DIALOGUE_TEXT_AUTOPROCCESS_SKIP;
         }
         waitDialogueAutoProccess = new WaitForSeconds(currentautoProccessTime);
     }
 
     public void SetAutoMode() //자동 모드로 변경.
     {
-        if (skipTrigger) skipTrigger = false;
-        autoTrigger = !autoTrigger;
+        if (skipTrigger)
+        {
+            skipTrigger = false;
+            autoTrigger = true;
+        }
+
+        else
+        {
+            autoTrigger = !autoTrigger;
+        }
+
+        Time.timeScale = 1f;
+        currentdialogueTextSpeed = settedDialogueTextSpeed;
+        currentautoProccessTime = settedAutoProccessTime;
         waitDialogueAutoProccess = new WaitForSeconds(currentautoProccessTime);
 
         if (autoTrigger && !isWaiting)
