@@ -52,5 +52,5 @@
         "Temp/": true
     },
     "dotnet.preferCSharpExtension": true,
-    "dotnet.defaultSolution": "Project_AI_Story.sln"
+    "dotnet.defaultSolution": "ProjectAI_Story.sln"
 }
