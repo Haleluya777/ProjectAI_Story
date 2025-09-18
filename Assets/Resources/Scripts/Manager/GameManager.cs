@@ -37,6 +37,10 @@ public class GameManager : MonoBehaviour
     private void OperandInit(Dictionary<string, object> dic)
     {
         dic.Add("Level", 4);
+        dic.Add("IronLikeability", 0);
+        dic.Add("FireLikeability", 0);
+        dic.Add("WoodLikeability", 0);
+        dic.Add("WaterLikeability", 0);
     }
 
     private void Update()
