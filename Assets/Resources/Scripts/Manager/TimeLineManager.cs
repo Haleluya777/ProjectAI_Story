@@ -10,7 +10,7 @@ public class TimeLineManager : MonoBehaviour
 
     void Update()
     {
-        Debug.Log(timeLine.state);
+
     }
 
     public void TimeLineAnimatorTrackInsert(Animator[] targetAnim)

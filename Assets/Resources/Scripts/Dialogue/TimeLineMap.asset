@@ -15,4 +15,19 @@ MonoBehaviour:
   timeLineInfos:
   - id: 0
     description: Move Pos A to B
-    asset: {fileID: 11400000, guid: 7ba84869593e1d24e862c5aaa39bf6cc, type: 2}
+    asset: {fileID: 11400000, guid: a60bccf0d55def847add3f1529c93cc2, type: 2}
+  - id: 1
+    description: Move Pos A to C
+    asset: {fileID: 11400000, guid: 824df9d96e6231946b4094479290cd60, type: 2}
+  - id: 2
+    description: Move Pos B to A
+    asset: {fileID: 11400000, guid: a7f6edb0f38989c4fb82e2db4dcd82d9, type: 2}
+  - id: 3
+    description: Move Pos B to C
+    asset: {fileID: 11400000, guid: 5813e436f58ffaf4da397f5c472a820d, type: 2}
+  - id: 4
+    description: Move Pos C to A
+    asset: {fileID: 11400000, guid: f4d8b178178f79a4fa86f6babdb766eb, type: 2}
+  - id: 5
+    description: Move Pos C to B
+    asset: {fileID: 11400000, guid: 2dbb04bfccc16b64fae9318fd04e8e07, type: 2}

@@ -49,9 +49,9 @@ public class DialogueRunner : MonoBehaviour
     [SerializeField] private float settedAutoProccessTime; //설정에서 변경된 자동 대화 진행 속도.
 
     [Header("DialogueCharacters")] //대화에 등장하는 캐릭터 관련 요소들.
-    [SerializeField] private GameObject CharacterPrefab;
-    [SerializeField] private CharacterMap characterMap;
-    [SerializeField] private Transform characterParent; //대화에 등장하는 캐릭터 오브젝트들의 부모 오브젝트.
+    [SerializeField] private GameObject CharacterPrefab; //캐릭터 베이스 프리팹
+    [SerializeField] private CharacterMap characterMap; //캐릭터 데이터 베이스
+    [SerializeField] private Transform characterParent; //캐릭터 베이스 프리팹의 부모 오브젝트. Instantiate용.
     [SerializeField] public Dictionary<int, GameObject> characters = new Dictionary<int, GameObject>(); //대화에 등장하는 캐릭터 오브젝트들.
 
     private const float DIALOGUE_TEXT_SPEED_SKIP = .01f; //텍스트 진행 속도 (스킵 모드)
