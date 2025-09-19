@@ -269,7 +269,7 @@ public class DialogueRunner : MonoBehaviour
                 if (line.Args[0].Contains("\\n")) line.Args[0] = line.Args[0].Replace("\\n", "\n");
                 CharacterEmphasis(int.Parse(line.Args[1]));
                 SpeakerName.text = line.Command;
-                GameManager.instance.dialogueLog.Add(line);
+                GameManager.instance.dataManager.dialogueLog.Add(line);
                 StartCoroutine(TypingTxt(line.Args[0]));
                 break;
         }
@@ -287,7 +287,8 @@ public class DialogueRunner : MonoBehaviour
     private void CheckingCondition(string[] args)
     {
         Debug.Log(args.Length);
-        var leftOperand = GameManager.instance.operandDic[args[0]];
+        if (GameManager.instance.dataManager.operandDic[args[0]] == null) return;
+        var leftOperand = GameManager.instance.dataManager.operandDic[args[0]];
         var Operator = args[1];
         bool condition = false;
 
@@ -421,7 +422,7 @@ public class DialogueRunner : MonoBehaviour
 
     private void OptionSelected(int lineIndex, DialogueParser.ParsedLine line)
     {
-        GameManager.instance.dialogueLog.Add(line);
+        GameManager.instance.dataManager.dialogueLog.Add(line);
         isWaiting = false;
         //ChoiceOptionPanel.SetActive(false);
         DialoguePanel.SetActive(true);
@@ -463,7 +464,7 @@ public class DialogueRunner : MonoBehaviour
     //버튼에 할당할 이벤트 집합
     public void GetDialogueLogs() //GameManager에 저장된 이전까지의 대화 로그.
     {
-        List<DialogueParser.ParsedLine> logs = GameManager.instance.dialogueLog;
+        List<DialogueParser.ParsedLine> logs = GameManager.instance.dataManager.dialogueLog;
         DialogueLogPanel.SetActive(true);
 
         foreach (Transform child in DialogueLogContainer)
