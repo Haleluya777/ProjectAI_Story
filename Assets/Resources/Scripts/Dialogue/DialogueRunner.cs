@@ -8,7 +8,7 @@ using System.Linq;
 using TMPro;
 using UnityEngine.Playables;
 
-public class DialogueRunner : MonoBehaviour
+public class DialogueRunner : MonoBehaviour, DataInitializable
 {
     public enum RunnerState { Normal, Skip, Auto }
 
@@ -34,7 +34,7 @@ public class DialogueRunner : MonoBehaviour
     [SerializeField] private Transform DialogueLogContainer; //대화 로그 창의 부모 오브젝트.
 
     [Header("DialogueFile")]
-    [SerializeField] private TextAsset DialogueFile;
+    [SerializeField] public TextAsset DialogueFile;
 
     [Header("DialogueParse")]
     [SerializeField] private DialogueParser parser;
@@ -42,15 +42,12 @@ public class DialogueRunner : MonoBehaviour
     [Header("DialogueMenu")]
     [SerializeField] private bool autoTrigger; //대화가 자동으로 진행될지 체크하는 트리거
     [SerializeField] private bool skipTrigger; //대화가 스킵 모드로 진행될지 체크하는 트리거
-    [SerializeField] private float currentautoProccessTime; //이 변수의 시간동안 대기 후 자동으로 대화 진행.
-    [SerializeField] private float currentdialogueTextSpeed; //Dialogue텍스트가 진행되는 속도
 
     [SerializeField] private float settedDialogueTextSpeed; //설정에서 변경된 Dialogue텍스트 진행 속도.
     [SerializeField] private float settedAutoProccessTime; //설정에서 변경된 자동 대화 진행 속도.
 
     [Header("DialogueCharacters")] //대화에 등장하는 캐릭터 관련 요소들.
     [SerializeField] private GameObject CharacterPrefab; //캐릭터 베이스 프리팹
-    [SerializeField] private CharacterMap characterMap; //캐릭터 데이터 베이스
     [SerializeField] private Transform characterParent; //캐릭터 베이스 프리팹의 부모 오브젝트. Instantiate용.
     [SerializeField] public Dictionary<int, GameObject> characters = new Dictionary<int, GameObject>(); //대화에 등장하는 캐릭터 오브젝트들.
 
@@ -63,43 +60,46 @@ public class DialogueRunner : MonoBehaviour
     private WaitForSeconds skipedWaitDialogueProccessSpeed; //스킵 모드일 때, Dialogue 텍스트 진행 속도에 쓰는 WaitForSeconds
     private WaitForSeconds skipedWaitDialogueAutoProccess; //스킵 모드일 떄, Dialogue 자동 진행에 쓰는 WaitForSeconds
 
-    private WaitForSeconds normalWaitDialogueAutoProccess; //스킵 모드가 아닐 때, Dialogue 자동 진행에 쓰는 WaitForSeconds (설정된 텍스트 속도로 지정함.)
-    private WaitForSeconds normalWaitDialogueProccessSpeed; //스킵 모드가 아닐 때, Dialogue 텍스트 진행에 쓰는 WaitForSeconds (설정된 텍스트 속도로 지정.)
+    private WaitForSeconds settedWaitDialogueAutoProccess; //스킵 모드가 아닐 때, Dialogue 자동 진행에 쓰는 WaitForSeconds (설정된 텍스트 속도로 지정함.)
+    private WaitForSeconds settedWaitDialogueProccessSpeed; //스킵 모드가 아닐 때, Dialogue 텍스트 진행에 쓰는 WaitForSeconds (설정된 텍스트 속도로 지정.)
 
     private List<DialogueParser.ParsedLine> scriptLine;
     private int currentLineNum = 0;
     [SerializeField] private bool isWaiting;
 
-    private void Start()
+    public void InitializeData()
     {
         currentState = RunnerState.Normal;
-        if (DialogueFile != null)
-        {
-            scriptLine = parser.Parse(DialogueFile.text);
-        }
         isWaiting = false;
 
         settedDialogueTextSpeed = .065f;
         settedAutoProccessTime = .6f;
 
-        currentdialogueTextSpeed = settedDialogueTextSpeed;
-        currentautoProccessTime = settedAutoProccessTime;
-
-        currentWaitDialogueProccessSpeed = new WaitForSeconds(currentdialogueTextSpeed);
-        currentWaitDialogueAutoProccess = new WaitForSeconds(currentautoProccessTime);
+        currentWaitDialogueProccessSpeed = new WaitForSeconds(settedDialogueTextSpeed);
+        currentWaitDialogueAutoProccess = new WaitForSeconds(settedAutoProccessTime);
 
         skipedWaitDialogueAutoProccess = new WaitForSeconds(DIALOGUE_TEXT_AUTOPROCCESS_SKIP);
         skipedWaitDialogueProccessSpeed = new WaitForSeconds(DIALOGUE_TEXT_SPEED_SKIP);
 
-        normalWaitDialogueAutoProccess = new WaitForSeconds(settedAutoProccessTime);
-        normalWaitDialogueProccessSpeed = new WaitForSeconds(settedDialogueTextSpeed);
-
-        RunDialogue();
+        settedWaitDialogueAutoProccess = new WaitForSeconds(settedAutoProccessTime);
+        settedWaitDialogueProccessSpeed = new WaitForSeconds(settedDialogueTextSpeed);
     }
 
     void Update()
     {
+        Debug.Log(settedDialogueTextSpeed);
         DialogueStateAction();
+
+        if (Input.GetKey(KeyCode.LeftControl))
+        {
+            currentState = RunnerState.Skip;
+
+            ProccessNextLine();
+        }
+        else if (Input.GetKeyUp(KeyCode.LeftControl))
+        {
+            currentState = RunnerState.Normal;
+        }
 
         if (isWaiting) return;
 
@@ -110,16 +110,6 @@ public class DialogueRunner : MonoBehaviour
                 ProccessNextLine();
             }
         }
-        else if (Input.GetKey(KeyCode.LeftControl))
-        {
-            currentState = RunnerState.Skip;
-
-            ProccessNextLine();
-        }
-        else if (Input.GetKeyUp(KeyCode.LeftControl))
-        {
-            currentState = RunnerState.Normal;
-        }
     }
 
     private void DialogueStateAction()
@@ -127,16 +117,15 @@ public class DialogueRunner : MonoBehaviour
         switch (currentState)
         {
             case RunnerState.Normal:
-                currentWaitDialogueProccessSpeed = normalWaitDialogueProccessSpeed;
+                currentWaitDialogueProccessSpeed = settedWaitDialogueProccessSpeed;
                 break;
 
             case RunnerState.Auto:
-                currentWaitDialogueProccessSpeed = normalWaitDialogueProccessSpeed;
-                currentWaitDialogueAutoProccess = normalWaitDialogueAutoProccess;
+                currentWaitDialogueProccessSpeed = settedWaitDialogueProccessSpeed;
+                currentWaitDialogueAutoProccess = settedWaitDialogueAutoProccess;
                 break;
 
             case RunnerState.Skip:
-                Debug.Log("스킵 모드 활성화");
                 currentWaitDialogueProccessSpeed = skipedWaitDialogueProccessSpeed;
                 currentWaitDialogueAutoProccess = skipedWaitDialogueAutoProccess;
                 break;
@@ -146,15 +135,16 @@ public class DialogueRunner : MonoBehaviour
     public void SettingChangeTextSpeed(float value)
     {
         settedDialogueTextSpeed = value;
-        currentWaitDialogueProccessSpeed = new WaitForSeconds(settedDialogueTextSpeed);
+        settedWaitDialogueProccessSpeed = new WaitForSeconds(settedDialogueTextSpeed);
     }
 
     public void SettingAutoNextLineSpeed(float value)
     {
         settedAutoProccessTime = value;
+        settedWaitDialogueAutoProccess = new WaitForSeconds(settedAutoProccessTime);
     }
 
-    public void CharacterInit(int index)
+    public void CharacterInit(int index) //대화에 등장하는 모든 캐릭터 오브젝트 초기화.
     {
         foreach (Transform character in characterParent)
         {
@@ -166,7 +156,7 @@ public class DialogueRunner : MonoBehaviour
             if (((index >> i) & 1) == 1)
             {
                 GameObject character = Instantiate(CharacterPrefab, characterParent);
-                CharacterData data = characterMap.GetCharacter(i);
+                CharacterData data = GameManager.instance.dataManager.characterMap.GetCharacter(i);
 
                 character.GetComponent<Image>().sprite = data.characterSprite;
                 character.name = data.characterName;
@@ -195,16 +185,26 @@ public class DialogueRunner : MonoBehaviour
         }
     }
 
-    private void RunDialogue()
+    public void RunDialogue()
     {
-        //Panel.SetActive(true);
-        currentLineNum = 0;
+
+        Debug.Log(currentLineNum);
+        if (DialogueFile != null)
+        {
+            scriptLine = parser.Parse(DialogueFile.text);
+        }
+
+        Panel.SetActive(true);
         ProccessNextLine();
     }
 
-    private void EndDialogue()
+    public void EndDialogue()
     {
-        //Panel.SetActive(false);
+        characters.Clear();
+        currentLineNum = 0;
+        currentState = RunnerState.Normal;
+        GameManager.instance.dataManager.dialogueLog.Clear();
+        Panel.SetActive(false);
     }
     //------------------------------------------
     public void ProccessNextLine()
@@ -218,6 +218,7 @@ public class DialogueRunner : MonoBehaviour
         if (isWaiting) return;
 
         DialogueParser.ParsedLine line = scriptLine[currentLineNum];
+        //Debug.Log(line);
 
         switch (line.Command)
         {

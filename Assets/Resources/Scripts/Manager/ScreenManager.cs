@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class ScreenManager : MonoBehaviour
+public class ScreenManager : MonoBehaviour, DataInitializable
 {
     [SerializeField] private TextMeshProUGUI resolutionTxt;
     //[SerializeField] private TextMeshProUGUI frameRateTxt;
@@ -21,7 +21,8 @@ public class ScreenManager : MonoBehaviour
     private int currentResolutionNum;
     private int currentFrame;
 
-    private void Start()
+
+    public void InitializeData()
     {
         currentResolutionNum = resolutions.Length - 1;
         currentFrame = 1;
@@ -31,9 +32,6 @@ public class ScreenManager : MonoBehaviour
 
         Screen.fullScreen = false;
         fullScreenTxt.text = "Windowed";
-
-        //Application.targetFrameRate = frameRates[currentFrame];
-        //frameRateTxt.text = Application.targetFrameRate + "FPS";
     }
 
     public void SetResolution(int num)

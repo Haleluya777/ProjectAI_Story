@@ -4,12 +4,12 @@ using System.Linq;
 using UnityEngine;
 using DG.Tweening;
 
-public class DialogueFuncManager : MonoBehaviour
+public class DialogueFuncManager : MonoBehaviour, DataInitializable
 {
     public Dictionary<string, Action> noParamMethod = new Dictionary<string, Action>();
     public Dictionary<string, Action<object[]>> multiParamMethod = new Dictionary<string, Action<object[]>>();
 
-    public void InitMethods()
+    public void InitializeData()
     {
         //파라미터가 없는 메서드들 초기화
         noParamMethod.Add("Greeting", Greeting);

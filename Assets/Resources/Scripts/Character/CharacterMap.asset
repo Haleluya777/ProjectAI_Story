@@ -15,10 +15,26 @@ MonoBehaviour:
   characters:
   - id: 1
     characterName: Fire
-    characterSprite: {fileID: -1180496191, guid: 24938338f66cd4f498c727d718e5c885, type: 3}
+    characterSprite: {fileID: 21300000, guid: 99f17ed7db6072241bfac90e489e4b26, type: 3}
+    affaction: 0
+    CurrentdialogueNum: 0
+    dialogueLineNum: 0
+    dialogueFiles:
+    - {fileID: 4900000, guid: 70bc5b8298d7f0b42b75c587b32047c3, type: 3}
+    - {fileID: 4900000, guid: 0ea39929ae2ed2a4abc5a12ef191eaee, type: 3}
   - id: 2
     characterName: Steel
-    characterSprite: {fileID: 335413641, guid: 24938338f66cd4f498c727d718e5c885, type: 3}
+    characterSprite: {fileID: 21300000, guid: 4cef226f63409544aa45b44a276d7348, type: 3}
+    affaction: 0
+    CurrentdialogueNum: 0
+    dialogueLineNum: 0
+    dialogueFiles:
+    - {fileID: 4900000, guid: 0327026da44074046866f9780d59a78c, type: 3}
   - id: 3
-    characterName: Wood
-    characterSprite: {fileID: 21300000, guid: cfbca4a8e658f0c4d9ba427043fe12be, type: 3}
+    characterName: Stone
+    characterSprite: {fileID: 21300000, guid: 2de84749d2e6ef04788a8c7ae234e2b2, type: 3}
+    affaction: 0
+    CurrentdialogueNum: 0
+    dialogueLineNum: 0
+    dialogueFiles:
+    - {fileID: 4900000, guid: 0327026da44074046866f9780d59a78c, type: 3}

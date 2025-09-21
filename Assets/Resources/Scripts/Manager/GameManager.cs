@@ -29,7 +29,12 @@ public class GameManager : MonoBehaviour
             Destroy(this.gameObject);
         }
 
-        dialogueFunc.InitMethods();
+        //dialogueFunc.InitMethods();
+        foreach (var obj in GetComponentsInChildren<DataInitializable>())
+        {
+            Debug.Log("데이터 초기화 됨.");
+            obj.InitializeData();
+        }
     }
 
     private void Update()
