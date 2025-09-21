@@ -276,7 +276,7 @@ public class DialogueRunner : MonoBehaviour, DataInitializable
         }
     }
 
-    private void CharacterEmphasis(int id)
+    private void CharacterEmphasis(int id) //화자 캐릭터의 강조. 및 나머지 캐릭터의 색감 죽이기.
     {
         foreach (Transform character in characterParent)
         {
