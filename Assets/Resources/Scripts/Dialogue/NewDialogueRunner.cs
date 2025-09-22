@@ -7,8 +7,9 @@ using KoreanTyper;
 using System.Linq;
 using TMPro;
 using UnityEngine.Playables;
+using Unity.VisualScripting;
 
-public class DialogueRunner : MonoBehaviour, DataInitializable
+public class NewDialogueRunner : MonoBehaviour, DataInitializable
 {
     public enum RunnerState { Normal, Skip, Auto }
 
@@ -37,7 +38,7 @@ public class DialogueRunner : MonoBehaviour, DataInitializable
     [SerializeField] public TextAsset DialogueFile;
 
     [Header("DialogueParse")]
-    [SerializeField] private DialogueParser parser;
+    [SerializeField] private NewDialogueParser parser;
 
     [Header("DialogueMenu")]
     [SerializeField] private bool autoTrigger; //대화가 자동으로 진행될지 체크하는 트리거
@@ -63,9 +64,15 @@ public class DialogueRunner : MonoBehaviour, DataInitializable
     private WaitForSeconds settedWaitDialogueAutoProccess; //스킵 모드가 아닐 때, Dialogue 자동 진행에 쓰는 WaitForSeconds (설정된 텍스트 속도로 지정함.)
     private WaitForSeconds settedWaitDialogueProccessSpeed; //스킵 모드가 아닐 때, Dialogue 텍스트 진행에 쓰는 WaitForSeconds (설정된 텍스트 속도로 지정.)
 
-    private List<DialogueParser.ParsedLine> scriptLine;
+    private List<NewDialogueParser.ParsedLine> scriptLine;
     private int currentLineNum = 0;
     [SerializeField] private bool isWaiting;
+
+    private void Start()
+    {
+        Debug.Log("할렐루야");
+        parser.Parse(DialogueFile.text);
+    }
 
     public void InitializeData()
     {
@@ -187,7 +194,6 @@ public class DialogueRunner : MonoBehaviour, DataInitializable
 
     public void RunDialogue()
     {
-
         Debug.Log(currentLineNum);
         if (DialogueFile != null)
         {
@@ -217,10 +223,10 @@ public class DialogueRunner : MonoBehaviour, DataInitializable
 
         if (isWaiting) return;
 
-        DialogueParser.ParsedLine line = scriptLine[currentLineNum];
+        NewDialogueParser.ParsedLine line = scriptLine[currentLineNum];
         //Debug.Log(line);
 
-        switch (line.Command)
+        switch (line.Action)
         {
             //아래 4가지 케이스는 아무런 행동 없이 다음 줄로 넘김.
             case "Dialogue":
@@ -247,7 +253,7 @@ public class DialogueRunner : MonoBehaviour, DataInitializable
                 break;
 
             case "Func":
-                ExcuteFunc(line.Args);
+                //ExcuteFunc(line.Args);
                 currentLineNum++;
                 ProccessNextLine();
                 break;
@@ -263,15 +269,15 @@ public class DialogueRunner : MonoBehaviour, DataInitializable
                 break;
 
             case "If":
-                CheckingCondition(line.Args);
+                //CheckingCondition(line.Args);
                 break;
 
             default: //위의 모든 명령어가 아닌 경우에는 캐릭터의 대화로 간주. 대화창에 출력 및 게임 매니저 대화 로그 리스트에 저장.
-                if (line.Args[0].Contains("\\n")) line.Args[0] = line.Args[0].Replace("\\n", "\n");
-                CharacterEmphasis(int.Parse(line.Args[1]));
-                SpeakerName.text = line.Command;
-                GameManager.instance.dataManager.dialogueLog.Add(line);
-                StartCoroutine(TypingTxt(line.Args[0]));
+                //if (line.Args[0].Contains("\\n")) line.Args[0] = line.Args[0].Replace("\\n", "\n");
+                //CharacterEmphasis(int.Parse(line.Args[1]));
+                //SpeakerName.text = line.Command;
+                //GameManager.instance.dataManager.dialogueLog.Add(line);
+                //StartCoroutine(TypingTxt(line.Args[0]));
                 break;
         }
     }
@@ -343,13 +349,13 @@ public class DialogueRunner : MonoBehaviour, DataInitializable
             while (scanIndex < scriptLine.Count)
             {
                 var line = scriptLine[scanIndex];
-                if (line.Command == "IfEnd")
-                {
-                    currentLineNum = scanIndex;
-                    ProccessNextLine();
-                    break;
-                }
-                else scanIndex++;
+                //if (line.Command == "IfEnd")
+                //{
+                //    currentLineNum = scanIndex;
+                //    ProccessNextLine();
+                //    break;
+                //}
+                //else scanIndex++;
             }
         }
     }
@@ -371,29 +377,29 @@ public class DialogueRunner : MonoBehaviour, DataInitializable
         {
             var line = scriptLine[scanIndex];
 
-            if (line.Command == "SelectorEnd") break; // 블록 끝이면 스캔 중지
-
-            if (line.Command == ">>")
-            {
-                //Debug.Log("선택지 발견! 버튼 생성!");
-                var buttonObj = Instantiate(ChoiceButtonPrefab, OptionContainer);
-
-                var buttonText = buttonObj.GetComponentInChildren<TextMeshProUGUI>();
-                var button = buttonObj.GetComponent<Button>();
-
-                string optionText = line.Args[0];
-                buttonText.text = optionText;
-
-                int targetLine = scanIndex + 1;
-                button.onClick.AddListener(() => OptionSelected(targetLine, line));
-
-                scanIndex = FindEndOfResultBlock(scanIndex);
-                buttonCount++;
-            }
-            else
-            {
-                scanIndex++;
-            }
+            //if (line.Command == "SelectorEnd") break; // 블록 끝이면 스캔 중지
+            //
+            //if (line.Command == ">>")
+            //{
+            //    //Debug.Log("선택지 발견! 버튼 생성!");
+            //    var buttonObj = Instantiate(ChoiceButtonPrefab, OptionContainer);
+            //
+            //    var buttonText = buttonObj.GetComponentInChildren<TextMeshProUGUI>();
+            //    var button = buttonObj.GetComponent<Button>();
+            //
+            //    string optionText = line.Args[0];
+            //    buttonText.text = optionText;
+            //
+            //    int targetLine = scanIndex + 1;
+            //    button.onClick.AddListener(() => OptionSelected(targetLine, line));
+            //
+            //    scanIndex = FindEndOfResultBlock(scanIndex);
+            //    buttonCount++;
+            //}
+            //else
+            //{
+            //    scanIndex++;
+            //}
         }
     }
 
@@ -401,10 +407,10 @@ public class DialogueRunner : MonoBehaviour, DataInitializable
     {
         for (int i = startIndex + 1; i < scriptLine.Count; i++)
         {
-            if (scriptLine[i].Command == "ResultEnd")
-            {
-                return i + 1;
-            }
+            //if (scriptLine[i].Command == "ResultEnd")
+            //{
+            //    return i + 1;
+            //}
         }
         return scriptLine.Count;
     }
@@ -413,10 +419,10 @@ public class DialogueRunner : MonoBehaviour, DataInitializable
     {
         for (int i = startIndex; i < scriptLine.Count; i++)
         {
-            if (scriptLine[i].Command == command)
-            {
-                return i;
-            }
+            //if (scriptLine[i].Command == command)
+            //{
+            //    return i;
+            //}
         }
         return -1;
     }

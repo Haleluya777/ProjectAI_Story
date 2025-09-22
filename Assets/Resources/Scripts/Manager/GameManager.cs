@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour
         //dialogueFunc.InitMethods();
         foreach (var obj in GetComponentsInChildren<DataInitializable>())
         {
-            Debug.Log("데이터 초기화 됨.");
+            //Debug.Log("데이터 초기화 됨.");
             obj.InitializeData();
         }
     }
