@@ -35,6 +35,7 @@ public class GameManager : MonoBehaviour
             //Debug.Log("데이터 초기화 됨.");
             obj.InitializeData();
         }
+        Debug.Log(dataManager.operandDic["Level"]);
     }
 
     private void Update()

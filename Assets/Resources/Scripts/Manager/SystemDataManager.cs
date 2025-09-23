@@ -12,6 +12,7 @@ public class SystemDataManager : MonoBehaviour, DataInitializable
     [SerializeField] private int maxAP;
     public Dictionary<int, CharacterData> characterDic = new Dictionary<int, CharacterData>();
     public Dictionary<string, object> operandDic = new Dictionary<string, object>();
+    public List<NewDialogueParser.ParsedLine> NewdialogueLog = new List<NewDialogueParser.ParsedLine>();
     public List<DialogueParser.ParsedLine> dialogueLog = new List<DialogueParser.ParsedLine>();
     [SerializeField] public CharacterMap characterMap; //캐릭터 데이터 베이스
 
@@ -25,6 +26,7 @@ public class SystemDataManager : MonoBehaviour, DataInitializable
     {
         currentAP = maxAP;
         currentTurn = 1;
+        operandDic.Add("Level", 8);
     }
 
     void Awake()

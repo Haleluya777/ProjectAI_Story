@@ -1882,9 +1882,9 @@ RectTransform:
   - {fileID: 1389906776}
   m_Father: {fileID: 1331948287}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 75, y: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 150, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &508823456
@@ -2111,7 +2111,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
   m_AnchoredPosition: {x: 25, y: 225}
-  m_SizeDelta: {x: 394.12, y: 100}
+  m_SizeDelta: {x: 0, y: 100}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &556980108
 MonoBehaviour:
@@ -2243,7 +2243,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &577238748
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2601,7 +2601,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &654681675
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4466,9 +4466,9 @@ RectTransform:
   - {fileID: 1839700003}
   m_Father: {fileID: 1331948287}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 240, y: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 150, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1172254940
@@ -4578,7 +4578,7 @@ GameObject:
   - component: {fileID: 1227608860}
   - component: {fileID: 1227608859}
   m_Layer: 5
-  m_Name: GameObject
+  m_Name: ClickRange
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4620,8 +4620,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 786586160}
-          m_TargetAssemblyTypeName: DialogueRunner, Assembly-CSharp
+        - m_Target: {fileID: 1683172625}
+          m_TargetAssemblyTypeName: NewDialogueRunner, Assembly-CSharp
           m_MethodName: ProccessNextLine
           m_Mode: 1
           m_Arguments:
@@ -5612,9 +5612,9 @@ RectTransform:
   - {fileID: 1632558022}
   m_Father: {fileID: 1331948287}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 405, y: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 150, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1307584022
@@ -5749,7 +5749,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
   m_AnchoredPosition: {x: -240, y: 200}
-  m_SizeDelta: {x: 480, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1331948288
 MonoBehaviour:
@@ -6560,7 +6560,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1468492072
 Transform:
   m_ObjectHideFlags: 0
@@ -7720,10 +7720,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 556980107}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 197.06, y: -50}
-  m_SizeDelta: {x: 344.12, y: 100}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1674524198
 MonoBehaviour:
@@ -7840,7 +7840,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1680868254
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7948,24 +7948,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentState: 0
-  Panel: {fileID: 0}
-  SpeakerName: {fileID: 0}
-  DialogueText: {fileID: 0}
+  Panel: {fileID: 1680868253}
+  SpeakerName: {fileID: 1674524198}
+  DialogueText: {fileID: 1129359402}
   NextImg: {fileID: 0}
-  DialoguePanel: {fileID: 0}
-  ChoiceButtonPrefab: {fileID: 0}
-  OptionContainer: {fileID: 0}
-  DialogueLogPanel: {fileID: 0}
-  DialogueLogObj: {fileID: 0}
-  DialogueLogContainer: {fileID: 0}
-  DialogueFile: {fileID: 4900000, guid: 2eba89ae50b466a47833743800fc207e, type: 3}
+  DialoguePanel: {fileID: 1393103089}
+  ChoiceButtonPrefab: {fileID: 3097128848111405434, guid: 45d7ffe4118c9214b9e5cfeaeb8a138e, type: 3}
+  OptionContainer: {fileID: 51291396}
+  DialogueLogPanel: {fileID: 75346933}
+  DialogueLogObj: {fileID: 3672888988007502892, guid: d4ca6be24e7b0a64594b5938559a4e29, type: 3}
+  DialogueLogContainer: {fileID: 347649510}
+  DialogueFile: {fileID: 4900000, guid: ffd9502167099ad47b3228f2b9c35c7b, type: 3}
   parser: {fileID: 992799310}
   autoTrigger: 0
   skipTrigger: 0
   settedDialogueTextSpeed: 0
   settedAutoProccessTime: 0
-  CharacterPrefab: {fileID: 0}
-  characterParent: {fileID: 0}
+  CharacterPrefab: {fileID: 5531511152743457384, guid: 365f3da8ebcddc84fab047515259f7c7, type: 3}
+  characterParent: {fileID: 1662264813}
   isWaiting: 0
 --- !u!4 &1683172626
 Transform:
@@ -8126,7 +8126,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1824871745
 RectTransform:
   m_ObjectHideFlags: 0

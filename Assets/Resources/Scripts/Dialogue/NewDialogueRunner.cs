@@ -70,8 +70,10 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
 
     private void Start()
     {
-        Debug.Log("할렐루야");
         parser.Parse(DialogueFile.text);
+        //임시
+        CharacterInit(3);
+        RunDialogue();
     }
 
     public void InitializeData()
@@ -94,7 +96,6 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
 
     void Update()
     {
-        //Debug.Log(settedDialogueTextSpeed);
         DialogueStateAction();
 
         if (Input.GetKey(KeyCode.LeftControl))
@@ -119,6 +120,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
         }
     }
 
+    //출력 모드에 따른 텍스트 속도 변경.
     private void DialogueStateAction()
     {
         switch (currentState)
@@ -139,12 +141,14 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
         }
     }
 
+    //설정 메뉴에서 변경된 텍스트 속도에 따른 변수 변경.
     public void SettingChangeTextSpeed(float value)
     {
         settedDialogueTextSpeed = value;
         settedWaitDialogueProccessSpeed = new WaitForSeconds(settedDialogueTextSpeed);
     }
 
+    //설정 메뉴에서 변경된 자동 대화 진행 속도에 따른 변수 변경.
     public void SettingAutoNextLineSpeed(float value)
     {
         settedAutoProccessTime = value;
@@ -228,58 +232,93 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
 
         switch (line.Action)
         {
-            //아래 4가지 케이스는 아무런 행동 없이 다음 줄로 넘김.
-            case "Dialogue":
-            case "DialogueEnd":
-            case "Result":
-            case "IfEnd":
-            case "SelectorEnd":
-                currentLineNum++;
-                ProccessNextLine();
-                break;
-
-            case "ResultEnd":
-                int selectorEndIndex = FindNextCommand("SelectorEnd", currentLineNum);
-                if (selectorEndIndex != -1)
-                {
-                    currentLineNum = selectorEndIndex + 1; // SelectorEnd 다음 줄로 점프
-                }
-                else
-                {
-                    Debug.LogWarning("SelectorEnd not found after ResultEnd!");
-                    currentLineNum++; // 못 찾으면 그냥 다음 줄로
-                }
-                ProccessNextLine();
-                break;
-
-            case "Func":
-                //ExcuteFunc(line.Args);
-                currentLineNum++;
-                ProccessNextLine();
-                break;
-
-            case "Selector":
-                currentLineNum++; // Selector 명령어 다음 줄부터 스캔 시작
-                HandleChoices();
-                return;
-
-            case ">>": // Selector 블록 밖의 >>는 무시하거나 에러 처리 가능
-                currentLineNum++;
-                ProccessNextLine();
+            case "T": //액션 노드가 T일 경우, 대사를 출력.
+                if (line.Detail.result.Contains("\\n")) line.Detail.result = line.Detail.result.Replace("\\n", "\n"); //대사에 \n이 포함되어 있을 경우, 줄바꿈 처리.
+                Debug.Log(int.Parse(line.Actor.Split('_')[0]));
+                SpeakerName.text = line.Actor.Split('_')[1]; //화자 이름 설정.
+                CharacterEmphasis(int.Parse(line.Actor.Split('_')[0])); //화자 캐릭터 강조.
+                StartCoroutine(TypingTxt(line.Detail.result)); //대사 출력.
+                GameManager.instance.dataManager.NewdialogueLog.Add(line); //대화 로그에 저장.
                 break;
 
             case "If":
-                //CheckingCondition(line.Args);
+                CheckingCondition(line.Detail.condition.Split('|'), line.Detail.result.Split('|'));
                 break;
 
-            default: //위의 모든 명령어가 아닌 경우에는 캐릭터의 대화로 간주. 대화창에 출력 및 게임 매니저 대화 로그 리스트에 저장.
-                //if (line.Args[0].Contains("\\n")) line.Args[0] = line.Args[0].Replace("\\n", "\n");
-                //CharacterEmphasis(int.Parse(line.Args[1]));
-                //SpeakerName.text = line.Command;
-                //GameManager.instance.dataManager.dialogueLog.Add(line);
-                //StartCoroutine(TypingTxt(line.Args[0]));
+            case "F":
+                CheckingFlag(line.Detail.condition, line.Detail.result.Split('|'));
                 break;
+
+            case "S":
+                HandleChoices();
+                break;
+
+            default:
+                Debug.LogWarning($"알 수 없는 액션: {line.Action} (라인 {currentLineNum})");
+                currentLineNum++;
+                ProccessNextLine();
+                return;
         }
+
+        //switch (line.Action)
+        //{
+        //    //아래 4가지 케이스는 아무런 행동 없이 다음 줄로 넘김.
+        //    case "Dialogue":
+        //    case "DialogueEnd":
+        //    case "Result":
+        //    case "IfEnd":
+        //    case "SelectorEnd":
+        //        currentLineNum++;
+        //        ProccessNextLine();
+        //        break;
+        //
+        //    case "ResultEnd":
+        //        int selectorEndIndex = FindNextCommand("SelectorEnd", currentLineNum);
+        //        if (selectorEndIndex != -1)
+        //        {
+        //            currentLineNum = selectorEndIndex + 1; // SelectorEnd 다음 줄로 점프
+        //        }
+        //        else
+        //        {
+        //            Debug.LogWarning("SelectorEnd not found after ResultEnd!");
+        //            currentLineNum++; // 못 찾으면 그냥 다음 줄로
+        //        }
+        //        ProccessNextLine();
+        //        break;
+        //
+        //    case "Func":
+        //        //ExcuteFunc(line.Args);
+        //        currentLineNum++;
+        //        ProccessNextLine();
+        //        break;
+        //
+        //    case "Selector":
+        //        currentLineNum++; // Selector 명령어 다음 줄부터 스캔 시작
+        //        HandleChoices();
+        //        return;
+        //
+        //    case ">>": // Selector 블록 밖의 >>는 무시하거나 에러 처리 가능
+        //        currentLineNum++;
+        //        ProccessNextLine();
+        //        break;
+        //
+        //    case "If":
+        //        //CheckingCondition(line.Args);
+        //        break;
+        //
+        //    default: //위의 모든 명령어가 아닌 경우에는 캐릭터의 대화로 간주. 대화창에 출력 및 게임 매니저 대화 로그 리스트에 저장.
+        //        //if (line.Args[0].Contains("\\n")) line.Args[0] = line.Args[0].Replace("\\n", "\n");
+        //        //CharacterEmphasis(int.Parse(line.Args[1]));
+        //        //SpeakerName.text = line.Command;
+        //        //GameManager.instance.dataManager.dialogueLog.Add(line);
+        //        //StartCoroutine(TypingTxt(line.Args[0]));
+        //        break;
+        //}
+    }
+
+    private void RunningDialogue()
+    {
+
     }
 
     private void CharacterEmphasis(int id) //화자 캐릭터의 강조. 및 나머지 캐릭터의 색감 죽이기.
@@ -291,22 +330,23 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
         characters[id].GetComponent<Image>().color = new Color32(255, 255, 255, 255);
     }
 
-    private void CheckingCondition(string[] args)
+    private void CheckingFlag(string condition, string[] results) //플래그 설정 및 해제.
     {
-        Debug.Log(args.Length);
-        if (GameManager.instance.dataManager.operandDic[args[0]] == null) return;
-        var leftOperand = GameManager.instance.dataManager.operandDic[args[0]];
-        var Operator = args[1];
-        bool condition = false;
+        //string[] flags = condition.Split()
+    }
 
-        object rightOperand = (args[3]) switch
+    private void CheckingCondition(string[] args, string[] results) //조건 검사 및 참/거짓에 따른 분기 처리.
+    {
+        for (int i = 0; i < args.Length; i++)
         {
-            "Int" => int.Parse(args[2]),
-            "Float" => float.Parse(args[2]),
-            "Boolean" => bool.Parse(args[2]),
-            "String" => args[2].ToString(),
-            _ => null
-        };
+            args[i] = args[i].Trim();
+        }
+        Debug.Log($"{args[0]}, {args[1]}, {args[2]}");
+        if (GameManager.instance.dataManager.operandDic[args[0]] == null) return;
+        var leftOperand = GameManager.instance.dataManager.operandDic[args[0]]; //좌측 피 연산자 (데이터 매니저에서 가져옴.)
+        var Operator = args[1]; //연산자
+        var rightOperand = int.Parse(args[2]); //우측 피 연산자 (int값만 받음.)
+        bool condition = false;
 
         Debug.Log($"{leftOperand} {Operator} {rightOperand}");
 
@@ -339,24 +379,16 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
 
         if (condition)
         {
-            currentLineNum++;
+            Debug.Log("조건 충족");
+            currentLineNum += int.Parse(results[0].Trim()) + 1; //조건이 참일 경우, result값(점프할 라인 수)만큼 건너뛰고 다음 줄부터 실행.
             ProccessNextLine();
         }
 
         else
         {
-            int scanIndex = currentLineNum;
-            while (scanIndex < scriptLine.Count)
-            {
-                var line = scriptLine[scanIndex];
-                //if (line.Command == "IfEnd")
-                //{
-                //    currentLineNum = scanIndex;
-                //    ProccessNextLine();
-                //    break;
-                //}
-                //else scanIndex++;
-            }
+            Debug.Log("조건 불충족");
+            currentLineNum += int.Parse(results[1].Trim()) + 1; //조건이 거짓일 경우, result값(점프할 라인 수)만큼 건너뛰고 다음 줄부터 실행. 
+            ProccessNextLine();
         }
     }
 
@@ -427,9 +459,9 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
         return -1;
     }
 
-    private void OptionSelected(int lineIndex, DialogueParser.ParsedLine line)
+    private void OptionSelected(int lineIndex, NewDialogueParser.ParsedLine line)
     {
-        GameManager.instance.dataManager.dialogueLog.Add(line);
+        GameManager.instance.dataManager.NewdialogueLog.Add(line);
         isWaiting = false;
         //ChoiceOptionPanel.SetActive(false);
         DialoguePanel.SetActive(true);
@@ -471,7 +503,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
     //버튼에 할당할 이벤트 집합
     public void GetDialogueLogs() //GameManager에 저장된 이전까지의 대화 로그.
     {
-        List<DialogueParser.ParsedLine> logs = GameManager.instance.dataManager.dialogueLog;
+        List<NewDialogueParser.ParsedLine> logs = GameManager.instance.dataManager.NewdialogueLog;
         DialogueLogPanel.SetActive(true);
 
         foreach (Transform child in DialogueLogContainer)
@@ -479,15 +511,15 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
             Destroy(child.gameObject);
         }
 
-        foreach (DialogueParser.ParsedLine log in logs)
+        foreach (NewDialogueParser.ParsedLine log in logs)
         {
             //대화 로그 오브젝트를 생성하는 명령어. 추후 오브젝트 풀링으로 변경 예정.
             var logObj = Instantiate(DialogueLogObj, DialogueLogContainer);
             var speakerLogText = logObj.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
             var dialogueLogText = logObj.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
 
-            speakerLogText.text = log.Command;
-            dialogueLogText.text = log.Args[0];
+            speakerLogText.text = log.Actor.Split('_')[1];
+            dialogueLogText.text = log.Detail.result;
         }
     }
 
