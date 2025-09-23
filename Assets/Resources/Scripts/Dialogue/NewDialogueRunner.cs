@@ -8,6 +8,7 @@ using System.Linq;
 using TMPro;
 using UnityEngine.Playables;
 using Unity.VisualScripting;
+using System.Text;
 
 public class NewDialogueRunner : MonoBehaviour, DataInitializable
 {
@@ -241,16 +242,16 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
                 GameManager.instance.dataManager.NewdialogueLog.Add(line); //대화 로그에 저장.
                 break;
 
-            case "If":
+            case "If": //액션 노드가 If일 경우, 조건 체크 및 조건에 부합한지 부합하지 않은지 체크한 후, 줄 이동.
                 CheckingCondition(line.Detail.condition.Split('|'), line.Detail.result.Split('|'));
                 break;
 
-            case "F":
+            case "F": //분기점 체크. 개발 보류.
                 CheckingFlag(line.Detail.condition, line.Detail.result.Split('|'));
                 break;
 
-            case "S":
-                HandleChoices();
+            case "S": //액션 노드가 S일 경우, 선택지를 제시한 후, 고른 선택지에 따라 줄 이동.
+                HandleChoices(line.Detail.condition.Split('|'), line.Detail.result.Split('|'), line);
                 break;
 
             default:
@@ -330,9 +331,28 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
         characters[id].GetComponent<Image>().color = new Color32(255, 255, 255, 255);
     }
 
-    private void CheckingFlag(string condition, string[] results) //플래그 설정 및 해제.
+    private void CheckingFlag(string condition, string[] results) //분기점 플래그 체크.
     {
-        //string[] flags = condition.Split()
+        StringBuilder letter = new StringBuilder();
+        StringBuilder digit = new StringBuilder();
+        condition = condition.Trim();
+
+        while (true)
+        {
+            if (condition.Contains("||")) //여러 개의 플래그가 ||로 제어될 때.
+            {
+                Debug.Log("Or연산자 사용.");
+            }
+            else if (condition.Contains("&&")) //여러 개의 플래그가 &&로 묶일 때.
+            {
+                Debug.Log("And연산자 사용.");
+            }
+            else //플래그가 하나 뿐일 때.
+            {
+
+            }
+        }
+
     }
 
     private void CheckingCondition(string[] args, string[] results) //조건 검사 및 참/거짓에 따른 분기 처리.
@@ -392,71 +412,33 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
         }
     }
 
-    private void HandleChoices()
+    private void HandleChoices(string[] selectors, string[] results, NewDialogueParser.ParsedLine line)
     {
+        for (int i = 0; i < selectors.Length; i++)
+        {
+            selectors[i] = selectors[i].Trim();
+            results[i] = results[i].Trim();
+        }
+
         isWaiting = true;
         //ChoiceOptionPanel.SetActive(true);
         DialoguePanel.SetActive(false);
-        int buttonCount = 0;
 
-        foreach (Transform child in OptionContainer)
+        //foreach (Transform child in OptionContainer)
+        //{
+        //    Destroy(child.gameObject);
+        //}
+
+        for (int i = 0; i < selectors.Length; i++)
         {
-            Destroy(child.gameObject);
-        }
+            var buttonObj = Instantiate(ChoiceButtonPrefab, OptionContainer);
 
-        int scanIndex = currentLineNum;
-        while (scanIndex < scriptLine.Count)
-        {
-            var line = scriptLine[scanIndex];
+            var buttonText = buttonObj.GetComponentInChildren<TextMeshProUGUI>();
+            var button = buttonObj.GetComponent<Button>();
 
-            //if (line.Command == "SelectorEnd") break; // 블록 끝이면 스캔 중지
-            //
-            //if (line.Command == ">>")
-            //{
-            //    //Debug.Log("선택지 발견! 버튼 생성!");
-            //    var buttonObj = Instantiate(ChoiceButtonPrefab, OptionContainer);
-            //
-            //    var buttonText = buttonObj.GetComponentInChildren<TextMeshProUGUI>();
-            //    var button = buttonObj.GetComponent<Button>();
-            //
-            //    string optionText = line.Args[0];
-            //    buttonText.text = optionText;
-            //
-            //    int targetLine = scanIndex + 1;
-            //    button.onClick.AddListener(() => OptionSelected(targetLine, line));
-            //
-            //    scanIndex = FindEndOfResultBlock(scanIndex);
-            //    buttonCount++;
-            //}
-            //else
-            //{
-            //    scanIndex++;
-            //}
+            buttonText.text = selectors[i];
+            button.onClick.AddListener(() => OptionSelected(int.Parse(results[i]), line));
         }
-    }
-
-    private int FindEndOfResultBlock(int startIndex)
-    {
-        for (int i = startIndex + 1; i < scriptLine.Count; i++)
-        {
-            //if (scriptLine[i].Command == "ResultEnd")
-            //{
-            //    return i + 1;
-            //}
-        }
-        return scriptLine.Count;
-    }
-
-    private int FindNextCommand(string command, int startIndex)
-    {
-        for (int i = startIndex; i < scriptLine.Count; i++)
-        {
-            //if (scriptLine[i].Command == command)
-            //{
-            //    return i;
-            //}
-        }
-        return -1;
     }
 
     private void OptionSelected(int lineIndex, NewDialogueParser.ParsedLine line)
@@ -465,14 +447,14 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
         isWaiting = false;
         //ChoiceOptionPanel.SetActive(false);
         DialoguePanel.SetActive(true);
-        currentLineNum = lineIndex;
+        //currentLineNum = lineIndex;
 
         foreach (Transform child in OptionContainer)
         {
             Destroy(child.gameObject);
         }
 
-        currentLineNum++;
+        currentLineNum += lineIndex + 1;
         ProccessNextLine();
     }
 
