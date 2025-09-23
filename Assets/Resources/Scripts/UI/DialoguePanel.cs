@@ -6,6 +6,7 @@ using DG.Tweening;
 public class DialoguePanel : MonoBehaviour
 {
     [SerializeField] private Transform menuParent; //Dialogue 씬의 메뉴 버튼들을 총괄하는 오브젝트.
+    public GameObject backGround;
     private List<RectTransform> menuChildsPos = new List<RectTransform>();
     private bool menuClosed;
     //Dialogue Panel 하위의 UI 버튼 이벤트들 중, Dialogue Runner 스크립트와의 상호작용이 없는 버튼들의 이벤트를 담당.

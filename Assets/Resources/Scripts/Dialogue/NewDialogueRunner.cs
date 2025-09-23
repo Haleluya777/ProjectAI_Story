@@ -260,6 +260,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
                 ProccessNextLine();
                 return;
         }
+        RunningOtherNode(line);
 
         //switch (line.Action)
         //{
@@ -321,6 +322,62 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
     {
 
     }
+
+    private void RunningOtherNode(NewDialogueParser.ParsedLine line)
+    {
+        if (line.BG != "") ChangeBG(line.BG);
+        if (line.Production != "") RunningProduction(line.Production);
+        if (line.Face != "") ChangeFace(line.Face);
+        if (line.Actor != "") RunningActor(line.Actor);
+        if (line.BGM != "") ChangeBGM(line.BGM);
+        if (line.Affection != "") AffectionChange(line.Affection);
+    }
+
+    //===============8개의 노드 중 6개의 노드 진행======================
+
+    private void ChangeBG(string bgNode)
+    {
+        string[] nodeSplit = bgNode.Split('_');
+        int bgNum = int.Parse(nodeSplit[1]);
+
+        //DialoguePanel클래스의 backGround오브젝트의 이미지를 DataSystemManager에서 가져온 스프라이트 값으로 변경.
+
+        //
+    }
+
+    private void RunningProduction(string production)
+    {
+
+    }
+
+    private void ChangeFace(string face)
+    {
+
+    }
+
+    private void RunningActor(string actor)
+    {
+        string[] nodeSplit = actor.Split('_');
+        string charName = nodeSplit[0];
+        string charImgNum = nodeSplit[1];
+
+        //GameManager.instance.uiManager.dialogueUIManager.runningCharacter[actor]
+    }
+
+    private void ChangeBGM(string bgm)
+    {
+        string[] nodeSplit = bgm.Split('_');
+        int bgmNum = int.Parse(nodeSplit[1]);
+
+        //GameManager.instance.
+    }
+
+    private void AffectionChange(string affection)
+    {
+
+    }
+
+    //===============================================================
 
     private void CharacterEmphasis(int id) //화자 캐릭터의 강조. 및 나머지 캐릭터의 색감 죽이기.
     {

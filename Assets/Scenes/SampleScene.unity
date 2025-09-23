@@ -2260,6 +2260,7 @@ MonoBehaviour:
   dialogueRunner: {fileID: 786586160}
   timeLineManager: {fileID: 187570194}
   dataManager: {fileID: 590390356}
+  uiManager: {fileID: 654681679}
 --- !u!4 &577238749
 Transform:
   m_ObjectHideFlags: 0
@@ -2595,6 +2596,7 @@ GameObject:
   - component: {fileID: 654681677}
   - component: {fileID: 654681676}
   - component: {fileID: 654681675}
+  - component: {fileID: 654681679}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -2687,6 +2689,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &654681679
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 654681674}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d36d99e3071137f4c925ecd92c1423e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dialogueUIManager: {fileID: 1680868257}
+  lobbyUIManager: {fileID: 1824871748}
 --- !u!1 &665705958
 GameObject:
   m_ObjectHideFlags: 0
@@ -7918,6 +7934,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   menuParent: {fileID: 2134309071}
+  backGround: {fileID: 1573037799}
 --- !u!1 &1683172624
 GameObject:
   m_ObjectHideFlags: 0

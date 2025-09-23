@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
     public DialogueRunner dialogueRunner;
     public TimeLineManager timeLineManager;
     public SystemDataManager dataManager;
+    public UIManager uiManager;
 
     private void Awake()
     {
