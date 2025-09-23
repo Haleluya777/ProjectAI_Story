@@ -1,13 +1,14 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using AYellowpaper.SerializedCollections;
 
 [System.Serializable]
 public class CharacterData
 {
     public int id;
     public string characterName; //캐릭터 이름
-    public Sprite characterSprite; //캐릭터 스프라이트
+                                 //public Dictionary<string, Sprite> characterSprite = new Dictionary<string, Sprite>(); //캐릭터 스프라이트
+    public SerializedDictionary characterSpriteMap; //캐릭터 스프라이트
     public int affaction; //캐릭터 호감도
     public int CurrentdialogueNum; //현재 대화 진행도
     public int dialogueLineNum; //현재 대화 진행도 내의 대사 진행도

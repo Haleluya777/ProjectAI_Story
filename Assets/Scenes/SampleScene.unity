@@ -2464,6 +2464,7 @@ MonoBehaviour:
   currentTurn: 0
   maxAP: 3
   characterMap: {fileID: 11400000, guid: ea0782da381a690458d3e0c0817ec866, type: 2}
+  backgroundMap: {fileID: 11400000, guid: d89ec18d70fd9324c81900f73878346a, type: 2}
 --- !u!1 &631687458
 GameObject:
   m_ObjectHideFlags: 0
@@ -7933,8 +7934,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30b201f3893bc844fb56b0f77f20fee1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  backGround: {fileID: 1573037801}
   menuParent: {fileID: 2134309071}
-  backGround: {fileID: 1573037799}
 --- !u!1 &1683172624
 GameObject:
   m_ObjectHideFlags: 0

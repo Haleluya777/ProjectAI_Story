@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using AYellowpaper.SerializedCollections;
 using UnityEngine;
 
 public class SystemDataManager : MonoBehaviour, DataInitializable
@@ -10,28 +11,29 @@ public class SystemDataManager : MonoBehaviour, DataInitializable
     public int currentAP;
     public int currentTurn;
     [SerializeField] private int maxAP;
-    public Dictionary<int, CharacterData> characterDic = new Dictionary<int, CharacterData>();
-    public Dictionary<string, object> operandDic = new Dictionary<string, object>();
-    public List<NewDialogueParser.ParsedLine> NewdialogueLog = new List<NewDialogueParser.ParsedLine>();
-    public List<DialogueParser.ParsedLine> dialogueLog = new List<DialogueParser.ParsedLine>();
     [SerializeField] public CharacterMap characterMap; //캐릭터 데이터 베이스
+    public Dictionary<int, Data> runningCharacters = new Dictionary<int, Data>(); //현재 대화에 참여중인 캐릭터들만
+    public SerializedDic_BG backgroundMap; //배경 이미지 데이터 베이스
+    public Dictionary<string, object> operandDic = new Dictionary<string, object>(); //조건 체크할 때 쓰는 피연산자.
+    public List<NewDialogueParser.ParsedLine> NewdialogueLog = new List<NewDialogueParser.ParsedLine>(); //지나간 대화 로그.
+    public List<DialogueParser.ParsedLine> dialogueLog = new List<DialogueParser.ParsedLine>();
 
-    public struct CharacterData
+    public struct Data
     {
-        public string name;
-        public int affection;
+        public GameObject obj;
+        public CharacterData characterData;
     }
 
     public void InitializeData()
     {
         currentAP = maxAP;
         currentTurn = 1;
-        operandDic.Add("Level", 8);
+        operandDic.Add("Level", 2);
     }
 
     void Awake()
     {
-        characterDic.Add(1, new CharacterData { name = "Fire", affection = 0 });
+        //characterDic.Add(1, new CharacterData { name = "Fire", affection = 0 });
     }
 
     public void AddTurn()

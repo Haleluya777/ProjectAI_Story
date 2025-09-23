@@ -27,7 +27,7 @@ public class LobbyPanel : MonoBehaviour
             Debug.Log(dialogueFile.name);
             var characterButton = Instantiate(characterButtonPrefab, characterButtonParent);
             characterButton.GetComponent<Button>().onClick.AddListener(() => StartDialogue(dialogueFile, characterDialogueNum));
-            characterButton.transform.GetChild(0).GetComponent<Image>().sprite = GameManager.instance.dataManager.characterMap.GetCharacter(i).characterSprite;
+            characterButton.transform.GetChild(0).GetComponent<Image>().sprite = GameManager.instance.dataManager.characterMap.GetCharacter(i).characterSpriteMap.sprites["Default"];
         }
     }
 

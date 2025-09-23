@@ -158,7 +158,7 @@ public class DialogueRunner : MonoBehaviour, DataInitializable
                 GameObject character = Instantiate(CharacterPrefab, characterParent);
                 CharacterData data = GameManager.instance.dataManager.characterMap.GetCharacter(i);
 
-                character.GetComponent<Image>().sprite = data.characterSprite;
+                character.GetComponent<Image>().sprite = data.characterSpriteMap.sprites["Default"]; //기본 표정으로 초기화.
                 character.name = data.characterName;
 
                 //character.SetActive(false);

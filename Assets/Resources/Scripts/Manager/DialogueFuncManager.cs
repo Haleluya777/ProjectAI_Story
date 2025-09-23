@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using DG.Tweening;
+using Microsoft.Unity.VisualStudio.Editor;
 
 public class DialogueFuncManager : MonoBehaviour, DataInitializable
 {
     public Dictionary<string, Action> noParamMethod = new Dictionary<string, Action>();
     public Dictionary<string, Action<object[]>> multiParamMethod = new Dictionary<string, Action<object[]>>();
+
 
     public void InitializeData()
     {
@@ -21,7 +23,6 @@ public class DialogueFuncManager : MonoBehaviour, DataInitializable
         multiParamMethod.Add("TimeLineRun", (param) => TimeLineStart(int.Parse((string)param[0])));
         multiParamMethod.Add("CharacterInit", (param) => CharacterInit(int.Parse((string)param[0])));
         multiParamMethod.Add("TimeLineInsert", (param) => TimeLineInsert(int.Parse((string)param[0])));
-        multiParamMethod.Add("CharacterTurn", (param) => CharacterTurn(int.Parse((string)param[0]), param[1].ToString(), float.Parse((string)param[2])));
     }
 
     public void TimeLineInsert(int characterId)
@@ -60,10 +61,37 @@ public class DialogueFuncManager : MonoBehaviour, DataInitializable
         Debug.Log($"이름은 {name}, 나이는 {age}세다.");
     }
 
-    public void CharacterTurn(int characterId, string dir, float duration)
+
+    //===============8개의 노드 중 6개의 노드 진행======================
+    public void ChangeBG(string bgNode)
     {
-        int direction = dir == "Left" ? 0 : dir == "Right" ? 180 : 0;
-        var characterTransform = GameManager.instance.dialogueRunner.characters[characterId].GetComponent<RectTransform>();
-        characterTransform.DORotate(new Vector3(0, direction, 0), duration);
+        string[] nodeSplit = bgNode.Split('_');
+        int bgNum = int.Parse(nodeSplit[1]);
+
+        //DialoguePanel클래스의 backGround오브젝트의 이미지를 DataSystemManager에서 가져온 스프라이트 값으로 변경.
+        GameManager.instance.uiManager.dialogueUIManager.backGround.sprite = GameManager.instance.dataManager.backgroundMap.bgMap[bgNum];
+        //
     }
+
+    public void RunningProduction(string production)
+    {
+
+    }
+
+    public void ChangeBGM(string bgm)
+    {
+        string[] nodeSplit = bgm.Split('_');
+        int bgmNum = int.Parse(nodeSplit[1]);
+
+        //GameManager.instance.
+    }
+
+    public void AffectionChange(string affection, string actor)
+    {
+        int actorId = int.Parse(actor.Split('_')[0]);
+        int value = int.Parse(affection);
+        GameManager.instance.dataManager.runningCharacters[actorId].characterData.affaction += value;
+        Debug.Log($"{GameManager.instance.dataManager.runningCharacters[actorId].characterData.characterName}의 호감도가 {value}만큼 변동되었습니다. 현재 호감도 : {GameManager.instance.dataManager.runningCharacters[actorId].characterData.affaction}");
+    }
+    //===============================================================
 }

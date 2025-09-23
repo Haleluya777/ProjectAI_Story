@@ -170,12 +170,12 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
                 GameObject character = Instantiate(CharacterPrefab, characterParent);
                 CharacterData data = GameManager.instance.dataManager.characterMap.GetCharacter(i);
 
-                character.GetComponent<Image>().sprite = data.characterSprite;
+                character.GetComponent<Image>().sprite = data.characterSpriteMap.sprites["Default"]; //기본 표정으로 초기화.
                 character.name = data.characterName;
 
                 //character.SetActive(false);
-                character.GetComponent<RectTransform>().anchoredPosition = new Vector3(0, -150, 0);
-                characters.Add(data.id, character);
+                character.GetComponent<RectTransform>().anchoredPosition = new Vector3(0, -150, 0); //y값 초기화.
+                GameManager.instance.dataManager.runningCharacters.Add(data.id, new SystemDataManager.Data { obj = character, characterData = data });
             }
         }
     }
@@ -211,7 +211,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
 
     public void EndDialogue()
     {
-        characters.Clear();
+        GameManager.instance.dataManager.runningCharacters.Clear();
         currentLineNum = 0;
         currentState = RunnerState.Normal;
         GameManager.instance.dataManager.dialogueLog.Clear();
@@ -237,7 +237,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
                 if (line.Detail.result.Contains("\\n")) line.Detail.result = line.Detail.result.Replace("\\n", "\n"); //대사에 \n이 포함되어 있을 경우, 줄바꿈 처리.
                 Debug.Log(int.Parse(line.Actor.Split('_')[0]));
                 SpeakerName.text = line.Actor.Split('_')[1]; //화자 이름 설정.
-                CharacterEmphasis(int.Parse(line.Actor.Split('_')[0])); //화자 캐릭터 강조.
+                CharacterEmphasis(int.Parse(line.Actor.Split('_')[0]), line.Face); //화자 캐릭터 강조.
                 StartCoroutine(TypingTxt(line.Detail.result)); //대사 출력.
                 GameManager.instance.dataManager.NewdialogueLog.Add(line); //대화 로그에 저장.
                 break;
@@ -247,7 +247,9 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
                 break;
 
             case "F": //분기점 체크. 개발 보류.
-                CheckingFlag(line.Detail.condition, line.Detail.result.Split('|'));
+                //CheckingFlag(line.Detail.condition, line.Detail.result.Split('|'));
+                currentLineNum++;
+                ProccessNextLine();
                 break;
 
             case "S": //액션 노드가 S일 경우, 선택지를 제시한 후, 고른 선택지에 따라 줄 이동.
@@ -261,61 +263,6 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
                 return;
         }
         RunningOtherNode(line);
-
-        //switch (line.Action)
-        //{
-        //    //아래 4가지 케이스는 아무런 행동 없이 다음 줄로 넘김.
-        //    case "Dialogue":
-        //    case "DialogueEnd":
-        //    case "Result":
-        //    case "IfEnd":
-        //    case "SelectorEnd":
-        //        currentLineNum++;
-        //        ProccessNextLine();
-        //        break;
-        //
-        //    case "ResultEnd":
-        //        int selectorEndIndex = FindNextCommand("SelectorEnd", currentLineNum);
-        //        if (selectorEndIndex != -1)
-        //        {
-        //            currentLineNum = selectorEndIndex + 1; // SelectorEnd 다음 줄로 점프
-        //        }
-        //        else
-        //        {
-        //            Debug.LogWarning("SelectorEnd not found after ResultEnd!");
-        //            currentLineNum++; // 못 찾으면 그냥 다음 줄로
-        //        }
-        //        ProccessNextLine();
-        //        break;
-        //
-        //    case "Func":
-        //        //ExcuteFunc(line.Args);
-        //        currentLineNum++;
-        //        ProccessNextLine();
-        //        break;
-        //
-        //    case "Selector":
-        //        currentLineNum++; // Selector 명령어 다음 줄부터 스캔 시작
-        //        HandleChoices();
-        //        return;
-        //
-        //    case ">>": // Selector 블록 밖의 >>는 무시하거나 에러 처리 가능
-        //        currentLineNum++;
-        //        ProccessNextLine();
-        //        break;
-        //
-        //    case "If":
-        //        //CheckingCondition(line.Args);
-        //        break;
-        //
-        //    default: //위의 모든 명령어가 아닌 경우에는 캐릭터의 대화로 간주. 대화창에 출력 및 게임 매니저 대화 로그 리스트에 저장.
-        //        //if (line.Args[0].Contains("\\n")) line.Args[0] = line.Args[0].Replace("\\n", "\n");
-        //        //CharacterEmphasis(int.Parse(line.Args[1]));
-        //        //SpeakerName.text = line.Command;
-        //        //GameManager.instance.dataManager.dialogueLog.Add(line);
-        //        //StartCoroutine(TypingTxt(line.Args[0]));
-        //        break;
-        //}
     }
 
     private void RunningDialogue()
@@ -325,67 +272,23 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
 
     private void RunningOtherNode(NewDialogueParser.ParsedLine line)
     {
-        if (line.BG != "") ChangeBG(line.BG);
-        if (line.Production != "") RunningProduction(line.Production);
-        if (line.Face != "") ChangeFace(line.Face);
-        if (line.Actor != "") RunningActor(line.Actor);
-        if (line.BGM != "") ChangeBGM(line.BGM);
-        if (line.Affection != "") AffectionChange(line.Affection);
+        if (line.BG != "") GameManager.instance.dialogueFunc.ChangeBG(line.BG);
+        if (line.Production != "") GameManager.instance.dialogueFunc.RunningProduction(line.Production);
+        //if (line.Face != "") GameManager.instance.dialogueFunc.ChangeFace(line.Face);
+        //if (line.Actor != "") GameManager.instance.dialogueFunc.RunningActor(line.Actor);
+        if (line.BGM != "") GameManager.instance.dialogueFunc.ChangeBGM(line.BGM);
+        if (line.Affection != "") GameManager.instance.dialogueFunc.AffectionChange(line.Affection, line.Actor);
     }
 
-    //===============8개의 노드 중 6개의 노드 진행======================
-
-    private void ChangeBG(string bgNode)
-    {
-        string[] nodeSplit = bgNode.Split('_');
-        int bgNum = int.Parse(nodeSplit[1]);
-
-        //DialoguePanel클래스의 backGround오브젝트의 이미지를 DataSystemManager에서 가져온 스프라이트 값으로 변경.
-
-        //
-    }
-
-    private void RunningProduction(string production)
-    {
-
-    }
-
-    private void ChangeFace(string face)
-    {
-
-    }
-
-    private void RunningActor(string actor)
-    {
-        string[] nodeSplit = actor.Split('_');
-        string charName = nodeSplit[0];
-        string charImgNum = nodeSplit[1];
-
-        //GameManager.instance.uiManager.dialogueUIManager.runningCharacter[actor]
-    }
-
-    private void ChangeBGM(string bgm)
-    {
-        string[] nodeSplit = bgm.Split('_');
-        int bgmNum = int.Parse(nodeSplit[1]);
-
-        //GameManager.instance.
-    }
-
-    private void AffectionChange(string affection)
-    {
-
-    }
-
-    //===============================================================
-
-    private void CharacterEmphasis(int id) //화자 캐릭터의 강조. 및 나머지 캐릭터의 색감 죽이기.
+    private void CharacterEmphasis(int id, string emotion) //화자 캐릭터의 강조 및 해당 캐릭터 스프라이트 변경(필요시).
     {
         foreach (Transform character in characterParent)
         {
             character.GetComponent<Image>().color = new Color32(140, 140, 140, 255);
         }
-        characters[id].GetComponent<Image>().color = new Color32(255, 255, 255, 255);
+        var emphasisChar = GameManager.instance.dataManager.runningCharacters[id].obj.GetComponent<Image>();
+        emphasisChar.color = new Color32(255, 255, 255, 255);
+        emphasisChar.sprite = GameManager.instance.dataManager.runningCharacters[id].characterData.characterSpriteMap.sprites[emotion];
     }
 
     private void CheckingFlag(string condition, string[] results) //분기점 플래그 체크.
@@ -492,9 +395,10 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
 
             var buttonText = buttonObj.GetComponentInChildren<TextMeshProUGUI>();
             var button = buttonObj.GetComponent<Button>();
+            int index = i;
 
             buttonText.text = selectors[i];
-            button.onClick.AddListener(() => OptionSelected(int.Parse(results[i]), line));
+            button.onClick.AddListener(() => OptionSelected(int.Parse(results[index]), line));
         }
     }
 
@@ -515,7 +419,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
         ProccessNextLine();
     }
 
-    public void ExcuteFunc(string[] args)
+    public void ExcuteFunc(string[] args) //DialogueFuncManager의 메서드 실행.
     {
         if (args.Length < 1) return;
         string methodName = args[0];

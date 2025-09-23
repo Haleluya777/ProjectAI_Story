@@ -15,16 +15,16 @@ MonoBehaviour:
   characters:
   - id: 1
     characterName: Fire
-    characterSprite: {fileID: 21300000, guid: 99f17ed7db6072241bfac90e489e4b26, type: 3}
-    affaction: 0
+    characterSpriteMap: {fileID: 11400000, guid: 8a9fe86d9b73f73419ebd880a5008e83, type: 2}
+    affaction: 1
     CurrentdialogueNum: 0
     dialogueLineNum: 0
     dialogueFiles:
     - {fileID: 4900000, guid: 70bc5b8298d7f0b42b75c587b32047c3, type: 3}
     - {fileID: 4900000, guid: 0ea39929ae2ed2a4abc5a12ef191eaee, type: 3}
   - id: 2
-    characterName: Steel
-    characterSprite: {fileID: 21300000, guid: 4cef226f63409544aa45b44a276d7348, type: 3}
+    characterName: Iron
+    characterSpriteMap: {fileID: 11400000, guid: 2be8663db9542c24284ca7a1b606d87c, type: 2}
     affaction: 0
     CurrentdialogueNum: 0
     dialogueLineNum: 0
@@ -32,7 +32,7 @@ MonoBehaviour:
     - {fileID: 4900000, guid: 0327026da44074046866f9780d59a78c, type: 3}
   - id: 3
     characterName: Stone
-    characterSprite: {fileID: 21300000, guid: 2de84749d2e6ef04788a8c7ae234e2b2, type: 3}
+    characterSpriteMap: {fileID: 0}
     affaction: 0
     CurrentdialogueNum: 0
     dialogueLineNum: 0
