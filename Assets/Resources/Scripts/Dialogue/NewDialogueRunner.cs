@@ -235,8 +235,17 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
         {
             case "T": //액션 노드가 T일 경우, 대사를 출력.
                 if (line.Detail.result.Contains("\\n")) line.Detail.result = line.Detail.result.Replace("\\n", "\n"); //대사에 \n이 포함되어 있을 경우, 줄바꿈 처리.
-                Debug.Log(int.Parse(line.Actor.Split('_')[0]));
-                SpeakerName.text = line.Actor.Split('_')[1]; //화자 이름 설정.
+                //Debug.Log(int.Parse(line.Actor.Split('_')[0]));
+                string[] actorDetail = line.Actor.Split('_');
+                if (actorDetail.Length <= 2) //'_'기준으로 Actor를 나눴을 때의 배열 길이가 2이하일 때. (캐릭터의 id와 이름만 있을 떄)
+                {
+                    SpeakerName.text = actorDetail[1]; //화자 이름만 출력.
+                }
+                else if (actorDetail.Length > 2)//Actor칸이 ID_이름_이명 형식일 때.
+                {
+                    SpeakerName.text = actorDetail[1] + " | " + actorDetail[2];
+                }
+
                 CharacterEmphasis(int.Parse(line.Actor.Split('_')[0]), line.Face); //화자 캐릭터 강조.
                 StartCoroutine(TypingTxt(line.Detail.result)); //대사 출력.
                 GameManager.instance.dataManager.NewdialogueLog.Add(line); //대화 로그에 저장.
@@ -256,6 +265,10 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
                 HandleChoices(line.Detail.condition.Split('|'), line.Detail.result.Split('|'), line);
                 break;
 
+            case "": //액션 노드에 아무것도 없는 경우. T행동의 연장선으로 간주, Detail의 Result를 출력한다.
+                StartCoroutine(TypingTxt(line.Detail.result)); //대사 출력.
+                break;
+
             default:
                 Debug.LogWarning($"알 수 없는 액션: {line.Action} (라인 {currentLineNum})");
                 currentLineNum++;
@@ -263,11 +276,6 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
                 return;
         }
         RunningOtherNode(line);
-    }
-
-    private void RunningDialogue()
-    {
-
     }
 
     private void RunningOtherNode(NewDialogueParser.ParsedLine line)
@@ -278,6 +286,11 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
         //if (line.Actor != "") GameManager.instance.dialogueFunc.RunningActor(line.Actor);
         if (line.BGM != "") GameManager.instance.dialogueFunc.ChangeBGM(line.BGM);
         if (line.Affection != "") GameManager.instance.dialogueFunc.AffectionChange(line.Affection, line.Actor);
+    }
+
+    private void RunningDialogue(NewDialogueParser.ParsedLine line)
+    {
+
     }
 
     private void CharacterEmphasis(int id, string emotion) //화자 캐릭터의 강조 및 해당 캐릭터 스프라이트 변경(필요시).
