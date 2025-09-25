@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
 
     public DialogueFuncManager dialogueFunc;
-    public DialogueRunner dialogueRunner;
+    public NewDialogueRunner dialogueRunner;
     public TimeLineManager timeLineManager;
     public SystemDataManager dataManager;
     public UIManager uiManager;

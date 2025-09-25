@@ -1,0 +1,5 @@
+Action(행동),Detail(세부내용),BG(배경),Production(연출),Face(표정),Actor(주체),BGM(브금),Affection(호감도)
+T,캐릭터 이름이 없는 나레이션,,,,,,
+T,캐릭터 이름만 있는 대사,,,Default,1_Fire,,
+T,캐릭터 이름과 이명이 있는 대사,,,Default,1_Fire_불의 층 관리자,,
+,이건 대사의 연장선.,,,Default,,,

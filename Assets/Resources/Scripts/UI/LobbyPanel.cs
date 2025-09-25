@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class LobbyPanel : MonoBehaviour
 {
+    [SerializeField] private Image lobbyBG;
     [SerializeField] private GameObject CharacterSelection;
     [SerializeField] private Button playerActionButton;
     [SerializeField] private TextMeshProUGUI actionButtonText;

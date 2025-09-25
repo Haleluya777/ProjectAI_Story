@@ -67,6 +67,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
 
     private List<NewDialogueParser.ParsedLine> scriptLine;
     private int currentLineNum = 0;
+    int currentCharId;
     [SerializeField] private bool isWaiting;
 
     private void Start()
@@ -74,7 +75,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
         parser.Parse(DialogueFile.text);
         //임시
         CharacterInit(3);
-        RunDialogue();
+        //RunDialogue();
     }
 
     public void InitializeData()
@@ -175,6 +176,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
 
                 //character.SetActive(false);
                 character.GetComponent<RectTransform>().anchoredPosition = new Vector3(0, -150, 0); //y값 초기화.
+                if (GameManager.instance.dataManager.runningCharacters.ContainsKey(data.id)) continue;
                 GameManager.instance.dataManager.runningCharacters.Add(data.id, new SystemDataManager.Data { obj = character, characterData = data });
             }
         }
@@ -206,6 +208,8 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
         }
 
         Panel.SetActive(true);
+        //임시.
+        CharacterInit(3);
         ProccessNextLine();
     }
 
@@ -213,6 +217,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
     {
         GameManager.instance.dataManager.runningCharacters.Clear();
         currentLineNum = 0;
+        currentCharId = -1;
         currentState = RunnerState.Normal;
         GameManager.instance.dataManager.dialogueLog.Clear();
         Panel.SetActive(false);
@@ -234,21 +239,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
         switch (line.Action)
         {
             case "T": //액션 노드가 T일 경우, 대사를 출력.
-                if (line.Detail.result.Contains("\\n")) line.Detail.result = line.Detail.result.Replace("\\n", "\n"); //대사에 \n이 포함되어 있을 경우, 줄바꿈 처리.
-                //Debug.Log(int.Parse(line.Actor.Split('_')[0]));
-                string[] actorDetail = line.Actor.Split('_');
-                if (actorDetail.Length <= 2) //'_'기준으로 Actor를 나눴을 때의 배열 길이가 2이하일 때. (캐릭터의 id와 이름만 있을 떄)
-                {
-                    SpeakerName.text = actorDetail[1]; //화자 이름만 출력.
-                }
-                else if (actorDetail.Length > 2)//Actor칸이 ID_이름_이명 형식일 때.
-                {
-                    SpeakerName.text = actorDetail[1] + " | " + actorDetail[2];
-                }
-
-                CharacterEmphasis(int.Parse(line.Actor.Split('_')[0]), line.Face); //화자 캐릭터 강조.
-                StartCoroutine(TypingTxt(line.Detail.result)); //대사 출력.
-                GameManager.instance.dataManager.NewdialogueLog.Add(line); //대화 로그에 저장.
+                RunningDialogue(line);
                 break;
 
             case "If": //액션 노드가 If일 경우, 조건 체크 및 조건에 부합한지 부합하지 않은지 체크한 후, 줄 이동.
@@ -267,6 +258,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
 
             case "": //액션 노드에 아무것도 없는 경우. T행동의 연장선으로 간주, Detail의 Result를 출력한다.
                 StartCoroutine(TypingTxt(line.Detail.result)); //대사 출력.
+                CharacterEmphasis(currentCharId, line.Face); //화자 캐릭터 강조.
                 break;
 
             default:
@@ -290,7 +282,31 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
 
     private void RunningDialogue(NewDialogueParser.ParsedLine line)
     {
+        if (line.Detail.result.Contains("\\n")) line.Detail.result = line.Detail.result.Replace("\\n", "\n"); //대사에 \n이 포함되어 있을 경우, 줄바꿈 처리.
+        /*Debug.Log(int.Parse(line.Actor.Split('_')[0]));*/
+        if (line.Actor == "") //화자 이름이 없을 경우.
+        {
+            SpeakerName.gameObject.transform.parent.gameObject.SetActive(false); //화자 이름이 없을 경우, 화자 이름 UI 비활성화.
+        }
 
+        else //화자 이름이 있을 경우.
+        {
+            SpeakerName.gameObject.transform.parent.gameObject.SetActive(true); //화자 이름이 있을 경우, 화자 이름 UI 활성화.
+            string[] actorDetail = line.Actor.Split('_');
+            if (actorDetail.Length <= 2) //'_'기준으로 Actor를 나눴을 때의 배열 길이가 2이하일 때. (캐릭터의 id와 이름만 있을 떄)
+            {
+                SpeakerName.text = actorDetail[1]; //화자 이름만 출력.
+            }
+            else if (actorDetail.Length > 2)//Actor칸이 ID_이름_이명 형식일 때.
+            {
+                SpeakerName.text = actorDetail[1] + " | " + actorDetail[2];
+            }
+            currentCharId = int.Parse(actorDetail[0]);
+            CharacterEmphasis(currentCharId, line.Face); //화자 캐릭터 강조.
+        }
+
+        StartCoroutine(TypingTxt(line.Detail.result)); //대사 출력.
+        GameManager.instance.dataManager.NewdialogueLog.Add(line); //대화 로그에 저장.
     }
 
     private void CharacterEmphasis(int id, string emotion) //화자 캐릭터의 강조 및 해당 캐릭터 스프라이트 변경(필요시).
@@ -325,7 +341,6 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
 
             }
         }
-
     }
 
     private void CheckingCondition(string[] args, string[] results) //조건 검사 및 참/거짓에 따른 분기 처리.
@@ -394,13 +409,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
         }
 
         isWaiting = true;
-        //ChoiceOptionPanel.SetActive(true);
         DialoguePanel.SetActive(false);
-
-        //foreach (Transform child in OptionContainer)
-        //{
-        //    Destroy(child.gameObject);
-        //}
 
         for (int i = 0; i < selectors.Length; i++)
         {
@@ -494,28 +503,6 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
         {
             ProccessNextLine();
         }
-
-        //===============================
-        //if (skipTrigger) //스킵 상태일 경우 스킵 버튼을 눌면 스킵 상태 해제.
-        //{
-        //    skipTrigger = false;
-        //    autoTrigger = false;
-        //    currentautoProccessTime = settedAutoProccessTime;
-        //    currentdialogueTextSpeed = settedDialogueTextSpeed;
-        //}
-        //else if (!skipTrigger) //스킵 상태가 아닐 경우 스킵 버튼을 누르면 스킵 상태로 변경.
-        //{
-        //    skipTrigger = true;
-        //    autoTrigger = true;
-        //
-        //    currentWaitDialogueAutoProccess = skipedWaitDialogueAutoProccess;
-        //    currentWaitDialogueProccessSpeed = skipedWaitDialogueProccessSpeed;
-        //}
-        //
-        //if (autoTrigger && !isWaiting)
-        //{
-        //    ProccessNextLine();
-        //}
     }
 
     public void SetAutoMode() //자동 모드로 변경.
@@ -528,23 +515,6 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
         {
             currentState = RunnerState.Auto;
         }
-
-
-        //=============================
-        //if (skipTrigger)
-        //{
-        //    skipTrigger = false;
-        //    autoTrigger = true;
-        //}
-        //
-        //else
-        //{
-        //    autoTrigger = !autoTrigger;
-        //}
-        //
-        //currentdialogueTextSpeed = settedDialogueTextSpeed;
-        //currentautoProccessTime = settedAutoProccessTime;
-        //currentWaitDialogueAutoProccess = new WaitForSeconds(currentautoProccessTime);
 
         if (currentState == RunnerState.Auto && !isWaiting)
         {

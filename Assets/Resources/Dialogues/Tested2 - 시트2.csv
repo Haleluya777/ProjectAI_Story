@@ -1,5 +1,0 @@
-Action(행동),Detail(세부내용),BG(배경),Production(연출),Face(표정),Actor(주체),BGM(브금),Affection(호감도)
-T, 대화내용,BG_2,Move_C_A,Smile,ID_Name,BGM_1,+1
-If,Operand | Condition | Operation_0 | 4 ,,,,,,
-F,Flag1 || Flag2_1 | 10,,,,,,
-S,Selector1 | Selector2 | Selector3_2 | 4 | 8,,,,,,
