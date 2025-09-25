@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,6 +21,15 @@ public class LobbyPanel : MonoBehaviour
     {
         //playerActionButton.onClick.AddListener(StartAction);
         InitCharacterSelection();
+        InitRepairSelection();
+    }
+
+    private void Update()
+    {
+        for (int i = 0; i < REPAIRCOUNT; i++)
+        {
+            Debug.Log(GameManager.instance.dataManager.repairableEquipment[i].name + " : " + GameManager.instance.dataManager.repairableEquipment[i].progress);
+        }
     }
 
     private void InitCharacterSelection()
@@ -37,13 +47,16 @@ public class LobbyPanel : MonoBehaviour
 
     private void InitRepairSelection()
     {
-        var equipmentDic = GameManager.instance.dataManager.repairableEquipment;
+        Dictionary<int, EquipmentDatas> equipmentDic = GameManager.instance.dataManager.repairableEquipment;
         var equipment = GameManager.instance.dataManager.equipmentMap;
+
         for (int i = 0; i < REPAIRCOUNT; i++)
         {
             var repairButton = Instantiate(repairButtonPrefab, repairButtonParent);
             equipmentDic.Add(i, equipment.GetEquipment(i));
-            repairButton.GetComponent<Button>().onClick.AddListener(() => Repair(equipmentDic[i]));
+            var equipmentData = equipmentDic[i];
+            repairButton.GetComponent<Button>().onClick.AddListener(() => Repair(equipmentData));
+            repairButton.name = equipmentData.name;
         }
     }
 
@@ -60,11 +73,6 @@ public class LobbyPanel : MonoBehaviour
         GameManager.instance.dataManager.AddTurn();
         //playerActionButton.onClick.RemoveAllListeners();
         //playerActionButton.onClick.AddListener(StartAction);
-    }
-
-    public void SelectCharacter()
-    {
-        CharacterSelection.SetActive(true);
     }
 
     public void StartDialogue(TextAsset dialogue, int lineNum) //선택한 캐릭터와의 대화 상호작용 시작

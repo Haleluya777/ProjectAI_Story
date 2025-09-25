@@ -2,14 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "EquipmentMap", menuName = "ScriptableObjects / Equipment / EquipmentMap")]
-
+[System.Serializable]
 public class EquipmentDatas
 {
     public string name;
     public int progress;
 }
 
+[CreateAssetMenu(fileName = "EquipmentMap", menuName = "ScriptableObjects / Equipment / EquipmentMap")]
 public class RepairableEquipment : ScriptableObject
 {
     public EquipmentDatas[] datas;
