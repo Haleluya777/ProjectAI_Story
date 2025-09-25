@@ -1,0 +1,25 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+[CreateAssetMenu(fileName = "EquipmentMap", menuName = "ScriptableObjects / Equipment / EquipmentMap")]
+
+public class EquipmentDatas
+{
+    public string name;
+    public int progress;
+}
+
+public class RepairableEquipment : ScriptableObject
+{
+    public EquipmentDatas[] datas;
+    public EquipmentDatas GetEquipment(int index)
+    {
+        if (index < 0 || index >= datas.Length)
+        {
+            Debug.Log($"유효하지 않은 장비 인덱스. Index : {index}");
+            return null;
+        }
+        return datas[index];
+    }
+}

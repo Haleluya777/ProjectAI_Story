@@ -10,15 +10,17 @@ public class SystemDataManager : MonoBehaviour, DataInitializable
 
     public int currentAP;
     public int currentTurn;
-    [SerializeField] private int maxAP;
+    public int maxAP;
     [SerializeField] public CharacterMap characterMap; //캐릭터 데이터 베이스
-    public Dictionary<int, Data> runningCharacters = new Dictionary<int, Data>(); //현재 대화에 참여중인 캐릭터들만
+    [SerializeField] public RepairableEquipment equipmentMap; //수리 가능한 장비 데이터 베이스
+    public Dictionary<int, CharacterDatas> runningCharacters = new Dictionary<int, CharacterDatas>(); //현재 대화에 참여중인 캐릭터들만
+    public Dictionary<int, EquipmentDatas> repairableEquipment = new Dictionary<int, EquipmentDatas>();
     public SerializedDic_BG backgroundMap; //배경 이미지 데이터 베이스
     public Dictionary<string, object> operandDic = new Dictionary<string, object>(); //조건 체크할 때 쓰는 피연산자.
     public List<NewDialogueParser.ParsedLine> NewdialogueLog = new List<NewDialogueParser.ParsedLine>(); //지나간 대화 로그.
     public List<DialogueParser.ParsedLine> dialogueLog = new List<DialogueParser.ParsedLine>();
 
-    public struct Data
+    public struct CharacterDatas
     {
         public GameObject obj;
         public CharacterData characterData;

@@ -11,8 +11,11 @@ public class LobbyPanel : MonoBehaviour
     [SerializeField] private Button playerActionButton;
     [SerializeField] private TextMeshProUGUI actionButtonText;
     [SerializeField] private GameObject characterButtonPrefab;
+    [SerializeField] private GameObject repairButtonPrefab;
     [SerializeField] private Transform characterButtonParent;
-
+    [SerializeField] private Transform repairButtonParent;
+    [SerializeField] private Slider actionPointSlider;
+    private const int REPAIRCOUNT = 3;
     void Start()
     {
         //playerActionButton.onClick.AddListener(StartAction);
@@ -32,10 +35,23 @@ public class LobbyPanel : MonoBehaviour
         }
     }
 
-    public void Repair()
+    private void InitRepairSelection()
+    {
+        var equipmentDic = GameManager.instance.dataManager.repairableEquipment;
+        var equipment = GameManager.instance.dataManager.equipmentMap;
+        for (int i = 0; i < REPAIRCOUNT; i++)
+        {
+            var repairButton = Instantiate(repairButtonPrefab, repairButtonParent);
+            equipmentDic.Add(i, equipment.GetEquipment(i));
+            repairButton.GetComponent<Button>().onClick.AddListener(() => Repair(equipmentDic[i]));
+        }
+    }
+
+    public void Repair(EquipmentDatas data)
     {
         if (GameManager.instance.dataManager.currentAP <= 0) return;
         Debug.Log("수리");
+        data.progress++;
         ConsumeActionPoint();
     }
 
@@ -75,5 +91,6 @@ public class LobbyPanel : MonoBehaviour
     private void ConsumeActionPoint()
     {
         GameManager.instance.dataManager.currentAP--;
+        actionPointSlider.value = GameManager.instance.dataManager.currentAP / GameManager.instance.dataManager.maxAP;
     }
 }

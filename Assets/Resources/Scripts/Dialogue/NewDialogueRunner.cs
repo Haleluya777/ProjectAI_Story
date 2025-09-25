@@ -177,7 +177,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
                 //character.SetActive(false);
                 character.GetComponent<RectTransform>().anchoredPosition = new Vector3(0, -150, 0); //y값 초기화.
                 if (GameManager.instance.dataManager.runningCharacters.ContainsKey(data.id)) continue;
-                GameManager.instance.dataManager.runningCharacters.Add(data.id, new SystemDataManager.Data { obj = character, characterData = data });
+                GameManager.instance.dataManager.runningCharacters.Add(data.id, new SystemDataManager.CharacterDatas { obj = character, characterData = data });
             }
         }
     }
