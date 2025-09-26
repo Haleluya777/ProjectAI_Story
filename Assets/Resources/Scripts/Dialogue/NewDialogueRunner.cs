@@ -261,6 +261,10 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
                 CharacterEmphasis(currentCharId, line.Face); //화자 캐릭터 강조.
                 break;
 
+            case "J": //액션 노드가 J일 경우, 조건을 만족할 시, DialogueAsset을 변경, 조건을 만족하지 않으면 일정 줄 만큼 -이동.
+                JumpDialogue(line);
+                break;
+
             default:
                 Debug.LogWarning($"알 수 없는 액션: {line.Action} (라인 {currentLineNum})");
                 currentLineNum++;
@@ -268,6 +272,14 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
                 return;
         }
         RunningOtherNode(line);
+    }
+
+    private void JumpDialogue(NewDialogueParser.ParsedLine line) //DialogueAsset 변경.
+    {
+        int[] derived_dialogue_num = Array.ConvertAll(line.Detail.condition.Split('|'), int.Parse);
+        int jumpLine = int.Parse(line.Detail.result);
+
+        Debug.Log($"대화 자산 변경 시도: {derived_dialogue_num.Length}개, 점프 라인: {jumpLine}");
     }
 
     private void RunningOtherNode(NewDialogueParser.ParsedLine line)

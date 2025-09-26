@@ -8626,7 +8626,7 @@ MonoBehaviour:
   DialogueLogPanel: {fileID: 75346933}
   DialogueLogObj: {fileID: 3672888988007502892, guid: d4ca6be24e7b0a64594b5938559a4e29, type: 3}
   DialogueLogContainer: {fileID: 347649510}
-  DialogueFile: {fileID: 4900000, guid: 904eb3ff0ab2b2448874d9a0e713356b, type: 3}
+  DialogueFile: {fileID: 4900000, guid: 4a054c216f9e87f40a3f47567e3bd40a, type: 3}
   parser: {fileID: 992799310}
   autoTrigger: 0
   skipTrigger: 0
