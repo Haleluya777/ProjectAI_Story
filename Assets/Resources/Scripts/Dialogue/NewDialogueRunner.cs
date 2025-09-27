@@ -201,7 +201,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
 
     public void RunDialogue()
     {
-        Debug.Log(currentLineNum);
+        currentCharId = -1;
         if (DialogueFile != null)
         {
             scriptLine = parser.Parse(DialogueFile.text);
@@ -323,6 +323,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
 
     private void CharacterEmphasis(int id, string emotion) //화자 캐릭터의 강조 및 해당 캐릭터 스프라이트 변경(필요시).
     {
+        if (id == -1) return;
         foreach (Transform character in characterParent)
         {
             character.GetComponent<Image>().color = new Color32(140, 140, 140, 255);

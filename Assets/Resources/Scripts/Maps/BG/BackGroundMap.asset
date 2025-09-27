@@ -14,5 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bgMap:
     _serializedList:
-    - Key: 2
+    - Key: 1
       Value: {fileID: 21300000, guid: 8a85a15a68379db4782f96afbd26eeaf, type: 3}
+    - Key: 2
+      Value: {fileID: 21300000, guid: cfbca4a8e658f0c4d9ba427043fe12be, type: 3}

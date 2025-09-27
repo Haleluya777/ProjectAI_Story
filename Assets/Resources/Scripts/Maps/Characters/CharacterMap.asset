@@ -20,7 +20,7 @@ MonoBehaviour:
     CurrentdialogueNum: 0
     dialogueLineNum: 0
     dialogueFiles:
-    - {fileID: 4900000, guid: 4a054c216f9e87f40a3f47567e3bd40a, type: 3}
+    - {fileID: 4900000, guid: dfc101ed3a8d1c342b6a0091b115d77c, type: 3}
     - {fileID: 4900000, guid: 904eb3ff0ab2b2448874d9a0e713356b, type: 3}
   - id: 2
     characterName: Iron
