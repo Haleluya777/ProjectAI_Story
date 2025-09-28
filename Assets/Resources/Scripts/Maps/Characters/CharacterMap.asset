@@ -20,8 +20,8 @@ MonoBehaviour:
     CurrentdialogueNum: 0
     dialogueLineNum: 0
     dialogueFiles:
-    - {fileID: 4900000, guid: dfc101ed3a8d1c342b6a0091b115d77c, type: 3}
-    - {fileID: 4900000, guid: 904eb3ff0ab2b2448874d9a0e713356b, type: 3}
+    - {fileID: 4112817850453021399, guid: ffa5f7cb5322835449ec89aa2d8e48e5, type: 3}
+    - {fileID: 4900000, guid: 9170203dcefccbb41a2da85d540306b5, type: 3}
   - id: 2
     characterName: Iron
     characterSpriteMap: {fileID: 11400000, guid: 2be8663db9542c24284ca7a1b606d87c, type: 2}
@@ -29,7 +29,7 @@ MonoBehaviour:
     CurrentdialogueNum: 0
     dialogueLineNum: 0
     dialogueFiles:
-    - {fileID: 4900000, guid: 904eb3ff0ab2b2448874d9a0e713356b, type: 3}
+    - {fileID: 4900000, guid: 9170203dcefccbb41a2da85d540306b5, type: 3}
   - id: 3
     characterName: Stone
     characterSpriteMap: {fileID: 11400000, guid: 306ac4871cc0cd747b9bf036aea88b3d, type: 2}
@@ -37,4 +37,4 @@ MonoBehaviour:
     CurrentdialogueNum: 0
     dialogueLineNum: 0
     dialogueFiles:
-    - {fileID: 4900000, guid: 904eb3ff0ab2b2448874d9a0e713356b, type: 3}
+    - {fileID: 4900000, guid: 9170203dcefccbb41a2da85d540306b5, type: 3}

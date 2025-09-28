@@ -75,7 +75,21 @@ public class DialogueFuncManager : MonoBehaviour, DataInitializable
 
     public void RunningProduction(string production)
     {
+        string[] nodeSplit = production.Split('_');
+        switch (nodeSplit[1])
+        {
+            case "Move":
 
+                break;
+
+            case "Turn":
+                break;
+
+            case "Fall":
+                break;
+            default:
+                break;
+        }
     }
 
     public void ChangeBGM(string bgm)
@@ -83,7 +97,15 @@ public class DialogueFuncManager : MonoBehaviour, DataInitializable
         string[] nodeSplit = bgm.Split('_');
         int bgmNum = int.Parse(nodeSplit[1]);
 
-        //GameManager.instance.
+        GameManager.instance.soundManager.PlayBGM(bgmNum);
+    }
+
+    public void RunSE(string se)
+    {
+        string[] nodeSplit = se.Split('_');
+        int seNum = int.Parse(nodeSplit[1]);
+
+        GameManager.instance.soundManager.PlaySE(seNum);
     }
 
     public void AffectionChange(string affection, string actor)

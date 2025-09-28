@@ -13,6 +13,20 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private AudioSource SESources;  //SE 오디오 소스 컴포넌트.
 
     // Start is called before the first frame update
+
+
+    public void PlayBGM(int bgmNum)
+    {
+        BGMSources.clip = BGMClips[bgmNum];
+        BGMSources.Play();
+    }
+
+    public void PlaySE(int seNum)
+    {
+        SESources.clip = SEClips[seNum];
+        SESources.Play();
+    }
+
     public void SetMasterVolume(float volume)
     {
         if (volume <= 0) MasterVolume.SetFloat("Master", -80);

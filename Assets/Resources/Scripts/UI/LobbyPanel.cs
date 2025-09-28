@@ -9,6 +9,7 @@ public class LobbyPanel : MonoBehaviour
 {
     [SerializeField] private Image lobbyBG;
     [SerializeField] private GameObject CharacterSelection;
+    [SerializeField] private GameObject RepairSelection;
     [SerializeField] private Button playerActionButton;
     [SerializeField] private TextMeshProUGUI actionButtonText;
     [SerializeField] private GameObject characterButtonPrefab;
@@ -28,7 +29,7 @@ public class LobbyPanel : MonoBehaviour
     {
         for (int i = 0; i < REPAIRCOUNT; i++)
         {
-            Debug.Log(GameManager.instance.dataManager.repairableEquipment[i].name + " : " + GameManager.instance.dataManager.repairableEquipment[i].progress);
+            //Debug.Log(GameManager.instance.dataManager.repairableEquipment[i].name + " : " + GameManager.instance.dataManager.repairableEquipment[i].progress);
         }
     }
 
@@ -38,7 +39,7 @@ public class LobbyPanel : MonoBehaviour
         {
             int characterDialogueNum = GameManager.instance.dataManager.characterMap.GetCharacter(i).CurrentdialogueNum;
             var dialogueFile = GameManager.instance.dataManager.characterMap.GetCharacter(i).dialogueFiles[characterDialogueNum];
-            Debug.Log(dialogueFile.name);
+            //Debug.Log(dialogueFile.name);
             var characterButton = Instantiate(characterButtonPrefab, characterButtonParent);
             characterButton.GetComponent<Button>().onClick.AddListener(() => StartDialogue(dialogueFile, characterDialogueNum));
             characterButton.transform.GetChild(0).GetComponent<Image>().sprite = GameManager.instance.dataManager.characterMap.GetCharacter(i).characterSpriteMap.sprites["Default"];
@@ -65,12 +66,14 @@ public class LobbyPanel : MonoBehaviour
         if (GameManager.instance.dataManager.currentAP <= 0) return;
         Debug.Log("수리");
         data.progress++;
+        RepairSelection.SetActive(false);
         ConsumeActionPoint();
     }
 
     public void ProccessNextDay()
     {
         GameManager.instance.dataManager.AddTurn();
+        actionPointSlider.value = (float)GameManager.instance.dataManager.currentAP / (float)GameManager.instance.dataManager.maxAP;
         //playerActionButton.onClick.RemoveAllListeners();
         //playerActionButton.onClick.AddListener(StartAction);
     }
@@ -99,6 +102,6 @@ public class LobbyPanel : MonoBehaviour
     private void ConsumeActionPoint()
     {
         GameManager.instance.dataManager.currentAP--;
-        actionPointSlider.value = GameManager.instance.dataManager.currentAP / GameManager.instance.dataManager.maxAP;
+        actionPointSlider.value = (float)GameManager.instance.dataManager.currentAP / (float)GameManager.instance.dataManager.maxAP;
     }
 }

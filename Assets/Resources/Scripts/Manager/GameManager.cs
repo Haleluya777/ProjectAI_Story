@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
     public NewDialogueRunner dialogueRunner;
     public TimeLineManager timeLineManager;
     public SystemDataManager dataManager;
+    public SoundManager soundManager;
     public UIManager uiManager;
 
     private void Awake()
@@ -36,7 +37,7 @@ public class GameManager : MonoBehaviour
             //Debug.Log("데이터 초기화 됨.");
             obj.InitializeData();
         }
-        Debug.Log(dataManager.operandDic["Level"]);
+        //Debug.Log(dataManager.operandDic["Level"]);
     }
 
     private void Update()

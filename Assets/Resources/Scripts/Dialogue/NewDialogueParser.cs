@@ -1,6 +1,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//JSON test
+[System.Serializable]
+public class DataWarpper
+{
+    public string Action;
+    public string Detail;
+    public string BG;
+    public string Production;
+    public string Face;
+    public string Actor;
+    public string BGM;
+    public string Affection;
+}
+
+[System.Serializable]
+public class DialogueDatas
+{
+    public List<DataWarpper> TestedSheet;
+}
+//---------------------------------------
 public class NewDialogueParser : MonoBehaviour
 {
     public struct ParsedLine
@@ -24,6 +44,10 @@ public class NewDialogueParser : MonoBehaviour
 
     public List<ParsedLine> Parse(string csvFile)
     {
+        //JSon test
+        //DialogueDatas testline = JsonUtility.FromJson<DialogueDatas>(csvFile);
+        //Debug.Log(testline.TestedSheet.Count);
+
         List<ParsedLine> parsedLines = new List<ParsedLine>();
         string[] lines = csvFile.Split(new[] { '\n', '\r' }, System.StringSplitOptions.RemoveEmptyEntries);
 
@@ -32,12 +56,13 @@ public class NewDialogueParser : MonoBehaviour
             string line = lines[i];
             if (string.IsNullOrWhiteSpace(line)) continue;
 
-            List<string> parts = new List<string>(line.Split(','));
+            List<string> parts = new List<string>(line.Split('\t'));
             //parts.RemoveAll(s => string.IsNullOrEmpty(s));
 
             for (int j = 0; j < parts.Count; j++)
             {
                 parts[j] = parts[j].Trim();
+                Debug.Log(parts[j]);
             }
 
             string action = parts[0]; //첫번째 열(행동)을 action변수에 저장.

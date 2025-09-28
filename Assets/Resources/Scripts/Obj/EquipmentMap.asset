@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   datas:
   - name: Name1
-    progress: 3
-  - name: Name2
-    progress: 2
-  - name: Name3
     progress: 1
+  - name: Name2
+    progress: 1
+  - name: Name3
+    progress: 4
