@@ -62,7 +62,7 @@ public class NewDialogueParser : MonoBehaviour
             for (int j = 0; j < parts.Count; j++)
             {
                 parts[j] = parts[j].Trim();
-                Debug.Log(parts[j]);
+                //Debug.Log(parts[j]);
             }
 
             string action = parts[0]; //첫번째 열(행동)을 action변수에 저장.

@@ -220,6 +220,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
         currentCharId = -1;
         currentState = RunnerState.Normal;
         GameManager.instance.dataManager.dialogueLog.Clear();
+        GameManager.instance.dataManager.proccessDatas.PlayerPosition = "1층 로비 | 엘리베이터";
         Panel.SetActive(false);
     }
     //------------------------------------------
