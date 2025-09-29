@@ -65,6 +65,11 @@ public class LobbyPanel : MonoBehaviour
         }
     }
 
+    public void PlayerPosUpdate(string pos)
+    {
+        playerPosition.text = pos;
+    }
+
     public void Repair(EquipmentDatas data)
     {
         if (GameManager.instance.dataManager.proccessDatas.Routine <= 0) return;

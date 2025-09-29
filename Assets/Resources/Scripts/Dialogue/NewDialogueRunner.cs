@@ -215,12 +215,15 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
 
     public void EndDialogue()
     {
-        GameManager.instance.dataManager.runningCharacters.Clear();
+        var dataManager = GameManager.instance.dataManager;
+
+        dataManager.runningCharacters.Clear();
         currentLineNum = 0;
         currentCharId = -1;
         currentState = RunnerState.Normal;
-        GameManager.instance.dataManager.dialogueLog.Clear();
-        GameManager.instance.dataManager.proccessDatas.PlayerPosition = "1층 로비 | 엘리베이터";
+        dataManager.dialogueLog.Clear();
+        dataManager.proccessDatas.PlayerPosition = "1층 로비 | 엘리베이터";
+        GameManager.instance.uiManager.lobbyUIManager.PlayerPosUpdate(dataManager.proccessDatas.PlayerPosition);
         Panel.SetActive(false);
     }
     //------------------------------------------

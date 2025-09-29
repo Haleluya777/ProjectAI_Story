@@ -34,6 +34,7 @@ public class SystemDataManager : MonoBehaviour, DataInitializable
     public List<DialogueParser.ParsedLine> dialogueLog = new List<DialogueParser.ParsedLine>();
     public ProccessDatas proccessDatas;
 
+
     public void InitializeData()
     {
         proccessDatas.Routine = maxAP;
