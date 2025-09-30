@@ -20,6 +20,7 @@ public class SystemDataManager : MonoBehaviour, DataInitializable
         public int Day;
         public string PlayerPosition;
         public int Routine;
+        public string CurrentTime;
     }
 
     //public int currentAP;
@@ -33,6 +34,7 @@ public class SystemDataManager : MonoBehaviour, DataInitializable
     public List<NewDialogueParser.ParsedLine> NewdialogueLog = new List<NewDialogueParser.ParsedLine>(); //지나간 대화 로그.
     public List<DialogueParser.ParsedLine> dialogueLog = new List<DialogueParser.ParsedLine>();
     public ProccessDatas proccessDatas;
+    private List<string> currentTime = new List<string> { "아침", "오후", "저녁" };
 
 
     public void InitializeData()
