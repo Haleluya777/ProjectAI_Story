@@ -50,3 +50,12 @@ MonoBehaviour:
     dialogueFiles:
     - {fileID: 4900000, guid: 9170203dcefccbb41a2da85d540306b5, type: 3}
     CharacterFloor: "\uBB3C\uC758 \uCE35"
+  - id: 5
+    characterName: Wood
+    characterSpriteMap: {fileID: 11400000, guid: d93a8ad15262d254985323d3c6e34073, type: 2}
+    affaction: 0
+    CurrentdialogueNum: 0
+    dialogueLineNum: 0
+    dialogueFiles:
+    - {fileID: 4900000, guid: 9170203dcefccbb41a2da85d540306b5, type: 3}
+    CharacterFloor: "\uB098\uBB34\uC758 \uCE35"

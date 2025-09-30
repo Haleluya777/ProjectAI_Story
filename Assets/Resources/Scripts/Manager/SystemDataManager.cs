@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using AYellowpaper.SerializedCollections;
 using UnityEngine;
+using Hallelujah;
 
 public class SystemDataManager : MonoBehaviour, DataInitializable
 {
@@ -34,11 +35,14 @@ public class SystemDataManager : MonoBehaviour, DataInitializable
     public List<NewDialogueParser.ParsedLine> NewdialogueLog = new List<NewDialogueParser.ParsedLine>(); //지나간 대화 로그.
     public List<DialogueParser.ParsedLine> dialogueLog = new List<DialogueParser.ParsedLine>();
     public ProccessDatas proccessDatas;
-    private List<string> currentTime = new List<string> { "아침", "오후", "저녁" };
-
+    private List<string> currentTime = new List<string> { "아침", "오전 일과", "오후", "오후 일과", "저녁", "밤 일과", "휴식 시간" };
+    public CirclularList<string> dailyRoutine { get; private set; }
 
     public void InitializeData()
     {
+        dailyRoutine = new CirclularList<string>(currentTime);
+        proccessDatas.PlayerPosition = "1층 | 엘리베이터";
+        proccessDatas.CurrentTime = dailyRoutine.Next();
         proccessDatas.Routine = maxAP;
         proccessDatas.Day = 1;
         operandDic.Add("Level", 2);
@@ -46,7 +50,7 @@ public class SystemDataManager : MonoBehaviour, DataInitializable
 
     void Update()
     {
-        Debug.Log($"날 : {proccessDatas.Day}, 현재 위치 : {proccessDatas.PlayerPosition}, 현재 시각 : {proccessDatas.Routine}");
+        //Debug.Log($"날 : {proccessDatas.Day}, 현재 위치 : {proccessDatas.PlayerPosition}, 현재 시각 : {proccessDatas.Routine}");
     }
 
     void Awake()
@@ -58,5 +62,6 @@ public class SystemDataManager : MonoBehaviour, DataInitializable
     {
         proccessDatas.Routine = maxAP;
         proccessDatas.Day++;
+        //proccessDatas.CurrentTime = dailyRoutine.First(); //회전 리스트의 첫 번째 부분으로 강제 이동.
     }
 }

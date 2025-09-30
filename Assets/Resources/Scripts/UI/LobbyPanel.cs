@@ -29,6 +29,7 @@ public class LobbyPanel : MonoBehaviour
 
     private void Update()
     {
+        //Debug.Log(GameManager.instance.dataManager.proccessDatas.Routine);
         for (int i = 0; i < REPAIRCOUNT; i++)
         {
             //Debug.Log(GameManager.instance.dataManager.repairableEquipment[i].name + " : " + GameManager.instance.dataManager.repairableEquipment[i].progress);
@@ -104,6 +105,7 @@ public class LobbyPanel : MonoBehaviour
     private void ConsumeActionPoint()
     {
         GameManager.instance.dataManager.proccessDatas.Routine--;
+        GameManager.instance.dataManager.proccessDatas.CurrentTime = GameManager.instance.dataManager.dailyRoutine.Next();
         actionPointSlider.value = (float)GameManager.instance.dataManager.proccessDatas.Routine / (float)GameManager.instance.dataManager.maxAP;
     }
 }
