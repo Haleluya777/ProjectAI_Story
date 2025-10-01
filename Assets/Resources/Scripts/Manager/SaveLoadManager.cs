@@ -7,6 +7,7 @@ public class SaveLoadManager : MonoBehaviour
     public void SaveGame()
     {
         Debug.Log("데이터 저장.");
+        ES3.Save("CharacterDatas", GameManager.instance.dataManager.characterMap.characters);
         ES3.Save("SystemDatas", GameManager.instance.dataManager);
     }
 

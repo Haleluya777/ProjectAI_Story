@@ -263,6 +263,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
             case "": //액션 노드에 아무것도 없는 경우. T행동의 연장선으로 간주, Detail의 Result를 출력한다.
                 StartCoroutine(TypingTxt(line.Detail.result)); //대사 출력.
                 CharacterEmphasis(currentCharId, line.Face); //화자 캐릭터 강조.
+                GameManager.instance.dataManager.NewdialogueLog.Add(line); //로그 추가.
                 break;
 
             case "J": //액션 노드가 J일 경우, 조건을 만족할 시, DialogueAsset을 변경, 조건을 만족하지 않으면 일정 줄 만큼 -이동.
@@ -283,7 +284,19 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
         int[] derived_dialogue_num = Array.ConvertAll(line.Detail.condition.Split('|'), int.Parse);
         int jumpLine = int.Parse(line.Detail.result);
 
-        Debug.Log($"대화 자산 변경 시도: {derived_dialogue_num.Length}개, 점프 라인: {jumpLine}");
+        for (int i = 0; i < derived_dialogue_num.Length; i++)
+        {
+            int bitCheck = (3 & (1 << derived_dialogue_num[i]));
+            if (bitCheck == 1)
+            {
+                //캐릭터맵의...암튼 대화 스크립트 변경후 메서드 종료.
+                return;
+            }
+        }
+
+        //for문에서 return이 실행되지 않을 때(비트 연산에서 1이 반환되는 경우가 없었을 때),주어진 라인만큼 뒤로 돌아감.
+        currentLineNum = currentLineNum - jumpLine;
+        Debug.Log($"조건을 만족하지 않아 뒤로 돌아감. 점프 라인: {jumpLine}");
     }
 
     private void RunningOtherNode(NewDialogueParser.ParsedLine line)
@@ -500,7 +513,24 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
             var speakerLogText = logObj.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
             var dialogueLogText = logObj.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
 
-            speakerLogText.text = log.Actor.Split('_')[1];
+            if (log.Actor == "")
+            {
+                speakerLogText.text = "나레이션";
+            }
+
+            else
+            {
+                string[] actorDetail = log.Actor.Split('_');
+                if (actorDetail.Length <= 2) //'_'기준으로 Actor를 나눴을 때의 배열 길이가 2이하일 때. (캐릭터의 id와 이름만 있을 떄)
+                {
+                    speakerLogText.text = actorDetail[1]; //화자 이름만 출력.
+                }
+                else if (actorDetail.Length > 2)//Actor칸이 ID_이름_이명 형식일 때.
+                {
+                    speakerLogText.text = actorDetail[1] + " | " + actorDetail[2];
+                }
+            }
+
             dialogueLogText.text = log.Detail.result;
         }
     }

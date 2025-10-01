@@ -45,7 +45,6 @@ public class SystemDataManager : MonoBehaviour, DataInitializable
         proccessDatas.CurrentTime = dailyRoutine.Next();
         proccessDatas.Routine = maxAP;
         proccessDatas.Day = 1;
-        operandDic.Add("Level", 2);
     }
 
     void Update()

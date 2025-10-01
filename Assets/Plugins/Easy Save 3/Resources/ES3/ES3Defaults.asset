@@ -50,4 +50,4 @@ MonoBehaviour:
   referenceFolders: []
   logDebugInfo: 0
   logWarnings: 1
-  logErrors: 0
+  logErrors: 1
