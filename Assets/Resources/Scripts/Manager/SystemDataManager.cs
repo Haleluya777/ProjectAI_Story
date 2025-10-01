@@ -62,6 +62,6 @@ public class SystemDataManager : MonoBehaviour, DataInitializable
     {
         proccessDatas.Routine = maxAP;
         proccessDatas.Day++;
-        //proccessDatas.CurrentTime = dailyRoutine.First(); //회전 리스트의 첫 번째 부분으로 강제 이동.
+        proccessDatas.CurrentTime = dailyRoutine.First(); //회전 리스트의 첫 번째 부분으로 강제 이동.
     }
 }

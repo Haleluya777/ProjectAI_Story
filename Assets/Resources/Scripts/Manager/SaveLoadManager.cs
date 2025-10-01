@@ -7,12 +7,12 @@ public class SaveLoadManager : MonoBehaviour
     public void SaveGame()
     {
         Debug.Log("데이터 저장.");
-        //ES3AutoSave.Save();
+        ES3.Save("SystemDatas", GameManager.instance.dataManager);
     }
 
 
     public void LoadGame()
     {
-
+        ES3.Load("SystemDatas");
     }
 }
