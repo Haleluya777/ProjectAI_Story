@@ -42,11 +42,12 @@ public class LobbyPanel : MonoBehaviour
         {
             var characterData = GameManager.instance.dataManager.characterMap.GetCharacter(i);
             int characterDialogueNum = characterData.CurrentdialogueNum;
+            int charID = characterData.id;
             var dialogueFile = characterData.dialogueFiles[characterDialogueNum];
             string floor = characterData.CharacterFloor;
 
             var characterButton = Instantiate(characterButtonPrefab, characterButtonParent);
-            characterButton.GetComponent<Button>().onClick.AddListener(() => StartDialogue(dialogueFile, characterDialogueNum, floor));
+            characterButton.GetComponent<Button>().onClick.AddListener(() => StartDialogue(dialogueFile, characterDialogueNum, floor, charID));
             characterButton.transform.GetChild(0).GetComponent<Image>().sprite = GameManager.instance.dataManager.characterMap.GetCharacter(i).characterSpriteMap.sprites["Default"];
         }
     }
@@ -87,9 +88,12 @@ public class LobbyPanel : MonoBehaviour
         actionPointSlider.value = (float)GameManager.instance.dataManager.proccessDatas.Routine / (float)GameManager.instance.dataManager.maxAP;
     }
 
-    public void StartDialogue(TextAsset dialogue, int lineNum, string floor) //선택한 캐릭터와의 대화 상호작용 시작
+    public void StartDialogue(TextAsset dialogue, int lineNum, string floor, int id) //선택한 캐릭터와의 대화 상호작용 시작
     {
         if (GameManager.instance.dataManager.proccessDatas.Routine <= 0) return;
+        //DataManager에서 대화 스크립트의 중심 캐릭터의 ID값 설정.
+        GameManager.instance.dataManager.MainCharacterID = id;
+
         //플레이어의 표기된 위치를 클릭한 캐릭터의 위치로 재설정. ex(불의 층 캐릭터와 상호작용을 한다면 우측상단 플레이어의 현재 위치는 불의 층.)
         GameManager.instance.dataManager.proccessDatas.PlayerPosition = floor;
         playerPosition.text = GameManager.instance.dataManager.proccessDatas.PlayerPosition;

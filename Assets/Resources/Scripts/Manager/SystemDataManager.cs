@@ -36,6 +36,8 @@ public class SystemDataManager : MonoBehaviour, DataInitializable
     public ProccessDatas proccessDatas; //현재 날짜, 플레이어 위치, 시간, 남은 ap
     private List<string> currentTime = new List<string> { "아침", "오전 일과", "오후", "오후 일과", "저녁", "밤 일과", "휴식 시간" };
     public CirclularList<string> dailyRoutine { get; private set; }
+    //public List<int> characterDialogueNum = new List<int> { 0, 0, 0, 0, 0 }; //캐릭터의 대화 진행 상황. 2진수로 사용할 예정.
+    public int MainCharacterID; //대화의 주체가 되는 중심 캐릭터 ID값. 대화 진행 중, 혹은 대화 마지막에 대화 스크립트 변경 시 CharacterMap에서 해당 캐릭터의 변수값을 변경할 접근용으로 사용. (캐릭터가 메인 로비에 있을 경우 값은 0)
 
     public void InitializeData()
     {

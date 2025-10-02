@@ -267,7 +267,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
                 break;
 
             case "J": //액션 노드가 J일 경우, 조건을 만족할 시, DialogueAsset을 변경, 조건을 만족하지 않으면 일정 줄 만큼 -이동.
-                JumpDialogue(line);
+                JumpDialogue(line, GameManager.instance.dataManager.MainCharacterID);
                 break;
 
             default:
@@ -279,17 +279,21 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
         RunningOtherNode(line);
     }
 
-    private void JumpDialogue(NewDialogueParser.ParsedLine line) //DialogueAsset 변경.
+    private void JumpDialogue(NewDialogueParser.ParsedLine line, int MainCharacterID) //DialogueAsset 변경.
     {
+        var characterData = GameManager.instance.dataManager.characterMap.GetCharacter(MainCharacterID); //메인 캐릭터 데이터 받아옴.
         int[] derived_dialogue_num = Array.ConvertAll(line.Detail.condition.Split('|'), int.Parse);
         int jumpLine = int.Parse(line.Detail.result);
+        int dialogueProccess = characterData.CurrentdialogueNum; //메인 캐릭터의 전체 대화 스크립트들 진행도 체크.
 
         for (int i = 0; i < derived_dialogue_num.Length; i++)
         {
-            int bitCheck = (3 & (1 << derived_dialogue_num[i]));
+            int bitCheck = (dialogueProccess & (1 << derived_dialogue_num[i]));
             if (bitCheck == 1)
             {
                 //캐릭터맵의...암튼 대화 스크립트 변경후 메서드 종료.
+                Debug.Log($"파생된 Dialogue중 {i} 번째로 변경 가능.");
+                characterData.NextDialogueScript = characterData.dialogueFiles[i];
                 return;
             }
         }
@@ -350,7 +354,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
         emphasisChar.sprite = GameManager.instance.dataManager.runningCharacters[id].characterData.characterSpriteMap.sprites[emotion];
     }
 
-    private void CheckingFlag(string condition, string[] results) //분기점 플래그 체크.
+    private void CheckingFlag(string condition, string[] results) //분기점 플래그 체크. 아직까지 사용예정 없음. 미완성.
     {
         StringBuilder letter = new StringBuilder();
         StringBuilder digit = new StringBuilder();
