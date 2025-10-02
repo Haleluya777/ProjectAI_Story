@@ -41,6 +41,7 @@ public class SystemDataManager : MonoBehaviour, DataInitializable
 
     public void InitializeData()
     {
+        characterMap.InitDialogue();
         dailyRoutine = new CirclularList<string>(currentTime);
         proccessDatas.PlayerPosition = "1층 | 엘리베이터";
         proccessDatas.CurrentTime = dailyRoutine.Get();

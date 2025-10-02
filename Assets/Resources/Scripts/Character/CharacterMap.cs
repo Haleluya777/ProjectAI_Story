@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using AYellowpaper.SerializedCollections;
+using Unity.VisualScripting;
 
 [System.Serializable]
 public class CharacterData
@@ -23,6 +24,14 @@ public class CharacterData
 public class CharacterMap : ScriptableObject
 {
     public CharacterData[] characters; //캐릭터 데이터
+
+    public void InitDialogue()
+    {
+        foreach (var character in characters)
+        {
+            character.NextDialogueScript = character.dialogueFiles[0];
+        }
+    }
 
     public CharacterData GetCharacter(int index)
     {

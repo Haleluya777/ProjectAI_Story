@@ -300,6 +300,11 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
 
         //for문에서 return이 실행되지 않을 때(비트 연산에서 1이 반환되는 경우가 없었을 때),주어진 라인만큼 뒤로 돌아감.
         currentLineNum = currentLineNum - jumpLine;
+
+        //또한 이 이 상태에서 플레이어가 조건을 만족한 뒤 다시 대사를 시도하면, 바뀐 대화 스크립트가 재생되어야 함.
+        //대화 스크립트가 바뀌는 시점은 플레이어가 대화 버튼을 누를 때.
+        //그러나 대화 버튼을 누를 때 대화 스크립트를 바꾸려면, 파생된 스크립트의 번호를 알아야 함.
+        //따라서 이 메서드에서 게임매니저를 통해 다른 메서드에 derived_dialogue_num의 번호를 전달해줘야 함.
         Debug.Log($"조건을 만족하지 않아 뒤로 돌아감. 점프 라인: {jumpLine}");
     }
 
