@@ -263,7 +263,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
             case "": //액션 노드에 아무것도 없는 경우. T행동의 연장선으로 간주, Detail의 Result를 출력한다.
                 StartCoroutine(TypingTxt(line.Detail.result)); //대사 출력.
                 CharacterEmphasis(currentCharId, line.Face); //화자 캐릭터 강조.
-                GameManager.instance.dataManager.NewdialogueLog.Add(line); //로그 추가.
+                GameManager.instance.dataManager.dialogueLog.Add(line); //로그 추가.
                 break;
 
             case "J": //액션 노드가 J일 경우, 조건을 만족할 시, DialogueAsset을 변경, 조건을 만족하지 않으면 일정 줄 만큼 -이동.
@@ -335,7 +335,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
         }
 
         StartCoroutine(TypingTxt(line.Detail.result)); //대사 출력.
-        GameManager.instance.dataManager.NewdialogueLog.Add(line); //대화 로그에 저장.
+        GameManager.instance.dataManager.dialogueLog.Add(line); //대화 로그에 저장.
     }
 
     private void CharacterEmphasis(int id, string emotion) //화자 캐릭터의 강조 및 해당 캐릭터 스프라이트 변경(필요시).
@@ -456,7 +456,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
 
     private void OptionSelected(int lineIndex, NewDialogueParser.ParsedLine line)
     {
-        GameManager.instance.dataManager.NewdialogueLog.Add(line);
+        GameManager.instance.dataManager.dialogueLog.Add(line);
         isWaiting = false;
         //ChoiceOptionPanel.SetActive(false);
         DialoguePanel.SetActive(true);
@@ -498,7 +498,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
     //버튼에 할당할 이벤트 집합
     public void GetDialogueLogs() //GameManager에 저장된 이전까지의 대화 로그.
     {
-        List<NewDialogueParser.ParsedLine> logs = GameManager.instance.dataManager.NewdialogueLog;
+        List<NewDialogueParser.ParsedLine> logs = GameManager.instance.dataManager.dialogueLog;
         DialogueLogPanel.SetActive(true);
 
         foreach (Transform child in DialogueLogContainer)

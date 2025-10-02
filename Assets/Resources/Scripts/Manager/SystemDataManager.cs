@@ -24,17 +24,16 @@ public class SystemDataManager : MonoBehaviour, DataInitializable
         public string CurrentTime;
     }
 
-    //public int currentAP;
+    private enum CurrentDialogueCharacter { Iron, Fire, Ground, Water, Wood }
     public int maxAP;
     [SerializeField] public CharacterMap characterMap; //캐릭터 데이터 베이스
     [SerializeField] public RepairableEquipment equipmentMap; //수리 가능한 장비 데이터 베이스
     public Dictionary<int, CharacterDatas> runningCharacters = new Dictionary<int, CharacterDatas>(); //현재 대화에 참여중인 캐릭터들만
-    public Dictionary<int, EquipmentDatas> repairableEquipment = new Dictionary<int, EquipmentDatas>();
+    public Dictionary<int, EquipmentDatas> repairableEquipment = new Dictionary<int, EquipmentDatas>(); //수리 장치 데이터
     public SerializedDic_BG backgroundMap; //배경 이미지 데이터 베이스
     public Dictionary<string, object> operandDic = new Dictionary<string, object>(); //조건 체크할 때 쓰는 피연산자.
-    public List<NewDialogueParser.ParsedLine> NewdialogueLog = new List<NewDialogueParser.ParsedLine>(); //지나간 대화 로그.
-    public List<DialogueParser.ParsedLine> dialogueLog = new List<DialogueParser.ParsedLine>();
-    public ProccessDatas proccessDatas;
+    public List<NewDialogueParser.ParsedLine> dialogueLog = new List<NewDialogueParser.ParsedLine>(); //지나간 대화 로그.
+    public ProccessDatas proccessDatas; //현재 날짜, 플레이어 위치, 시간, 남은 ap
     private List<string> currentTime = new List<string> { "아침", "오전 일과", "오후", "오후 일과", "저녁", "밤 일과", "휴식 시간" };
     public CirclularList<string> dailyRoutine { get; private set; }
 
@@ -42,7 +41,7 @@ public class SystemDataManager : MonoBehaviour, DataInitializable
     {
         dailyRoutine = new CirclularList<string>(currentTime);
         proccessDatas.PlayerPosition = "1층 | 엘리베이터";
-        proccessDatas.CurrentTime = dailyRoutine.Next();
+        proccessDatas.CurrentTime = dailyRoutine.Get();
         proccessDatas.Routine = maxAP;
         proccessDatas.Day = 1;
     }
