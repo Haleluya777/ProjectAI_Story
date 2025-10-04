@@ -7,6 +7,8 @@ public class EquipmentDatas
 {
     public string name;
     public int progress;
+    public Sprite sprite;
+    public int reactedCharacterID;
 }
 
 [CreateAssetMenu(fileName = "EquipmentMap", menuName = "ScriptableObjects / Equipment / EquipmentMap")]

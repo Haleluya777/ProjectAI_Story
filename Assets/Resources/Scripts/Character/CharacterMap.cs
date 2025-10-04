@@ -18,6 +18,7 @@ public class CharacterData
     public List<TextAsset> dialogueFiles; //로비에서 캐릭터를 선택했을 때 하는 대화 스크립트들의 목록.
     public TextAsset NextDialogueScript; //다음에 진행할 대화 스크립트.
     public string CharacterFloor; //캐릭터가 있는 층 이름.
+    public int[] flags; //현재 대화 스크립트에서 파생될 수 있는 스크립트 목록들.
 }
 
 [CreateAssetMenu(fileName = "CharacterMap", menuName = "ScriptableObjects/Character/CharacterMap")]
@@ -35,11 +36,16 @@ public class CharacterMap : ScriptableObject
 
     public CharacterData GetCharacter(int index)
     {
-        if (index < 0 || index >= characters.Length)
+        if (index < 0 || index > characters.Length)
         {
             Debug.Log($"유효하지 않은 캐릭터 인덱스. Index : {index}");
             return null;
         }
-        return characters[index];
+        foreach (var character in characters)
+        {
+            if (character.id == index) return character;
+        }
+        Debug.Log($"ID값 {index}를 가진 캐릭터가 존재하지 않습니다.");
+        return null;
     }
 }

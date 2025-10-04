@@ -52,11 +52,21 @@ public class SystemDataManager : MonoBehaviour, DataInitializable
     void Update()
     {
         //Debug.Log($"날 : {proccessDatas.Day}, 현재 위치 : {proccessDatas.PlayerPosition}, 현재 시각 : {proccessDatas.Routine}");
+        //디버깅용 테스트코드
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            characterMap.GetCharacter(1).CurrentdialogueNum = 1 << (2);
+        }
     }
 
     void Awake()
     {
         //characterDic.Add(1, new CharacterData { name = "Fire", affection = 0 });
+    }
+
+    public int GetTopBit(int num)
+    {
+        return 0;
     }
 
     public void AddTurn()

@@ -7,7 +7,6 @@ using KoreanTyper;
 using System.Linq;
 using TMPro;
 using UnityEngine.Playables;
-using Unity.VisualScripting;
 using System.Text;
 
 public class NewDialogueRunner : MonoBehaviour, DataInitializable
@@ -72,9 +71,9 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
 
     private void Start()
     {
-        parser.Parse(DialogueFile.text);
+        //parser.Parse(DialogueFile.text);
         //임시
-        CharacterInit(3);
+        //CharacterInit(3);
         //RunDialogue();
     }
 
@@ -169,7 +168,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
             if (((index >> i) & 1) == 1)
             {
                 GameObject character = Instantiate(CharacterPrefab, characterParent);
-                CharacterData data = GameManager.instance.dataManager.characterMap.GetCharacter(i);
+                CharacterData data = GameManager.instance.dataManager.characterMap.GetCharacter(i + 1);
 
                 character.GetComponent<Image>().sprite = data.characterSpriteMap.sprites["Default"]; //기본 표정으로 초기화.
                 character.name = data.characterName;
@@ -201,6 +200,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
 
     public void RunDialogue()
     {
+        parser.Parse(DialogueFile.text);
         currentCharId = -1;
         if (DialogueFile != null)
         {
@@ -210,6 +210,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
         Panel.SetActive(true);
         //임시.
         CharacterInit(3);
+        //======
         ProccessNextLine();
     }
 
@@ -267,7 +268,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
                 break;
 
             case "J": //액션 노드가 J일 경우, 조건을 만족할 시, DialogueAsset을 변경, 조건을 만족하지 않으면 일정 줄 만큼 -이동.
-                JumpDialogue(line, GameManager.instance.dataManager.MainCharacterID);
+                JumpDialogue(line);
                 break;
 
             default:
@@ -279,35 +280,14 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
         RunningOtherNode(line);
     }
 
-    private void JumpDialogue(NewDialogueParser.ParsedLine line, int MainCharacterID) //DialogueAsset 변경.
+    private void JumpDialogue(NewDialogueParser.ParsedLine line) //DialogueAsset 변경.
     {
-        var characterData = GameManager.instance.dataManager.characterMap.GetCharacter(MainCharacterID); //메인 캐릭터 데이터 받아옴.
-        int[] derived_dialogue_num = Array.ConvertAll(line.Detail.condition.Split('|'), int.Parse);
         int jumpLine = int.Parse(line.Detail.result);
-        int dialogueProccess = characterData.CurrentdialogueNum; //메인 캐릭터의 전체 대화 스크립트들 진행도 체크.
 
-        for (int i = 0; i < derived_dialogue_num.Length; i++)
-        {
-            int bitCheck = (dialogueProccess & (1 << derived_dialogue_num[i]));
-            if (bitCheck == 1)
-            {
-                //캐릭터맵의...암튼 대화 스크립트 변경후 메서드 종료.
-                Debug.Log($"파생된 Dialogue중 {i} 번째로 변경 가능.");
-                characterData.NextDialogueScript = characterData.dialogueFiles[i];
-                return;
-            }
-        }
-
-        //for문에서 return이 실행되지 않을 때(비트 연산에서 1이 반환되는 경우가 없었을 때),주어진 라인만큼 뒤로 돌아감.
         currentLineNum = currentLineNum - jumpLine;
 
-        //또한 이 이 상태에서 플레이어가 조건을 만족한 뒤 다시 대사를 시도하면, 바뀐 대화 스크립트가 재생되어야 함.
-        //대화 스크립트가 바뀌는 시점은 플레이어가 대화 버튼을 누를 때이며, 모든 캐릭터의 조건을 체크할 필요는 없다.
-        //그러나 대화 버튼을 누를 때 대화 스크립트를 바꾸려면, 파생된 스크립트의 번호를 알아야 함.
-        //따라서 이 메서드에서 게임매니저를 통해 다른 메서드에 derived_dialogue_num의 번호를 전달해줘야 함.
-        //derived_dialogue_num의 값은 각 캐릭터 Map의 데이터에 가지고 있어야 함.
-
-        Debug.Log($"조건을 만족하지 않아 뒤로 돌아감. 점프 라인: {jumpLine}");
+        Debug.Log($"점프 라인: {jumpLine}");
+        EndDialogue();
     }
 
     private void RunningOtherNode(NewDialogueParser.ParsedLine line)

@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using Hallelujah;
 
 public class LobbyPanel : MonoBehaviour
 {
@@ -19,7 +19,7 @@ public class LobbyPanel : MonoBehaviour
     [SerializeField] private Slider actionPointSlider;
     [SerializeField] private TextMeshProUGUI playerPosition;
     [SerializeField] private TextMeshProUGUI day;
-    private const int REPAIRCOUNT = 3;
+    private const int REPAIRCOUNT = 5;
     void Start()
     {
         //playerActionButton.onClick.AddListener(StartAction);
@@ -38,18 +38,29 @@ public class LobbyPanel : MonoBehaviour
 
     private void InitCharacterSelection()
     {
-        for (int i = 0; i < GameManager.instance.dataManager.characterMap.characters.Length; i++)
+        for (int i = 1; i <= GameManager.instance.dataManager.characterMap.characters.Length; i++)
         {
             var characterData = GameManager.instance.dataManager.characterMap.GetCharacter(i);
-            int characterDialogueNum = characterData.CurrentdialogueNum;
+
+            //현재는 CurrnetdialogueNum를 2진수로 변경, 값이 1인 최상위 비트 번호에 해당하는 대화 번호를 가져오게끔 할 예정.
+            int characterDialogueNum = 0;//BitGeneric.GetTopBit(characterData.CurrentdialogueNum); //캐릭터의 현재 대화 번호를 가져옴. 다른 방식으로 변경 필요.
             int charID = characterData.id;
             var dialogueFile = characterData.dialogueFiles[characterDialogueNum];
             string floor = characterData.CharacterFloor;
 
             var characterButton = Instantiate(characterButtonPrefab, characterButtonParent);
-            characterButton.GetComponent<Button>().onClick.AddListener(() => StartDialogue(dialogueFile, characterDialogueNum, floor, charID));
-            characterButton.transform.GetChild(0).GetComponent<Image>().sprite = GameManager.instance.dataManager.characterMap.GetCharacter(i).characterSpriteMap.sprites["Default"];
+            var button = characterButton.GetComponent<Button>();
+            button.onClick.AddListener(() => CheckingFlags(characterData));
+            button.onClick.AddListener(() => StartDialogue(dialogueFile, characterDialogueNum, floor, charID));
+            characterButton.transform.GetChild(0).GetComponent<Image>().sprite = characterData.characterSpriteMap.sprites["Default"];
         }
+    }
+
+    private void CheckingFlags(CharacterData character) //CurrentDialgoueNum의 최상위 비트 번호 번째의 대화 파일로 변경.
+    {
+        var dialogueNum = BitGeneric.GetTopBit(character.CurrentdialogueNum);
+        if (GameManager.instance.dialogueRunner.DialogueFile == character.dialogueFiles[dialogueNum]) return;
+        GameManager.instance.dialogueRunner.DialogueFile = character.dialogueFiles[dialogueNum];
     }
 
     private void InitRepairSelection()
@@ -62,6 +73,7 @@ public class LobbyPanel : MonoBehaviour
             var repairButton = Instantiate(repairButtonPrefab, repairButtonParent);
             equipmentDic.Add(i, equipment.GetEquipment(i));
             var equipmentData = equipmentDic[i];
+            repairButton.transform.GetChild(0).GetComponent<Image>().sprite = equipmentData.sprite;
             repairButton.GetComponent<Button>().onClick.AddListener(() => Repair(equipmentData));
             repairButton.name = equipmentData.name;
         }
@@ -75,7 +87,7 @@ public class LobbyPanel : MonoBehaviour
     public void Repair(EquipmentDatas data)
     {
         if (GameManager.instance.dataManager.proccessDatas.Routine <= 0) return;
-        Debug.Log("수리");
+        GameManager.instance.dataManager.characterMap.GetCharacter(data.reactedCharacterID).CurrentdialogueNum |= (1 << data.progress);
         data.progress++;
         RepairSelection.SetActive(false);
         ConsumeActionPoint();
@@ -101,8 +113,6 @@ public class LobbyPanel : MonoBehaviour
         ConsumeActionPoint();
         CharacterSelection.SetActive(false);
 
-        //DialogueManager의 DialogueFile을 선택한 캐릭터의 대화 파일로 지정.
-        GameManager.instance.dialogueRunner.DialogueFile = dialogue;
         GameManager.instance.dialogueRunner.RunDialogue();
     }
 
