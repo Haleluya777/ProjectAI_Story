@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using DG.Tweening;
-using Microsoft.Unity.VisualStudio.Editor;
 
 public class DialogueFuncManager : MonoBehaviour, DataInitializable
 {
@@ -73,22 +72,47 @@ public class DialogueFuncManager : MonoBehaviour, DataInitializable
         //
     }
 
-    public void RunningProduction(string production)
+    public void RunningProduction(string production, int characterId)
     {
-        string[] nodeSplit = production.Split('_');
-        switch (nodeSplit[1])
+        string[] blocks = production.Split('\n');
+        for (int i = 0; i < blocks.Length; i++)
         {
-            case "Move":
+            string[] nodeSplit = blocks[i].Split('_');
+            switch (nodeSplit[0])
+            {
+                case "Move":
+                    string[] details = nodeSplit[1].Split('|'); //도착 위치, 시간, 대기 시간.
+                    var startTime = int.Parse(details[0]); //타임라인 트랙 시작 시간.
+                    int destination = details[1] switch
+                    {
+                        "A" => (Screen.width * 0) / 4,
+                        "B" => (Screen.width * 1) / 4,
+                        "C" => (Screen.width * 2) / 4,
+                        "D" => (Screen.width * 3) / 4,
+                        "E" => (Screen.width * 4) / 4,
+                        _ => 0
+                    }; //도착 위치
+                    var duration = int.Parse(details[2]); //도착하기 까지의 걸리는 시간.
+                    var waitTime = int.Parse(details[3]); //도착 이후 대기 시간.
 
-                break;
+                    GameObject characterObj = GameManager.instance.dataManager.runningCharacters[characterId].obj;
+                    //characterObj.GetComponent<RectTransform>().DOAnchorPosX(destination, duration);
+                    characterObj.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 10000);
+                    Debug.Log("이동한다.");
+                    break;
 
-            case "Turn":
-                break;
+                case "Turn":
+                    break;
 
-            case "Fall":
-                break;
-            default:
-                break;
+                case "Fall":
+                    break;
+
+                case "CutScene":
+                    break;
+
+                default:
+                    break;
+            }
         }
     }
 

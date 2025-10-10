@@ -8,6 +8,7 @@ using System.Linq;
 using TMPro;
 using UnityEngine.Playables;
 using System.Text;
+using UnityEngine.AI;
 
 public class NewDialogueRunner : MonoBehaviour, DataInitializable
 {
@@ -98,6 +99,11 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
     void Update()
     {
         DialogueStateAction();
+
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            Debug.Log(GameManager.instance.dataManager.runningCharacters[1]);
+        }
 
         if (Input.GetKey(KeyCode.LeftControl))
         {
@@ -223,8 +229,8 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
         currentCharId = -1;
         currentState = RunnerState.Normal;
         dataManager.dialogueLog.Clear();
-        dataManager.proccessDatas.PlayerPosition = "1층 로비 | 엘리베이터";
-        GameManager.instance.uiManager.lobbyUIManager.PlayerPosUpdate(dataManager.proccessDatas.PlayerPosition);
+        dataManager.proccessDatas.PlayerPosition.detail = "1층 로비 | 엘리베이터";
+        GameManager.instance.uiManager.lobbyUIManager.PlayerPosUpdate(dataManager.proccessDatas.PlayerPosition.detail);
         Panel.SetActive(false);
     }
     //------------------------------------------
@@ -293,7 +299,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
     private void RunningOtherNode(NewDialogueParser.ParsedLine line)
     {
         if (line.BG != "") GameManager.instance.dialogueFunc.ChangeBG(line.BG);
-        if (line.Production != "") GameManager.instance.dialogueFunc.RunningProduction(line.Production);
+        if (line.Production != "") GameManager.instance.dialogueFunc.RunningProduction(line.Production, currentCharId);
         if (line.BGM != "") GameManager.instance.dialogueFunc.ChangeBGM(line.BGM);
         if (line.Affection != "") GameManager.instance.dialogueFunc.AffectionChange(line.Affection, line.Actor);
     }
@@ -334,6 +340,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
         {
             character.GetComponent<Image>().color = new Color32(140, 140, 140, 255);
         }
+
         var emphasisChar = GameManager.instance.dataManager.runningCharacters[id].obj.GetComponent<Image>();
         emphasisChar.color = new Color32(255, 255, 255, 255);
         emphasisChar.sprite = GameManager.instance.dataManager.runningCharacters[id].characterData.characterSpriteMap.sprites[emotion];

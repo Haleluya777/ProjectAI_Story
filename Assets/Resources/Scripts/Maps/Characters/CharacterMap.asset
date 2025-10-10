@@ -14,6 +14,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characters:
   - id: 1
+    characterName: Iron
+    characterSpriteMap: {fileID: 11400000, guid: 2be8663db9542c24284ca7a1b606d87c, type: 2}
+    affaction: 0
+    CurrentdialogueNum: 0
+    dialogueLineNum: 0
+    dialogueFiles:
+    - {fileID: -8554868903961811279, guid: 3938d281ff7612e44bf2f15a08a678de, type: 3}
+    NextDialogueScript: {fileID: -8554868903961811279, guid: 3938d281ff7612e44bf2f15a08a678de, type: 3}
+    floor:
+      floorNum: 2
+      floorDetail: "\uCCA0\uC758 \uCE35"
+  - id: 2
     characterName: Fire
     characterSpriteMap: {fileID: 11400000, guid: 8a9fe86d9b73f73419ebd880a5008e83, type: 2}
     affaction: 1
@@ -26,19 +38,9 @@ MonoBehaviour:
     - {fileID: 4900000, guid: dfc101ed3a8d1c342b6a0091b115d77c, type: 3}
     - {fileID: 4900000, guid: 9170203dcefccbb41a2da85d540306b5, type: 3}
     NextDialogueScript: {fileID: -4982260756406341599, guid: a387960503677644bb8d729d27968fbe, type: 3}
-    CharacterFloor: "\uBD88\uC758 \uCE35"
-    flags: 020000000300000004000000
-  - id: 2
-    characterName: Iron
-    characterSpriteMap: {fileID: 11400000, guid: 2be8663db9542c24284ca7a1b606d87c, type: 2}
-    affaction: 0
-    CurrentdialogueNum: 0
-    dialogueLineNum: 0
-    dialogueFiles:
-    - {fileID: 4900000, guid: 9170203dcefccbb41a2da85d540306b5, type: 3}
-    NextDialogueScript: {fileID: 4900000, guid: 9170203dcefccbb41a2da85d540306b5, type: 3}
-    CharacterFloor: "\uCCA0\uC758 \uCE35"
-    flags: 020000000300000004000000
+    floor:
+      floorNum: 3
+      floorDetail: "\uBD88\uC758 \uCE35"
   - id: 3
     characterName: Stone
     characterSpriteMap: {fileID: 11400000, guid: 306ac4871cc0cd747b9bf036aea88b3d, type: 2}
@@ -48,8 +50,9 @@ MonoBehaviour:
     dialogueFiles:
     - {fileID: 4900000, guid: 9170203dcefccbb41a2da85d540306b5, type: 3}
     NextDialogueScript: {fileID: 4900000, guid: 9170203dcefccbb41a2da85d540306b5, type: 3}
-    CharacterFloor: "\uBC14\uC704\uC758 \uCE35"
-    flags: 
+    floor:
+      floorNum: 4
+      floorDetail: "\uBC14\uC704\uC758 \uCE35"
   - id: 4
     characterName: Water
     characterSpriteMap: {fileID: 11400000, guid: 54b74d682718c074983788809f8d64fc, type: 2}
@@ -57,10 +60,11 @@ MonoBehaviour:
     CurrentdialogueNum: 0
     dialogueLineNum: 0
     dialogueFiles:
-    - {fileID: 4900000, guid: 9170203dcefccbb41a2da85d540306b5, type: 3}
-    NextDialogueScript: {fileID: 4900000, guid: 9170203dcefccbb41a2da85d540306b5, type: 3}
-    CharacterFloor: "\uBB3C\uC758 \uCE35"
-    flags: 
+    - {fileID: -4789372409732899538, guid: 8941890bab7686d4595dc63f098a471c, type: 3}
+    NextDialogueScript: {fileID: -4789372409732899538, guid: 8941890bab7686d4595dc63f098a471c, type: 3}
+    floor:
+      floorNum: 5
+      floorDetail: "\uBB3C\uC758 \uCE35"
   - id: 5
     characterName: Wood
     characterSpriteMap: {fileID: 11400000, guid: d93a8ad15262d254985323d3c6e34073, type: 2}
@@ -70,5 +74,6 @@ MonoBehaviour:
     dialogueFiles:
     - {fileID: 4900000, guid: 9170203dcefccbb41a2da85d540306b5, type: 3}
     NextDialogueScript: {fileID: 4900000, guid: 9170203dcefccbb41a2da85d540306b5, type: 3}
-    CharacterFloor: "\uB098\uBB34\uC758 \uCE35"
-    flags: 
+    floor:
+      floorNum: 6
+      floorDetail: "\uB098\uBB34\uC758 \uCE35"

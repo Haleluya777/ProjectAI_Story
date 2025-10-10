@@ -10,7 +10,10 @@ public class TimeLineManager : MonoBehaviour
 
     void Update()
     {
-
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            timeLine.Play();
+        }
     }
 
     public void TimeLineAnimatorTrackInsert(Animator[] targetAnim)
@@ -31,11 +34,11 @@ public class TimeLineManager : MonoBehaviour
 
     public void TimeLinePlay(int timeLineId)
     {
-        TimelineAsset timelineAsset = timeLineMap.GetTimeLine(timeLineId).Asset; // timeLineMap에서 타임라인 가져오기
-        if (timelineAsset != null)
-        {
-            timeLine.Play(timelineAsset);
-        }
+        //TimelineAsset timelineAsset = timeLineMap.GetTimeLine(timeLineId).Asset; // timeLineMap에서 타임라인 가져오기
+        //if (timelineAsset != null)
+        //{
+        //    timeLine.Play(timelineAsset);
+        //}
     }
 
     public void TimeLinePause()

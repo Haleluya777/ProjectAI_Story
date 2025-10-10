@@ -4,6 +4,13 @@ using AYellowpaper.SerializedCollections;
 using Unity.VisualScripting;
 
 [System.Serializable]
+public struct FloorDetail
+{
+    public int floorNum;
+    public string floorDetail;
+}
+
+[System.Serializable]
 public class CharacterData
 {
     public int id;
@@ -17,8 +24,8 @@ public class CharacterData
     public int dialogueLineNum; //현재 대화 진행도 내의 대사 진행도
     public List<TextAsset> dialogueFiles; //로비에서 캐릭터를 선택했을 때 하는 대화 스크립트들의 목록.
     public TextAsset NextDialogueScript; //다음에 진행할 대화 스크립트.
-    public string CharacterFloor; //캐릭터가 있는 층 이름.
-    public int[] flags; //현재 대화 스크립트에서 파생될 수 있는 스크립트 목록들.
+    public FloorDetail floor; //캐릭터가 있는 층 이름.
+    //public int[] flags; //현재 대화 스크립트에서 파생될 수 있는 스크립트 목록들.
 }
 
 [CreateAssetMenu(fileName = "CharacterMap", menuName = "ScriptableObjects/Character/CharacterMap")]
