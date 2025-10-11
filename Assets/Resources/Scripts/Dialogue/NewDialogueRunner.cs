@@ -9,6 +9,7 @@ using TMPro;
 using UnityEngine.Playables;
 using System.Text;
 using UnityEngine.AI;
+using Unity.VisualScripting;
 
 public class NewDialogueRunner : MonoBehaviour, DataInitializable
 {
@@ -255,6 +256,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
 
             case "If": //액션 노드가 If일 경우, 조건 체크 및 조건에 부합한지 부합하지 않은지 체크한 후, 줄 이동.
                 CheckingCondition(line.Detail.condition.Split('|'), line.Detail.result.Split('|'));
+                currentCharId = -1;
                 break;
 
             case "F": //분기점 체크. 개발 보류.
@@ -265,9 +267,11 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
 
             case "S": //액션 노드가 S일 경우, 선택지를 제시한 후, 고른 선택지에 따라 줄 이동.
                 HandleChoices(line.Detail.condition.Split('|'), line.Detail.result.Split('|'), line);
+                currentCharId = -1;
                 break;
 
             case "": //액션 노드에 아무것도 없는 경우. T행동의 연장선으로 간주, Detail의 Result를 출력한다.
+                if (currentCharId == -1) break;
                 StartCoroutine(TypingTxt(line.Detail.result)); //대사 출력.
                 CharacterEmphasis(currentCharId, line.Face); //화자 캐릭터 강조.
                 GameManager.instance.dataManager.dialogueLog.Add(line); //로그 추가.
@@ -275,12 +279,14 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
 
             case "J": //액션 노드가 J일 경우, 조건을 만족할 시, DialogueAsset을 변경, 조건을 만족하지 않으면 일정 줄 만큼 -이동.
                 JumpDialogue(line);
+                currentCharId = -1;
                 break;
 
             default:
                 Debug.LogWarning($"알 수 없는 액션: {line.Action} (라인 {currentLineNum})");
                 currentLineNum++;
                 ProccessNextLine();
+                currentCharId = -1;
                 return;
         }
         RunningOtherNode(line);
@@ -288,18 +294,26 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
 
     private void JumpDialogue(NewDialogueParser.ParsedLine line) //DialogueAsset 변경.
     {
-        int jumpLine = int.Parse(line.Detail.result);
+        try
+        {
+            int jumpLine = int.Parse(line.Detail.result);
 
-        currentLineNum = currentLineNum - jumpLine;
-
-        Debug.Log($"점프 라인: {jumpLine}");
-        EndDialogue();
+            currentLineNum = currentLineNum - jumpLine;
+        }
+        catch
+        {
+            Debug.LogWarning($"잘못 된 내용");
+        }
+        finally
+        {
+            EndDialogue();
+        }
     }
 
     private void RunningOtherNode(NewDialogueParser.ParsedLine line)
     {
         if (line.BG != "") GameManager.instance.dialogueFunc.ChangeBG(line.BG);
-        if (line.Production != "") GameManager.instance.dialogueFunc.RunningProduction(line.Production, currentCharId);
+        if (line.Production != "") GameManager.instance.dialogueFunc.RunningProduction(line.Production);
         if (line.BGM != "") GameManager.instance.dialogueFunc.ChangeBGM(line.BGM);
         if (line.Affection != "") GameManager.instance.dialogueFunc.AffectionChange(line.Affection, line.Actor);
     }
@@ -335,7 +349,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
 
     private void CharacterEmphasis(int id, string emotion) //화자 캐릭터의 강조 및 해당 캐릭터 스프라이트 변경(필요시).
     {
-        if (id == -1) return;
+        if (id == -1 || emotion == "") return;
         foreach (Transform character in characterParent)
         {
             character.GetComponent<Image>().color = new Color32(140, 140, 140, 255);
@@ -565,8 +579,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
         }
     }
 
-    //----------------------
-
+    //------------
     private IEnumerator TypingTxt(string args)
     {
         isWaiting = true;
@@ -578,7 +591,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
         }
 
         yield return null;
-        if (GameManager.instance.timeLineManager.timeLine.state != PlayState.Playing) isWaiting = false;
+        isWaiting = false;
         currentLineNum++;
 
         if (currentState == RunnerState.Auto || currentState == RunnerState.Skip)

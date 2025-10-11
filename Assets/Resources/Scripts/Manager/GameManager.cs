@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
     public DialogueFuncManager dialogueFunc;
     public NewDialogueRunner dialogueRunner;
     public TimeLineManager timeLineManager;
+    public TimeLineBuilder timeLineBuilder;
     public SystemDataManager dataManager;
     public SoundManager soundManager;
     public UIManager uiManager;

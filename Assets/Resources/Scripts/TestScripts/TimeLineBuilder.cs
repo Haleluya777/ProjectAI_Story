@@ -12,38 +12,67 @@ public class TimeLineBuilder : MonoBehaviour
     public TimelineAsset timelineAsset;
     public GameObject character;
     private Animator anim;
-    public AnimationClip animClip;
+    private AnimationClip animClip; //빈 클립.
+    public AnimationClip walking; //걷는 것 처럼 위아래로 흔들리는 애니메이션 클립.
+    private AnimationTrack parent;
 
     private void Awake()
     {
         anim = character.GetComponent<Animator>();
+        animClip = new AnimationClip { legacy = false };
+
+        if (timelineAsset != null)
+        {
+            //timelineAsset = Instantiate(timelineAsset);
+            director.playableAsset = timelineAsset;
+        }
     }
 
     private void Update()
     {
-        //director = GetComponent<PlayableDirector>();
-        //timelineAsset = director.playableAsset as TimelineAsset;
-        if (Input.GetKeyDown(KeyCode.A))
+        //Debug.Log(director.state);
+    }
+
+    public void InitTimeLine()//타임라인 초기화
+    {
+        foreach (var track in timelineAsset.GetRootTracks().ToList())
         {
-            Debug.Log("할렐루야!");
-            foreach (var track in timelineAsset.GetRootTracks().ToList())
-            {
-                timelineAsset.DeleteTrack(track);
-            }
-
-            AnimationTrack animTrack = timelineAsset.CreateTrack<AnimationTrack>(null, "PlayerAnim");
-            director.SetGenericBinding(animTrack, anim);
-
-            ControlTrack controlTrack = timelineAsset.CreateTrack<ControlTrack>(null, "PlayerControl");
-            director.SetGenericBinding(controlTrack, character);
-
-            TimelineClip newClip = animTrack.CreateClip(animClip);
-            newClip.start = 0;
-            newClip.duration = 20;
-
-            TimelineClip moveClip = controlTrack.CreateDefaultClip();
-            moveClip.duration = 2.0;
-            moveClip.start = 0;
+            timelineAsset.DeleteTrack(track);
         }
+    }
+
+    public void MakeParentTrack()
+    {
+        parent = timelineAsset.CreateTrack<AnimationTrack>(null, "Parent");
+    }
+
+    public void BuildingTimeLine(int startTime, string trackName, AnimationClip clip, GameObject character)
+    {
+        //빈 애니메이션 트랙 생성.
+        AnimationTrack track = timelineAsset.CreateTrack<AnimationTrack>(parent, trackName);
+        director.SetGenericBinding(parent, character.GetComponent<Animator>()); //트랙에 움직일 캐릭터 애니메이터 할당.
+
+        TimelineClip timelineClip = track.CreateClip(clip); //트랙에 클립 할당.
+        timelineClip.start = startTime; //클립 시작 시간
+        //timelineClip.duration = _duration;
+    }
+
+    public AnimationClip MakeAnimationClip(Vector2 startPos, Vector2 endPos, float duration, string clipName, char attribute)
+    {
+        var clip = Instantiate(animClip);
+        clip.name = clipName;
+
+        if (attribute == 'X')
+        {
+            var moveX = AnimationCurve.Linear(0, startPos.x, duration, endPos.x);
+            clip.SetCurve("", typeof(RectTransform), "m_AnchoredPosition.x", moveX);
+        }
+        else if (attribute == 'Y')
+        {
+            var moveY = AnimationCurve.Linear(0, startPos.y, duration, endPos.y);
+            clip.SetCurve("", typeof(RectTransform), "m_AnchoredPosition.y", moveY);
+        }
+
+        return clip;
     }
 }

@@ -20,8 +20,8 @@ MonoBehaviour:
     CurrentdialogueNum: 0
     dialogueLineNum: 0
     dialogueFiles:
-    - {fileID: -8554868903961811279, guid: 3938d281ff7612e44bf2f15a08a678de, type: 3}
-    NextDialogueScript: {fileID: -8554868903961811279, guid: 3938d281ff7612e44bf2f15a08a678de, type: 3}
+    - {fileID: 6283971798180898224, guid: b4095f4c0bae90a489a60a6beb3d56cf, type: 3}
+    NextDialogueScript: {fileID: 6283971798180898224, guid: b4095f4c0bae90a489a60a6beb3d56cf, type: 3}
     floor:
       floorNum: 2
       floorDetail: "\uCCA0\uC758 \uCE35"

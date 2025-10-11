@@ -1,0 +1,5 @@
+Action	Detail	BG	Production	Face	Actor	BGM	SE	Affection			
+T	두둥탁!		1_Move_0 | B | 2 | 0	Default	1_Fire_불의 층 관리자			
+T	테스트용 대사			Default	1_Iron_철의 층 관리자			
+	연장 대사 테스트 겸 타임라인 테스트		1_Move_ 0 | E | 2 | 0, 1_Walk_0 | 2					
+J	\	BG_1						

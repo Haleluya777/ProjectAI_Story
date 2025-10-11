@@ -71,7 +71,6 @@ public class LobbyPanel : MonoBehaviour
         if (GameManager.instance.dataManager.floorUnlock == 0) return;
         for (int i = 0; i < GameManager.instance.dataManager.floorUnlock; i++)
         {
-            Debug.Log("알랄라");
             characterButtonParent.transform.GetChild(i).transform.GetChild(1).GetComponent<Button>().interactable = true;
         }
     }

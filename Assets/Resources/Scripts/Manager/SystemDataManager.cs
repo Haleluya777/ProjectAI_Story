@@ -67,7 +67,7 @@ public class SystemDataManager : MonoBehaviour, DataInitializable
         {
             characterMap.GetCharacter(1).CurrentdialogueNum = 1 << (2);
         }
-        Debug.Log(runningCharacters.ContainsKey(1));
+        //Debug.Log(runningCharacters.ContainsKey(1));
     }
 
     void Awake()
