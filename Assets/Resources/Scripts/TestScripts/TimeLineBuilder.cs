@@ -41,20 +41,21 @@ public class TimeLineBuilder : MonoBehaviour
         }
     }
 
-    public void MakeParentTrack()
+    public AnimationTrack MakeParentTrack()
     {
         parent = timelineAsset.CreateTrack<AnimationTrack>(null, "Parent");
+        return parent;
     }
 
-    public void BuildingTimeLine(int startTime, string trackName, AnimationClip clip, GameObject character)
+    public void BuildingTimeLine(int startTime, string trackName, float _duration, AnimationClip clip, GameObject character, AnimationTrack parentTrack)
     {
         //빈 애니메이션 트랙 생성.
-        AnimationTrack track = timelineAsset.CreateTrack<AnimationTrack>(parent, trackName);
-        director.SetGenericBinding(parent, character.GetComponent<Animator>()); //트랙에 움직일 캐릭터 애니메이터 할당.
+        AnimationTrack track = timelineAsset.CreateTrack<AnimationTrack>(parentTrack, trackName);
+        director.SetGenericBinding(parentTrack, character.GetComponent<Animator>()); //트랙에 움직일 캐릭터 애니메이터 할당.
 
         TimelineClip timelineClip = track.CreateClip(clip); //트랙에 클립 할당.
         timelineClip.start = startTime; //클립 시작 시간
-        //timelineClip.duration = _duration;
+        timelineClip.duration = _duration;
     }
 
     public AnimationClip MakeAnimationClip(Vector2 startPos, Vector2 endPos, float duration, string clipName, char attribute)

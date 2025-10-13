@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.Timeline;
 
 public class DialogueFuncManager : MonoBehaviour, DataInitializable
 {
@@ -66,16 +67,34 @@ public class DialogueFuncManager : MonoBehaviour, DataInitializable
 
     public void RunningProduction(string production)
     {
+        //각 캐릭터가 사용할 애니메이션 트랙
+        Dictionary<int, AnimationTrack> characterTrack = new Dictionary<int, AnimationTrack>();
+
         GameManager.instance.timeLineBuilder.InitTimeLine();
         string[] blocks = production.Split(',');
+        int previousActorId = -1;
+
         for (int i = 0; i < blocks.Length; i++)
         {
             string[] nodeSplit = blocks[i].Split('_');
+            var actorId = int.Parse(nodeSplit[0]);
+
+            if (actorId != previousActorId)
+            {
+                //행동하는 주체(캐릭터id값)이 바뀔 때마다 딕셔너리에 바뀐 actorId를 검색, 키 값이 존재하지 않으면 새로운 부모 애니메이션 트랙 생성.
+                if (!characterTrack.ContainsKey(actorId))
+                {
+                    AnimationTrack parentTrack = GameManager.instance.timeLineBuilder.MakeParentTrack();
+                    characterTrack.Add(actorId, parentTrack);
+                }
+            }
+            previousActorId = actorId;
+
             switch (nodeSplit[1])
             {
                 case "Move":
                     {
-                        int actorId = int.Parse(nodeSplit[0]); //타임라인에서 애니메이션을 재생할 캐릭터 ID
+                        //int actorId = int.Parse(nodeSplit[0]); //타임라인에서 애니메이션을 재생할 캐릭터 ID
                         string[] details = nodeSplit[2].Split('|'); //도착 위치, 시간, 대기 시간.
                         var startTime = int.Parse(details[0]); //타임라인 트랙 시작 시간.
 
@@ -94,20 +113,25 @@ public class DialogueFuncManager : MonoBehaviour, DataInitializable
                         GameObject characterObj = GameManager.instance.dataManager.runningCharacters[actorId].obj;
                         var characterPos = characterObj.GetComponent<RectTransform>().anchoredPosition;
                         var animClip = GameManager.instance.timeLineBuilder.MakeAnimationClip(characterPos, new Vector2(destination, -150), duration, "Moving", 'X');
-                        GameManager.instance.timeLineBuilder.BuildingTimeLine(startTime, "Move", animClip, characterObj);
+                        GameManager.instance.timeLineBuilder.BuildingTimeLine(startTime, "Move", 2, animClip, characterObj, characterTrack[actorId]);
                         break;
                     }
 
 
                 case "Turn": //캐릭터를 좌/우로 180도 회전시킴.
                     {
-                        int actorId = int.Parse(nodeSplit[0]); //타임라인에서 애니메이션을 재생할 캐릭터 ID
+                        float duration = .667f; //회전 애니메이션 재생 시간.(고정)
+                        //int actorId = int.Parse(nodeSplit[0]); //타임라인에서 애니메이션을 재생할 캐릭터 ID
                         string[] details = nodeSplit[2].Split('|'); //도착 위치, 회전 방향.
                         var startTime = int.Parse(details[0]); //타임라인 트랙 시작 시간.
-                        var dir = details[1].Trim();
+                        var dir = details[1].Trim(); //회전 방향. Right(왼쪽을 보던 캐릭터가 오른쪽으로 180도 회전) Left(오른쪽을 보던 캐릭터가 왼쪽으로 180도 회전)
 
+                        var characterDatas = GameManager.instance.dataManager.runningCharacters[actorId]; //캐릭터 데이터
+                        var characterPos = characterDatas.obj.GetComponent<RectTransform>().anchoredPosition; //캐릭터 위치
+                        string rotationAxis = dir == "Right" ? "TurnRight" : "TurnLeft";
 
-
+                        var animClip = characterDatas.characterData.characterAnim.animationClips[rotationAxis]; //캐릭터 애니메이션 클립
+                        GameManager.instance.timeLineBuilder.BuildingTimeLine(startTime, "Turning", duration, animClip, characterDatas.obj, characterTrack[actorId]);
                         break;
                     }
 
@@ -119,16 +143,17 @@ public class DialogueFuncManager : MonoBehaviour, DataInitializable
 
                 case "Walk": //걷는 것 처럼 위아래로 흔들리는 표현, 속도 조절 가능.(Loop Animation)
                     {
-                        int actorId = int.Parse(nodeSplit[0]); //타임라인에서 애니메이션을 재생할 캐릭터 ID
-                        string[] details = nodeSplit[2].Split('|'); //도착 위치, 시간, 대기 시간.
-                        var startTime = int.Parse(details[0]); //타임라인 트랙 시작 시간.
+                        //int actorId = int.Parse(nodeSplit[0]); //타임라인에서 애니메이션을 재생할 캐릭터 ID
+                        string[] details = nodeSplit[2].Split('|'); //시작 시간, 대기 시간.
+                        var startTime = int.Parse(details[0]); //타임라인 기준으로 애니메이션 클립이 시작되는 시간.
                         var duration = int.Parse(details[1]); //진행 시간.
 
-                        GameObject characterObj = GameManager.instance.dataManager.runningCharacters[actorId].obj;
-                        var characterPos = characterObj.GetComponent<RectTransform>().anchoredPosition;
-                        var animClip = GameManager.instance.timeLineBuilder.MakeAnimationClip(characterPos, new Vector2(characterPos.x, -100), 0.25f, "Walking", 'Y');
-                        animClip.wrapMode = WrapMode.PingPong;
-                        GameManager.instance.timeLineBuilder.BuildingTimeLine(startTime, "Walking", animClip, characterObj);
+                        var characterDatas = GameManager.instance.dataManager.runningCharacters[actorId]; //캐릭터 데이터
+                        var characterPos = characterDatas.obj.GetComponent<RectTransform>().anchoredPosition; //캐릭터 위치
+                        var animClip = characterDatas.characterData.characterAnim.animationClips["Walk"]; //캐릭터 애니메이션 클립
+
+                        //애니메이션 클립을 타임라인에 추가.
+                        GameManager.instance.timeLineBuilder.BuildingTimeLine(startTime, "Walking", 2, animClip, characterDatas.obj, characterTrack[actorId]);
                         break;
                     }
 

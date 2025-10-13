@@ -68,7 +68,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
 
     private List<NewDialogueParser.ParsedLine> scriptLine;
     private int currentLineNum = 0;
-    int currentCharId;
+    int currentCharId; //현재 말하고 있는 캐릭터의 id값. 0은 나레이션.
     [SerializeField] private bool isWaiting;
 
     private void Start()
@@ -99,6 +99,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
 
     void Update()
     {
+        Debug.Log(currentCharId);
         DialogueStateAction();
 
         if (Input.GetKeyDown(KeyCode.Z))
@@ -255,19 +256,17 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
                 break;
 
             case "If": //액션 노드가 If일 경우, 조건 체크 및 조건에 부합한지 부합하지 않은지 체크한 후, 줄 이동.
-                CheckingCondition(line.Detail.condition.Split('|'), line.Detail.result.Split('|'));
                 currentCharId = -1;
+                CheckingCondition(line.Detail.condition.Split('|'), line.Detail.result.Split('|'));
                 break;
 
             case "F": //분기점 체크. 개발 보류.
                 //CheckingFlag(line.Detail.condition, line.Detail.result.Split('|'));
-                currentLineNum++;
-                ProccessNextLine();
                 break;
 
             case "S": //액션 노드가 S일 경우, 선택지를 제시한 후, 고른 선택지에 따라 줄 이동.
-                HandleChoices(line.Detail.condition.Split('|'), line.Detail.result.Split('|'), line);
                 currentCharId = -1;
+                HandleChoices(line.Detail.condition.Split('|'), line.Detail.result.Split('|'), line);
                 break;
 
             case "": //액션 노드에 아무것도 없는 경우. T행동의 연장선으로 간주, Detail의 Result를 출력한다.
@@ -278,15 +277,15 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
                 break;
 
             case "J": //액션 노드가 J일 경우, 조건을 만족할 시, DialogueAsset을 변경, 조건을 만족하지 않으면 일정 줄 만큼 -이동.
-                JumpDialogue(line);
                 currentCharId = -1;
+                JumpDialogue(line);
                 break;
 
             default:
                 Debug.LogWarning($"알 수 없는 액션: {line.Action} (라인 {currentLineNum})");
                 currentLineNum++;
-                ProccessNextLine();
                 currentCharId = -1;
+                ProccessNextLine();
                 return;
         }
         RunningOtherNode(line);
@@ -322,12 +321,14 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
     {
         if (line.Detail.result.Contains("\\n")) line.Detail.result = line.Detail.result.Replace("\\n", "\n"); //대사에 \n이 포함되어 있을 경우, 줄바꿈 처리.
         /*Debug.Log(int.Parse(line.Actor.Split('_')[0]));*/
-        if (line.Actor == "") //화자 이름이 없을 경우.
+        if (line.Actor == "") //화자 이름이 없을 경우. 나레이션인 경우.
         {
             SpeakerName.gameObject.transform.parent.gameObject.SetActive(false); //화자 이름이 없을 경우, 화자 이름 UI 비활성화.
+            Debug.Log("나레이션이 말을 한다.");
+            currentCharId = 0;
         }
 
-        else //화자 이름이 있을 경우.
+        else //화자 이름이 있을 경우. 캐릭터가 말하는 경우.
         {
             SpeakerName.gameObject.transform.parent.gameObject.SetActive(true); //화자 이름이 있을 경우, 화자 이름 UI 활성화.
             string[] actorDetail = line.Actor.Split('_');
