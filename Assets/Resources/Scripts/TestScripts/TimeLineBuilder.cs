@@ -14,7 +14,7 @@ public class TimeLineBuilder : MonoBehaviour
     private Animator anim;
     private AnimationClip animClip; //빈 클립.
     public AnimationClip walking; //걷는 것 처럼 위아래로 흔들리는 애니메이션 클립.
-    private AnimationTrack parent;
+    //private AnimationTrack parent;
 
     private void Awake()
     {
@@ -41,17 +41,25 @@ public class TimeLineBuilder : MonoBehaviour
         }
     }
 
-    public AnimationTrack MakeParentTrack()
+    public AnimationTrack[] TrackSetting(AnimationTrack[] tracks)
     {
-        parent = timelineAsset.CreateTrack<AnimationTrack>(null, "Parent");
-        return parent;
+        tracks[0] = timelineAsset.CreateTrack<AnimationTrack>(null, "Parent");
+        tracks[1] = timelineAsset.CreateTrack<AnimationTrack>(tracks[0], "Movement"); //캐릭터 이동, 회전, 쓰러지는 효과를 담을 트랙 (서로 겹칠 일이 없는 애니메이션 클립이 들어감.)
+        tracks[2] = timelineAsset.CreateTrack<AnimationTrack>(tracks[0], "Effect"); //위아래로 흔들리는 걷기 모션 등, 서로 겹치면서 동시에 실행될 수 있는 애니메이션 클립이 들어감.
+
+        return tracks;
     }
 
-    public void BuildingTimeLine(int startTime, string trackName, float _duration, AnimationClip clip, GameObject character, AnimationTrack parentTrack)
+    public void SetAnimator(AnimationTrack parentTrack, GameObject character)
+    {
+        director.SetGenericBinding(parentTrack, character.GetComponent<Animator>());
+    }
+
+    public void BuildingTimeLine(int startTime, string trackName, float _duration, AnimationClip clip, GameObject character, AnimationTrack parentTrack, AnimationTrack track)
     {
         //빈 애니메이션 트랙 생성.
-        AnimationTrack track = timelineAsset.CreateTrack<AnimationTrack>(parentTrack, trackName);
-        director.SetGenericBinding(parentTrack, character.GetComponent<Animator>()); //트랙에 움직일 캐릭터 애니메이터 할당.
+        //AnimationTrack track = timelineAsset.CreateTrack<AnimationTrack>(parentTrack, trackName);
+        //director.SetGenericBinding(parentTrack, character.GetComponent<Animator>()); //트랙에 움직일 캐릭터 애니메이터 할당.
 
         TimelineClip timelineClip = track.CreateClip(clip); //트랙에 클립 할당.
         timelineClip.start = startTime; //클립 시작 시간

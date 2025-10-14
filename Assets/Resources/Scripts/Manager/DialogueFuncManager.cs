@@ -68,27 +68,23 @@ public class DialogueFuncManager : MonoBehaviour, DataInitializable
     public void RunningProduction(string production)
     {
         //각 캐릭터가 사용할 애니메이션 트랙
-        Dictionary<int, AnimationTrack> characterTrack = new Dictionary<int, AnimationTrack>();
+        Dictionary<int, AnimationTrack[]> characterTrack = new Dictionary<int, AnimationTrack[]>();
 
         GameManager.instance.timeLineBuilder.InitTimeLine();
         string[] blocks = production.Split(',');
-        int previousActorId = -1;
 
         for (int i = 0; i < blocks.Length; i++)
         {
             string[] nodeSplit = blocks[i].Split('_');
             var actorId = int.Parse(nodeSplit[0]);
 
-            if (actorId != previousActorId)
+            if (!characterTrack.ContainsKey(actorId))
             {
-                //행동하는 주체(캐릭터id값)이 바뀔 때마다 딕셔너리에 바뀐 actorId를 검색, 키 값이 존재하지 않으면 새로운 부모 애니메이션 트랙 생성.
-                if (!characterTrack.ContainsKey(actorId))
-                {
-                    AnimationTrack parentTrack = GameManager.instance.timeLineBuilder.MakeParentTrack();
-                    characterTrack.Add(actorId, parentTrack);
-                }
+                Debug.Log($"새로운 캐릭터 {actorId}의 트랙 생성.");
+                var track = GameManager.instance.timeLineBuilder.TrackSetting(new AnimationTrack[3]);
+                characterTrack.Add(actorId, track);
             }
-            previousActorId = actorId;
+            GameManager.instance.timeLineBuilder.SetAnimator(characterTrack[actorId][0], GameManager.instance.dataManager.runningCharacters[actorId].obj);
 
             switch (nodeSplit[1])
             {
@@ -113,7 +109,8 @@ public class DialogueFuncManager : MonoBehaviour, DataInitializable
                         GameObject characterObj = GameManager.instance.dataManager.runningCharacters[actorId].obj;
                         var characterPos = characterObj.GetComponent<RectTransform>().anchoredPosition;
                         var animClip = GameManager.instance.timeLineBuilder.MakeAnimationClip(characterPos, new Vector2(destination, -150), duration, "Moving", 'X');
-                        GameManager.instance.timeLineBuilder.BuildingTimeLine(startTime, "Move", 2, animClip, characterObj, characterTrack[actorId]);
+                        animClip.wrapMode = WrapMode.Loop;
+                        GameManager.instance.timeLineBuilder.BuildingTimeLine(startTime, "Move", duration, animClip, characterObj, characterTrack[actorId][0], characterTrack[actorId][1]);
                         break;
                     }
 
@@ -131,7 +128,7 @@ public class DialogueFuncManager : MonoBehaviour, DataInitializable
                         string rotationAxis = dir == "Right" ? "TurnRight" : "TurnLeft";
 
                         var animClip = characterDatas.characterData.characterAnim.animationClips[rotationAxis]; //캐릭터 애니메이션 클립
-                        GameManager.instance.timeLineBuilder.BuildingTimeLine(startTime, "Turning", duration, animClip, characterDatas.obj, characterTrack[actorId]);
+                        GameManager.instance.timeLineBuilder.BuildingTimeLine(startTime, "Turning", duration, animClip, characterDatas.obj, characterTrack[actorId][0], characterTrack[actorId][1]);
                         break;
                     }
 
@@ -153,7 +150,7 @@ public class DialogueFuncManager : MonoBehaviour, DataInitializable
                         var animClip = characterDatas.characterData.characterAnim.animationClips["Walk"]; //캐릭터 애니메이션 클립
 
                         //애니메이션 클립을 타임라인에 추가.
-                        GameManager.instance.timeLineBuilder.BuildingTimeLine(startTime, "Walking", 2, animClip, characterDatas.obj, characterTrack[actorId]);
+                        GameManager.instance.timeLineBuilder.BuildingTimeLine(startTime, "Walking", duration, animClip, characterDatas.obj, characterTrack[actorId][0], characterTrack[actorId][2]);
                         break;
                     }
 

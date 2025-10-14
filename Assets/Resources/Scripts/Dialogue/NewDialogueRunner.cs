@@ -99,7 +99,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
 
     void Update()
     {
-        Debug.Log(currentCharId);
+        //Debug.Log(currentCharId);
         DialogueStateAction();
 
         if (Input.GetKeyDown(KeyCode.Z))
