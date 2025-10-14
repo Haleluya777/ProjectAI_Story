@@ -81,7 +81,7 @@ public class DialogueFuncManager : MonoBehaviour, DataInitializable
             if (!characterTrack.ContainsKey(actorId))
             {
                 Debug.Log($"새로운 캐릭터 {actorId}의 트랙 생성.");
-                var track = GameManager.instance.timeLineBuilder.TrackSetting(new AnimationTrack[3]);
+                var track = GameManager.instance.timeLineBuilder.TrackSetting(new AnimationTrack[5]);
                 characterTrack.Add(actorId, track);
             }
             GameManager.instance.timeLineBuilder.SetAnimator(characterTrack[actorId][0], GameManager.instance.dataManager.runningCharacters[actorId].obj);
@@ -92,7 +92,7 @@ public class DialogueFuncManager : MonoBehaviour, DataInitializable
                     {
                         //int actorId = int.Parse(nodeSplit[0]); //타임라인에서 애니메이션을 재생할 캐릭터 ID
                         string[] details = nodeSplit[2].Split('|'); //도착 위치, 시간, 대기 시간.
-                        var startTime = int.Parse(details[0]); //타임라인 트랙 시작 시간.
+                        var startTime = float.Parse(details[0]); //타임라인 트랙 시작 시간.
 
                         int destination = details[1].Trim() switch
                         {
@@ -120,7 +120,7 @@ public class DialogueFuncManager : MonoBehaviour, DataInitializable
                         float duration = .667f; //회전 애니메이션 재생 시간.(고정)
                         //int actorId = int.Parse(nodeSplit[0]); //타임라인에서 애니메이션을 재생할 캐릭터 ID
                         string[] details = nodeSplit[2].Split('|'); //도착 위치, 회전 방향.
-                        var startTime = int.Parse(details[0]); //타임라인 트랙 시작 시간.
+                        var startTime = float.Parse(details[0]); //타임라인 트랙 시작 시간.
                         var dir = details[1].Trim(); //회전 방향. Right(왼쪽을 보던 캐릭터가 오른쪽으로 180도 회전) Left(오른쪽을 보던 캐릭터가 왼쪽으로 180도 회전)
 
                         var characterDatas = GameManager.instance.dataManager.runningCharacters[actorId]; //캐릭터 데이터
@@ -128,7 +128,7 @@ public class DialogueFuncManager : MonoBehaviour, DataInitializable
                         string rotationAxis = dir == "Right" ? "TurnRight" : "TurnLeft";
 
                         var animClip = characterDatas.characterData.characterAnim.animationClips[rotationAxis]; //캐릭터 애니메이션 클립
-                        GameManager.instance.timeLineBuilder.BuildingTimeLine(startTime, "Turning", duration, animClip, characterDatas.obj, characterTrack[actorId][0], characterTrack[actorId][1]);
+                        GameManager.instance.timeLineBuilder.BuildingTimeLine(startTime, "Turning", duration, animClip, characterDatas.obj, characterTrack[actorId][0], characterTrack[actorId][3]);
                         break;
                     }
 
@@ -142,7 +142,7 @@ public class DialogueFuncManager : MonoBehaviour, DataInitializable
                     {
                         //int actorId = int.Parse(nodeSplit[0]); //타임라인에서 애니메이션을 재생할 캐릭터 ID
                         string[] details = nodeSplit[2].Split('|'); //시작 시간, 대기 시간.
-                        var startTime = int.Parse(details[0]); //타임라인 기준으로 애니메이션 클립이 시작되는 시간.
+                        var startTime = float.Parse(details[0]); //타임라인 기준으로 애니메이션 클립이 시작되는 시간.
                         var duration = int.Parse(details[1]); //진행 시간.
 
                         var characterDatas = GameManager.instance.dataManager.runningCharacters[actorId]; //캐릭터 데이터

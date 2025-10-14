@@ -217,7 +217,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
 
         Panel.SetActive(true);
         //임시.
-        CharacterInit(3);
+        CharacterInit(7);
         //======
         ProccessNextLine();
     }
