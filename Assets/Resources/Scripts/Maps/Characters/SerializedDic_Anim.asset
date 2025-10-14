@@ -16,6 +16,8 @@ MonoBehaviour:
     _serializedList:
     - Key: Walk
       Value: {fileID: 7400000, guid: fbd5b1d0343690748bb935f021458e97, type: 2}
+    - Key: Fall
+      Value: {fileID: 7400000, guid: 6b43b3cd50f75a847a3d9cf64f696f0f, type: 2}
     - Key: TurnRight
       Value: {fileID: 7400000, guid: 1082aba153d9435478728400978a4455, type: 2}
     - Key: TurnLeft

@@ -11,15 +11,12 @@ public class TimeLineBuilder : MonoBehaviour
 {
     public PlayableDirector director;
     public TimelineAsset timelineAsset;
-    public GameObject character;
     private Animator anim;
     private AnimationClip animClip; //빈 클립.
-    public AnimationClip walking; //걷는 것 처럼 위아래로 흔들리는 애니메이션 클립.
-    //private AnimationTrack parent;
+    public SignalAsset signal;
 
     private void Awake()
     {
-        anim = character.GetComponent<Animator>();
         animClip = new AnimationClip { legacy = false };
 
         if (timelineAsset != null)
@@ -40,6 +37,11 @@ public class TimeLineBuilder : MonoBehaviour
         {
             timelineAsset.DeleteTrack(track);
         }
+    }
+
+    public void AddSignalInTrack(float time)
+    {
+        
     }
 
     public AnimationTrack[] TrackSetting(AnimationTrack[] tracks)

@@ -91,26 +91,17 @@ public class DialogueFuncManager : MonoBehaviour, DataInitializable
                 case "Move":
                     {
                         //int actorId = int.Parse(nodeSplit[0]); //타임라인에서 애니메이션을 재생할 캐릭터 ID
-                        string[] details = nodeSplit[2].Split('|'); //도착 위치, 시간, 대기 시간.
+                        string[] details = nodeSplit[2].Split('|'); //출발 위치(1), 도착 위치(2), 시작 시간(0), 걸리는 시간 (3).
                         var startTime = float.Parse(details[0]); //타임라인 트랙 시작 시간.
 
-                        int destination = details[1].Trim() switch
-                        {
-                            "A" => (((Screen.width - 360) * 0) / 4) - 780,
-                            "B" => (((Screen.width - 360) * 1) / 4) - 780,
-                            "C" => 0,
-                            "D" => (((Screen.width - 360) * 3) / 4) - 780,
-                            "E" => (((Screen.width - 360) * 4) / 4) - 780,
-                            _ => -1
-                        }; //도착 위치
+                        int startPos = CalculatePos(details[1].Trim()); //출발 위치.
+                        int destination = CalculatePos(details[2].Trim()); //도착 위치.
 
-                        var duration = int.Parse(details[2]); //도착하기 까지의 걸리는 시간.
+                        var duration = int.Parse(details[3]); //도착하기 까지의 걸리는 시간.
 
                         GameObject characterObj = GameManager.instance.dataManager.runningCharacters[actorId].obj;
-                        var characterPos = characterObj.GetComponent<RectTransform>().anchoredPosition;
-                        var animClip = GameManager.instance.timeLineBuilder.MakeAnimationClip(characterPos, new Vector2(destination, -150), duration, "Moving", 'X');
-                        animClip.wrapMode = WrapMode.Loop;
-                        GameManager.instance.timeLineBuilder.BuildingTimeLine(startTime, "Move", duration, animClip, characterObj, characterTrack[actorId][0], characterTrack[actorId][1]);
+                        var animClip = GameManager.instance.timeLineBuilder.MakeAnimationClip(new Vector2(startPos, -150), new Vector2(destination, -150), duration, "Moving", 'X');
+                        GameManager.instance.timeLineBuilder.BuildingTimeLine(startTime, "Move", 2, animClip, characterObj, characterTrack[actorId][0], characterTrack[actorId][1]);
                         break;
                     }
 
@@ -195,4 +186,17 @@ public class DialogueFuncManager : MonoBehaviour, DataInitializable
         Debug.Log($"{GameManager.instance.dataManager.runningCharacters[actorId].characterData.characterName}의 호감도가 {value}만큼 변동되었습니다. 현재 호감도 : {GameManager.instance.dataManager.runningCharacters[actorId].characterData.affaction}");
     }
     //===============================================================
+
+    private int CalculatePos(string positionCode)
+    {
+        return positionCode switch
+        {
+            "A" => (((Screen.width - 360) * 0) / 4) - 780,
+            "B" => (((Screen.width - 360) * 1) / 4) - 780,
+            "C" => 0,
+            "D" => (((Screen.width - 360) * 3) / 4) - 780,
+            "E" => (((Screen.width - 360) * 4) / 4) - 780,
+            _ => -1
+        };
+    }
 }
