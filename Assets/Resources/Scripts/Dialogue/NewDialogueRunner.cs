@@ -238,6 +238,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
     //------------------------------------------
     public void ProccessNextLine()
     {
+        Debug.Log($"줄 시작{currentLineNum}");
         if (currentLineNum >= scriptLine.Count)
         {
             EndDialogue();
@@ -258,7 +259,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
             case "If": //액션 노드가 If일 경우, 조건 체크 및 조건에 부합한지 부합하지 않은지 체크한 후, 줄 이동.
                 currentCharId = -1;
                 CheckingCondition(line.Detail.condition.Split('|'), line.Detail.result.Split('|'));
-                break;
+                return;
 
             case "F": //분기점 체크. 개발 보류.
                 //CheckingFlag(line.Detail.condition, line.Detail.result.Split('|'));
@@ -267,9 +268,9 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
             case "S": //액션 노드가 S일 경우, 선택지를 제시한 후, 고른 선택지에 따라 줄 이동.
                 currentCharId = -1;
                 HandleChoices(line.Detail.condition.Split('|'), line.Detail.result.Split('|'), line);
-                break;
+                return;
 
-            case "": //액션 노드에 아무것도 없는 경우. T행동의 연장선으로 간주, Detail의 Result를 출력한다.
+            case "": //액션 노드에 아무것도 없는 경우. T행동의 연장선으로 간주, Detail의 Result를 출력한다. T행동의 연장이 아니더라도, 다른 노드를 실행.
                 if (currentCharId == -1) break;
                 StartCoroutine(TypingTxt(line.Detail.result)); //대사 출력.
                 CharacterEmphasis(currentCharId, line.Face); //화자 캐릭터 강조.
@@ -279,7 +280,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
             case "J": //액션 노드가 J일 경우, 조건을 만족할 시, DialogueAsset을 변경, 조건을 만족하지 않으면 일정 줄 만큼 -이동.
                 currentCharId = -1;
                 JumpDialogue(line);
-                break;
+                return;
 
             default:
                 Debug.LogWarning($"알 수 없는 액션: {line.Action} (라인 {currentLineNum})");
@@ -288,7 +289,9 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
                 ProccessNextLine();
                 return;
         }
+        Debug.Log("체킹!");
         RunningOtherNode(line);
+        currentLineNum++;
     }
 
     private void JumpDialogue(NewDialogueParser.ParsedLine line) //DialogueAsset 변경.
@@ -315,6 +318,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
         if (line.Production != "") GameManager.instance.dialogueFunc.RunningProduction(line.Production);
         if (line.BGM != "") GameManager.instance.dialogueFunc.ChangeBGM(line.BGM);
         if (line.Affection != "") GameManager.instance.dialogueFunc.AffectionChange(line.Affection, line.Actor);
+        //currentLineNum++;
     }
 
     private void RunningDialogue(NewDialogueParser.ParsedLine line)
@@ -478,6 +482,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
             Destroy(child.gameObject);
         }
 
+        Debug.Log($"줄 이동! 이전 줄 : {currentLineNum}, 뛰어넘을 줄{lineIndex + 1}");
         currentLineNum += lineIndex + 1;
         ProccessNextLine();
     }
@@ -593,7 +598,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
 
         yield return null;
         isWaiting = false;
-        currentLineNum++;
+        //currentLineNum++;
 
         if (currentState == RunnerState.Auto || currentState == RunnerState.Skip)
         {

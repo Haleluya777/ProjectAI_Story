@@ -32,6 +32,7 @@ public class NewDialogueParser : MonoBehaviour
         public string Face;
         public string Actor;
         public string BGM;
+        public string SE;
         public string Affection;
         public int LineNum;
     }
@@ -57,6 +58,7 @@ public class NewDialogueParser : MonoBehaviour
             if (string.IsNullOrWhiteSpace(line)) continue;
 
             List<string> parts = new List<string>(line.Split('\t'));
+            Debug.Log(parts.Count);
             //parts.RemoveAll(s => string.IsNullOrEmpty(s));
 
             for (int j = 0; j < parts.Count; j++)
@@ -95,7 +97,8 @@ public class NewDialogueParser : MonoBehaviour
                 Face = parts[4],
                 Actor = parts[5],
                 BGM = parts[6],
-                Affection = parts[7],
+                SE = parts[7],
+                Affection = parts[8],
                 LineNum = i
             };
 

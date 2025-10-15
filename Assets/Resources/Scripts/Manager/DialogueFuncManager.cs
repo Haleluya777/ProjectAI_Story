@@ -84,7 +84,15 @@ public class DialogueFuncManager : MonoBehaviour, DataInitializable
                 var track = GameManager.instance.timeLineBuilder.TrackSetting(new AnimationTrack[5]);
                 characterTrack.Add(actorId, track);
             }
-            GameManager.instance.timeLineBuilder.SetAnimator(characterTrack[actorId][0], GameManager.instance.dataManager.runningCharacters[actorId].obj);
+
+            if (actorId == -1)
+            {
+                GameManager.instance.timeLineBuilder.SetAnimator(characterTrack[actorId][0], GameManager.instance.uiManager.gameObject);
+            }
+            else
+            {
+                GameManager.instance.timeLineBuilder.SetAnimator(characterTrack[actorId][0], GameManager.instance.dataManager.runningCharacters[actorId].obj);
+            }
 
             switch (nodeSplit[1])
             {
@@ -153,8 +161,9 @@ public class DialogueFuncManager : MonoBehaviour, DataInitializable
                     }
 
 
-                case "CutScene":
+                case "Fade":
                     {
+                        Debug.Log("페이드 인 아웃 연출 시작");
                         break;
                     }
 

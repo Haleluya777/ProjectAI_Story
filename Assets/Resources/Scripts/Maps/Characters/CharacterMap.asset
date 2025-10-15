@@ -21,8 +21,9 @@ MonoBehaviour:
     CurrentdialogueNum: 0
     dialogueLineNum: 0
     dialogueFiles:
-    - {fileID: 6283971798180898224, guid: b4095f4c0bae90a489a60a6beb3d56cf, type: 3}
-    NextDialogueScript: {fileID: 6283971798180898224, guid: b4095f4c0bae90a489a60a6beb3d56cf, type: 3}
+    - {fileID: -7276314267081567121, guid: cc3e08ead96f09b4ab73163f394c9323, type: 3}
+    - {fileID: 6999576070904414590, guid: a20f0c5a05136454eb0600bf9edd86a8, type: 3}
+    NextDialogueScript: {fileID: -7276314267081567121, guid: cc3e08ead96f09b4ab73163f394c9323, type: 3}
     floor:
       floorNum: 2
       floorDetail: "\uCCA0\uC758 \uCE35"
@@ -34,12 +35,8 @@ MonoBehaviour:
     CurrentdialogueNum: 0
     dialogueLineNum: 0
     dialogueFiles:
-    - {fileID: -4789372409732899538, guid: 8941890bab7686d4595dc63f098a471c, type: 3}
     - {fileID: 6283971798180898224, guid: b4095f4c0bae90a489a60a6beb3d56cf, type: 3}
-    - {fileID: 4900000, guid: 9170203dcefccbb41a2da85d540306b5, type: 3}
-    - {fileID: 4900000, guid: dfc101ed3a8d1c342b6a0091b115d77c, type: 3}
-    - {fileID: 4900000, guid: 9170203dcefccbb41a2da85d540306b5, type: 3}
-    NextDialogueScript: {fileID: -4789372409732899538, guid: 8941890bab7686d4595dc63f098a471c, type: 3}
+    NextDialogueScript: {fileID: 6283971798180898224, guid: b4095f4c0bae90a489a60a6beb3d56cf, type: 3}
     floor:
       floorNum: 3
       floorDetail: "\uBD88\uC758 \uCE35"
