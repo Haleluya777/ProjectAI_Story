@@ -101,7 +101,7 @@ public class DialogueFuncManager : MonoBehaviour, DataInitializable
 
                         GameObject characterObj = GameManager.instance.dataManager.runningCharacters[actorId].obj;
                         var animClip = GameManager.instance.timeLineBuilder.MakeAnimationClip(new Vector2(startPos, -150), new Vector2(destination, -150), duration, "Moving", 'X');
-                        GameManager.instance.timeLineBuilder.BuildingTimeLine(startTime, "Move", 2, animClip, characterObj, characterTrack[actorId][0], characterTrack[actorId][1]);
+                        GameManager.instance.timeLineBuilder.BuildingTimeLine(startTime, "Move", duration, animClip, characterObj, characterTrack[actorId][0], characterTrack[actorId][1]);
                         break;
                     }
 
@@ -125,6 +125,13 @@ public class DialogueFuncManager : MonoBehaviour, DataInitializable
 
                 case "Fall": //지쳐서 쓰러지는 표현
                     {
+                        string[] details = nodeSplit[2].Split('|');
+                        var startTime = float.Parse(details[0]); //타임라인 트랙 시작 시간.
+
+                        var characterDatas = GameManager.instance.dataManager.runningCharacters[actorId]; //캐릭터 데이터
+                        var animClip = characterDatas.characterData.characterAnim.animationClips["Fall"]; //캐릭터 애니메이션 클립
+                        GameManager.instance.timeLineBuilder.BuildingTimeLine(startTime, "Falling", 1.5f, animClip, characterDatas.obj, characterTrack[actorId][0], characterTrack[actorId][4]);
+
                         break;
                     }
 
