@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using AYellowpaper.SerializedCollections;
 using UnityEngine;
 using Hallelujah;
+using System;
 
 public class SystemDataManager : MonoBehaviour, DataInitializable
 {
@@ -40,6 +41,7 @@ public class SystemDataManager : MonoBehaviour, DataInitializable
     public Dictionary<string, object> operandDic = new Dictionary<string, object>(); //조건 체크할 때 쓰는 피연산자.
     public List<NewDialogueParser.ParsedLine> dialogueLog = new List<NewDialogueParser.ParsedLine>(); //지나간 대화 로그.
     public ProccessDatas proccessDatas = new ProccessDatas(); //현재 날짜, 플레이어 위치, 시간, 남은 ap
+    private List<string> dayOneTime = new List<string> { "새벽", "오전", "점심", "오후", "저녁" };
     private List<string> currentTime = new List<string> { "아침", "오전 일과", "오후", "오후 일과", "저녁", "밤 일과", "휴식 시간" };
     public CirclularList<string> dailyRoutine { get; private set; }
     public int floorUnlock; //해금한 층 정보.
@@ -50,7 +52,7 @@ public class SystemDataManager : MonoBehaviour, DataInitializable
     public void InitializeData()
     {
         characterMap.InitDialogue();
-        dailyRoutine = new CirclularList<string>(currentTime);
+        dailyRoutine = new CirclularList<string>(dayOneTime);
         proccessDatas.PlayerPosition.detail = "1층 | 엘리베이터";
         proccessDatas.CurrentTime = dailyRoutine.Get();
         proccessDatas.Routine = maxAP;
@@ -61,6 +63,7 @@ public class SystemDataManager : MonoBehaviour, DataInitializable
 
     void Update()
     {
+        Debug.Log(dailyRoutine.Get());
         //Debug.Log($"날 : {proccessDatas.Day}, 현재 위치 : {proccessDatas.PlayerPosition}, 현재 시각 : {proccessDatas.Routine}");
         //디버깅용 테스트코드
         if (Input.GetKeyDown(KeyCode.F))
@@ -75,11 +78,18 @@ public class SystemDataManager : MonoBehaviour, DataInitializable
         //characterDic.Add(1, new CharacterData { name = "Fire", affection = 0 });
     }
 
+    public void ChangeRoutineTime()
+    {
+        if (proccessDatas.Day > 2) return;
+        else dailyRoutine = new CirclularList<string>(currentTime);
+    }
+
     public void AddTurn()
     {
         proccessDatas.Routine = maxAP;
         proccessDatas.Day++;
         proccessDatas.CurrentTime = dailyRoutine.First(); //회전 리스트의 첫 번째 부분으로 강제 이동.
+        ChangeRoutineTime();
     }
 
     public void UnlockFloor(int floor) //해당 번호까지의 모든 층을 해금

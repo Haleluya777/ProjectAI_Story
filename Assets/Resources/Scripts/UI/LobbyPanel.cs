@@ -42,7 +42,7 @@ public class LobbyPanel : MonoBehaviour
     //층 선택 창 초기화.
     private void InitFloorSelection()
     {
-        for (int i = 1; i <= GameManager.instance.dataManager.characterMap.characters.Length; i++)
+        for (int i = 1; i <= GameManager.instance.dataManager.characterMap.characters.Length - 1; i++)
         {
             var characterButton = Instantiate(characterButtonPrefab, characterButtonParent);
             var button = characterButton.transform.GetChild(1).GetComponent<Button>();

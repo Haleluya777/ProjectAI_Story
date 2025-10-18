@@ -201,6 +201,8 @@ public class DialogueFuncManager : MonoBehaviour, DataInitializable
         GameManager.instance.dataManager.runningCharacters[actorId].characterData.affaction += value;
         Debug.Log($"{GameManager.instance.dataManager.runningCharacters[actorId].characterData.characterName}의 호감도가 {value}만큼 변동되었습니다. 현재 호감도 : {GameManager.instance.dataManager.runningCharacters[actorId].characterData.affaction}");
     }
+
+    
     //===============================================================
 
     private int CalculatePos(string positionCode)
