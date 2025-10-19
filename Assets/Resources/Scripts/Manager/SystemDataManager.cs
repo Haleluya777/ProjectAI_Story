@@ -44,6 +44,7 @@ public class SystemDataManager : MonoBehaviour, DataInitializable
     private List<string> dayOneTime = new List<string> { "새벽", "오전", "점심", "오후", "저녁" };
     private List<string> currentTime = new List<string> { "아침", "오전 일과", "오후", "오후 일과", "저녁", "밤 일과", "휴식 시간" };
     public CirclularList<string> dailyRoutine { get; private set; }
+    private int[] fixedConversationList = { 31, 21, 21, 21 }; //6개의 비트(하루 루틴 6개)중, 어느 부분에 고정 대화를 실행할 지 체크(1이면 고정대화 존재. 0이면 없음(행동 가능))
     public int floorUnlock; //해금한 층 정보.
     public int repairUnlock; //장치 수리 해금 정보.
     //public List<int> characterDialogueNum = new List<int> { 0, 0, 0, 0, 0 }; //캐릭터의 대화 진행 상황. 2진수로 사용할 예정.
@@ -59,6 +60,17 @@ public class SystemDataManager : MonoBehaviour, DataInitializable
         proccessDatas.Day = 1;
         floorUnlock = 2;
         repairUnlock = 2;
+
+        //CheckingFixedDialogue(proccessDatas.Day, dailyRoutine.CurrentIndex())
+        Debug.Log(CheckingFixedDialogue(proccessDatas.Day, 1));
+    }
+
+    public int CheckingFixedDialogue(int day, int time)
+    {
+        int mask = 1 << time;
+        int result = fixedConversationList[day - 1] & mask;
+
+        return result >> time;
     }
 
     void Update()
@@ -68,7 +80,7 @@ public class SystemDataManager : MonoBehaviour, DataInitializable
         //디버깅용 테스트코드
         if (Input.GetKeyDown(KeyCode.F))
         {
-            characterMap.GetCharacter(1).CurrentdialogueNum = 1 << (2);
+            Debug.Log(CheckingFixedDialogue(proccessDatas.Day, 1));
         }
         //Debug.Log(runningCharacters.ContainsKey(1));
     }
@@ -84,12 +96,18 @@ public class SystemDataManager : MonoBehaviour, DataInitializable
         else dailyRoutine = new CirclularList<string>(currentTime);
     }
 
-    public void AddTurn()
+    public void AddTurn() //날짜 증가.
     {
         proccessDatas.Routine = maxAP;
         proccessDatas.Day++;
         proccessDatas.CurrentTime = dailyRoutine.First(); //회전 리스트의 첫 번째 부분으로 강제 이동.
         ChangeRoutineTime();
+    }
+
+    public void ConsumeActionPoint()
+    {
+        proccessDatas.Routine--;
+        proccessDatas.CurrentTime = dailyRoutine.Next();
     }
 
     public void UnlockFloor(int floor) //해당 번호까지의 모든 층을 해금

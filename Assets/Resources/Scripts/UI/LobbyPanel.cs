@@ -128,7 +128,8 @@ public class LobbyPanel : MonoBehaviour
         GameManager.instance.dataManager.characterMap.GetCharacter(data.reactedCharacterID).CurrentdialogueNum |= (1 << data.progress);
         data.progress++;
         RepairSelection.SetActive(false);
-        ConsumeActionPoint();
+        GameManager.instance.dataManager.ConsumeActionPoint();
+        UpdateAPSlider();
     }
 
     public void ProccessNextDay()
@@ -148,17 +149,16 @@ public class LobbyPanel : MonoBehaviour
         GameManager.instance.dataManager.proccessDatas.PlayerPosition.detail = floor;
         playerPosition.text = GameManager.instance.dataManager.proccessDatas.PlayerPosition.detail;
 
-        ConsumeActionPoint();
+        GameManager.instance.dataManager.ConsumeActionPoint();
+        UpdateAPSlider();
         CharacterSelection.SetActive(false);
 
         GameManager.instance.dialogueRunner.RunDialogue();
         Actions.SetActive(true);
     }
 
-    private void ConsumeActionPoint()
+    private void UpdateAPSlider()
     {
-        GameManager.instance.dataManager.proccessDatas.Routine--;
-        GameManager.instance.dataManager.proccessDatas.CurrentTime = GameManager.instance.dataManager.dailyRoutine.Next();
         actionPointSlider.value = (float)GameManager.instance.dataManager.proccessDatas.Routine / (float)GameManager.instance.dataManager.maxAP;
     }
 }
