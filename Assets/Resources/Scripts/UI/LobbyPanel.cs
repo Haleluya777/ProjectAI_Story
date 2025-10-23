@@ -59,7 +59,7 @@ public class LobbyPanel : MonoBehaviour
             button.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = characterData.floor.floorDetail;
 
             button.onClick.AddListener(() => CheckingFlags(characterData));
-            button.onClick.AddListener(() => StartDialogue(dialogueFile, characterDialogueNum, floor, charID));
+            button.onClick.AddListener(() => StartDialogue(dialogueFile, characterDialogueNum));
 
             button.interactable = false;
         }
@@ -144,14 +144,14 @@ public class LobbyPanel : MonoBehaviour
         dataManager.CheckingFixedDialogue(dataManager.proccessDatas.Day, dataManager.dailyRoutine.IndexOf(dataManager.dailyRoutine.Get()));
     }
 
-    public void StartDialogue(TextAsset dialogue, int lineNum, string floor, int id) //선택한 캐릭터와의 대화 상호작용 시작
+    public void StartDialogue(TextAsset dialogue, int lineNum) //선택한 캐릭터와의 대화 상호작용 시작
     {
         if (GameManager.instance.dataManager.proccessDatas.Routine <= 0) return;
         //DataManager에서 대화 스크립트의 중심 캐릭터의 ID값 설정.
         //GameManager.instance.dataManager.MainCharacterID = id;
 
-        //플레이어의 표기된 위치를 클릭한 캐릭터의 위치로 재설정. ex(불의 층 캐릭터와 상호작용을 한다면 우측상단 플레이어의 현재 위치는 불의 층.)
-        GameManager.instance.dataManager.proccessDatas.PlayerPosition.detail = floor;
+        //플레이어의 표기된 위치를 클릭한 캐릭터의 위치로 재설정. ex(불의 층 캐릭터와 상호작용을 한다면 우측상단 플레이어의 현재 위치는 불의 층.) 이거 안쓸 예정.
+        //GameManager.instance.dataManager.proccessDatas.PlayerPosition.detail = floor;
         playerPosition.text = GameManager.instance.dataManager.proccessDatas.PlayerPosition.detail;
 
         GameManager.instance.dataManager.ConsumeActionPoint();

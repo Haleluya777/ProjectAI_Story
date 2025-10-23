@@ -50,6 +50,8 @@ public class SystemDataManager : MonoBehaviour, DataInitializable
     public int repairUnlock; //장치 수리 해금 정보.
     //public List<int> characterDialogueNum = new List<int> { 0, 0, 0, 0, 0 }; //캐릭터의 대화 진행 상황. 2진수로 사용할 예정.
     public int MainCharacterID; //대화의 주체가 되는 중심 캐릭터 ID값. 대화 진행 중, 혹은 대화 마지막에 대화 스크립트 변경 시 CharacterMap에서 해당 캐릭터의 변수값을 변경할 접근용으로 사용. (캐릭터가 메인 로비에 있을 경우 값은 0)
+    [SerializeField] private List<FixedDialoguesMap> fixedDialogueFiles = new List<FixedDialoguesMap>();
+    [SerializeField] private int fixedDialogueNum = 0;
 
     public void InitializeData()
     {
@@ -71,13 +73,19 @@ public class SystemDataManager : MonoBehaviour, DataInitializable
         int result = fixedConversationList[day - 1] & mask;
         if (result >> time != 0)
         {
-            Debug.Log("고정 대화 실행!");
             //ConsumeActionPoint();
+            Invoke("DialogueRun", .5f);
         }
         else
         {
             Debug.Log("고정 대화 없음. 플레이어 행동 가능");
         }
+    }
+
+    private void DialogueRun()
+    {
+        Debug.Log("고정 대화 실행!");
+        //GameManager.instance.uiManager.lobbyUIManager.StartDialogue(fixedDialogueFiles[proccessDatas.Day - 1][dailyRoutine.IndexOf(dailyRoutine.Get())], 0);
     }
 
     void Update()
