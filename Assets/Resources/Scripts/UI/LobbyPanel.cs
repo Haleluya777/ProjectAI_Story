@@ -125,18 +125,23 @@ public class LobbyPanel : MonoBehaviour
     public void Repair(EquipmentDatas data)
     {
         if (GameManager.instance.dataManager.proccessDatas.Routine <= 0) return;
-        GameManager.instance.dataManager.characterMap.GetCharacter(data.reactedCharacterID).CurrentdialogueNum |= (1 << data.progress);
+        var dataManager = GameManager.instance.dataManager;
+        dataManager.characterMap.GetCharacter(data.reactedCharacterID).CurrentdialogueNum |= (1 << data.progress);
         data.progress++;
         RepairSelection.SetActive(false);
-        GameManager.instance.dataManager.ConsumeActionPoint();
-        UpdateAPSlider();
+        dataManager.ConsumeActionPoint(); //AP소모.
+        UpdateAPSlider(); //슬라이더 업데이트
+        Actions.SetActive(true);
+        dataManager.CheckingFixedDialogue(dataManager.proccessDatas.Day, dataManager.dailyRoutine.IndexOf(dataManager.dailyRoutine.Get()));
     }
 
     public void ProccessNextDay()
     {
+        var dataManager = GameManager.instance.dataManager;
         GameManager.instance.dataManager.AddTurn();
         day.text = "Day" + GameManager.instance.dataManager.proccessDatas.Day.ToString();
         actionPointSlider.value = (float)GameManager.instance.dataManager.proccessDatas.Routine / (float)GameManager.instance.dataManager.maxAP;
+        dataManager.CheckingFixedDialogue(dataManager.proccessDatas.Day, dataManager.dailyRoutine.IndexOf(dataManager.dailyRoutine.Get()));
     }
 
     public void StartDialogue(TextAsset dialogue, int lineNum, string floor, int id) //선택한 캐릭터와의 대화 상호작용 시작

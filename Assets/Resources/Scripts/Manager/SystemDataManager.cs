@@ -4,6 +4,7 @@ using AYellowpaper.SerializedCollections;
 using UnityEngine;
 using Hallelujah;
 using System;
+using UnityEngine.UI;
 
 public class SystemDataManager : MonoBehaviour, DataInitializable
 {
@@ -41,10 +42,10 @@ public class SystemDataManager : MonoBehaviour, DataInitializable
     public Dictionary<string, object> operandDic = new Dictionary<string, object>(); //조건 체크할 때 쓰는 피연산자.
     public List<NewDialogueParser.ParsedLine> dialogueLog = new List<NewDialogueParser.ParsedLine>(); //지나간 대화 로그.
     public ProccessDatas proccessDatas = new ProccessDatas(); //현재 날짜, 플레이어 위치, 시간, 남은 ap
-    private List<string> dayOneTime = new List<string> { "새벽", "오전", "점심", "오후", "저녁" };
-    private List<string> currentTime = new List<string> { "아침", "오전 일과", "오후", "오후 일과", "저녁", "밤 일과", "휴식 시간" };
+    public List<string> dayOneTime = new List<string> { "새벽", "오전", "점심", "오후", "저녁", "휴식 시간" };
+    public List<string> currentTime = new List<string> { "아침", "오전 일과", "오후", "오후 일과", "저녁", "밤 일과", "휴식 시간" };
     public CirclularList<string> dailyRoutine { get; private set; }
-    private int[] fixedConversationList = { 31, 21, 21, 21 }; //6개의 비트(하루 루틴 6개)중, 어느 부분에 고정 대화를 실행할 지 체크(1이면 고정대화 존재. 0이면 없음(행동 가능))
+    [SerializeField] private int[] fixedConversationList = { 31, 21, 21, 21 }; //6개의 비트(하루 루틴 6개)중, 어느 부분에 고정 대화를 실행할 지 체크(1이면 고정대화 존재. 0이면 없음(행동 가능))
     public int floorUnlock; //해금한 층 정보.
     public int repairUnlock; //장치 수리 해금 정보.
     //public List<int> characterDialogueNum = new List<int> { 0, 0, 0, 0, 0 }; //캐릭터의 대화 진행 상황. 2진수로 사용할 예정.
@@ -56,32 +57,36 @@ public class SystemDataManager : MonoBehaviour, DataInitializable
         dailyRoutine = new CirclularList<string>(dayOneTime);
         proccessDatas.PlayerPosition.detail = "1층 | 엘리베이터";
         proccessDatas.CurrentTime = dailyRoutine.Get();
-        proccessDatas.Routine = maxAP;
+        proccessDatas.Routine = dailyRoutine.Length() - 1;
         proccessDatas.Day = 1;
         floorUnlock = 2;
         repairUnlock = 2;
 
-        //CheckingFixedDialogue(proccessDatas.Day, dailyRoutine.CurrentIndex())
-        Debug.Log(CheckingFixedDialogue(proccessDatas.Day, 1));
+        CheckingFixedDialogue(proccessDatas.Day, dailyRoutine.IndexOf(dailyRoutine.Get()));
     }
 
-    public int CheckingFixedDialogue(int day, int time)
+    public void CheckingFixedDialogue(int day, int time)
     {
         int mask = 1 << time;
         int result = fixedConversationList[day - 1] & mask;
-
-        return result >> time;
+        if (result >> time != 0)
+        {
+            Debug.Log("고정 대화 실행!");
+            //ConsumeActionPoint();
+        }
+        else
+        {
+            Debug.Log("고정 대화 없음. 플레이어 행동 가능");
+        }
     }
 
     void Update()
     {
         Debug.Log(dailyRoutine.Get());
+        Debug.Log(fixedConversationList[proccessDatas.Day - 1]);
+        Debug.Log(proccessDatas.Routine);
         //Debug.Log($"날 : {proccessDatas.Day}, 현재 위치 : {proccessDatas.PlayerPosition}, 현재 시각 : {proccessDatas.Routine}");
         //디버깅용 테스트코드
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            Debug.Log(CheckingFixedDialogue(proccessDatas.Day, 1));
-        }
         //Debug.Log(runningCharacters.ContainsKey(1));
     }
 
@@ -98,16 +103,18 @@ public class SystemDataManager : MonoBehaviour, DataInitializable
 
     public void AddTurn() //날짜 증가.
     {
-        proccessDatas.Routine = maxAP;
+        ChangeRoutineTime();
+        proccessDatas.Routine = dailyRoutine.Length() - 1;
         proccessDatas.Day++;
         proccessDatas.CurrentTime = dailyRoutine.First(); //회전 리스트의 첫 번째 부분으로 강제 이동.
-        ChangeRoutineTime();
     }
 
     public void ConsumeActionPoint()
     {
         proccessDatas.Routine--;
-        proccessDatas.CurrentTime = dailyRoutine.Next();
+        Debug.Log(proccessDatas.Routine);
+        dailyRoutine.Next();
+        proccessDatas.CurrentTime = dailyRoutine.Get();
     }
 
     public void UnlockFloor(int floor) //해당 번호까지의 모든 층을 해금
