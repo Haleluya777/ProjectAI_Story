@@ -132,7 +132,8 @@ public class LobbyPanel : MonoBehaviour
         dataManager.ConsumeActionPoint(); //AP소모.
         UpdateAPSlider(); //슬라이더 업데이트
         Actions.SetActive(true);
-        dataManager.CheckingFixedDialogue(dataManager.proccessDatas.Day, dataManager.dailyRoutine.IndexOf(dataManager.dailyRoutine.Get()));
+        //dataManager.CheckingFixedDialogue(dataManager.proccessDatas.Day, dataManager.dailyRoutine.IndexOf(dataManager.dailyRoutine.Get()));
+        //수리 연출 타임라인 실행. 타임라인 끝날 때 시그널로 고정 대화 체크.
     }
 
     public void ProccessNextDay()
@@ -141,7 +142,8 @@ public class LobbyPanel : MonoBehaviour
         GameManager.instance.dataManager.AddTurn();
         day.text = "Day" + GameManager.instance.dataManager.proccessDatas.Day.ToString();
         actionPointSlider.value = (float)GameManager.instance.dataManager.proccessDatas.Routine / (float)GameManager.instance.dataManager.maxAP;
-        dataManager.CheckingFixedDialogue(dataManager.proccessDatas.Day, dataManager.dailyRoutine.IndexOf(dataManager.dailyRoutine.Get()));
+        //dataManager.CheckingFixedDialogue(dataManager.proccessDatas.Day, dataManager.dailyRoutine.IndexOf(dataManager.dailyRoutine.Get()));
+        //수면 연출 타임라인 실행. 타임라인 끝날 때 시그널로 고정 대화 체크.
     }
 
     public void StartDialogue(TextAsset dialogue, int lineNum) //선택한 캐릭터와의 대화 상호작용 시작
@@ -152,17 +154,17 @@ public class LobbyPanel : MonoBehaviour
 
         //플레이어의 표기된 위치를 클릭한 캐릭터의 위치로 재설정. ex(불의 층 캐릭터와 상호작용을 한다면 우측상단 플레이어의 현재 위치는 불의 층.) 이거 안쓸 예정.
         //GameManager.instance.dataManager.proccessDatas.PlayerPosition.detail = floor;
-        playerPosition.text = GameManager.instance.dataManager.proccessDatas.PlayerPosition.detail;
+        //playerPosition.text = GameManager.instance.dataManager.proccessDatas.PlayerPosition.detail;
 
-        GameManager.instance.dataManager.ConsumeActionPoint();
-        UpdateAPSlider();
+        //GameManager.instance.dataManager.ConsumeActionPoint();
+        //UpdateAPSlider();
         CharacterSelection.SetActive(false);
 
         GameManager.instance.dialogueRunner.RunDialogue();
         Actions.SetActive(true);
     }
 
-    private void UpdateAPSlider()
+    public void UpdateAPSlider()
     {
         actionPointSlider.value = (float)GameManager.instance.dataManager.proccessDatas.Routine / (float)GameManager.instance.dataManager.maxAP;
     }

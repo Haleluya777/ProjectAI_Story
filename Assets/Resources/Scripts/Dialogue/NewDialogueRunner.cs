@@ -234,6 +234,8 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
         dataManager.proccessDatas.PlayerPosition.detail = "1층 로비 | 엘리베이터"; //플레이어 위치 로비로 변경(고정).
         GameManager.instance.uiManager.lobbyUIManager.PlayerPosUpdate(dataManager.proccessDatas.PlayerPosition.detail); //플레이어 위치 업데이트.
         Panel.SetActive(false); //대화 판넬 비활성화
+        dataManager.ConsumeActionPoint(); //AP소모.
+        GameManager.instance.uiManager.lobbyUIManager.UpdateAPSlider(); //슬라이더 업데이트
         dataManager.CheckingFixedDialogue(dataManager.proccessDatas.Day, 0);//고정 대화가 있는지 체크 후 실행.
     }
     //------------------------------------------

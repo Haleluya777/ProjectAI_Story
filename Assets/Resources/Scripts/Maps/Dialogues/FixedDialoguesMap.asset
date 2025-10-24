@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dialogues:
   - assets:
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
+    - {fileID: -3932682398501726993, guid: f656db47600c4514a83e69959365d66f, type: 3}
+    - {fileID: 8026012679450670106, guid: 5f515a025b5895f4b81fc96a96f791a3, type: 3}
+    - {fileID: -889461546362492130, guid: 8947f86500e701a48a13f48ddae20877, type: 3}
+    - {fileID: 4970508096838108701, guid: 3c8fbdae481846147a9f85400144d6f5, type: 3}
   - assets:
     - {fileID: 0}
     - {fileID: 0}
