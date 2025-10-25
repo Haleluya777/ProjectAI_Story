@@ -217,7 +217,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
 
         Panel.SetActive(true);
         //임시.
-        CharacterInit(7);
+        CharacterInit(512);
         //======
         ProccessNextLine();
     }
@@ -292,7 +292,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
                 ProccessNextLine();
                 return;
         }
-        Debug.Log("체킹!");
+        //Debug.Log("체킹!");
         RunningOtherNode(line);
         currentLineNum++;
     }
@@ -331,7 +331,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
         if (line.Actor == "") //화자 이름이 없을 경우. 나레이션인 경우.
         {
             SpeakerName.gameObject.transform.parent.gameObject.SetActive(false); //화자 이름이 없을 경우, 화자 이름 UI 비활성화.
-            Debug.Log("나레이션이 말을 한다.");
+            //Debug.Log("나레이션이 말을 한다.");
             currentCharId = 0;
         }
 

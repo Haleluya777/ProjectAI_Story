@@ -75,6 +75,7 @@ public class DialogueFuncManager : MonoBehaviour, DataInitializable
 
         for (int i = 0; i < blocks.Length; i++)
         {
+            Debug.Log($"RunningProduction trying to parse: {blocks[i]}");
             string[] nodeSplit = blocks[i].Split('_');
             var actorId = int.Parse(nodeSplit[0]);
 
@@ -167,6 +168,11 @@ public class DialogueFuncManager : MonoBehaviour, DataInitializable
                         break;
                     }
 
+                case "TimeProccess":
+                    {
+                        Debug.Log("시간 지남.");
+                        break;
+                    }
 
                 default:
                     {
@@ -202,7 +208,7 @@ public class DialogueFuncManager : MonoBehaviour, DataInitializable
         Debug.Log($"{GameManager.instance.dataManager.runningCharacters[actorId].characterData.characterName}의 호감도가 {value}만큼 변동되었습니다. 현재 호감도 : {GameManager.instance.dataManager.runningCharacters[actorId].characterData.affaction}");
     }
 
-    
+
     //===============================================================
 
     private int CalculatePos(string positionCode)

@@ -18,15 +18,12 @@ MonoBehaviour:
     characterSpriteMap: {fileID: 11400000, guid: 2be8663db9542c24284ca7a1b606d87c, type: 2}
     characterAnim: {fileID: 11400000, guid: 3906d7db6884e9c49b4a175b7eac739d, type: 2}
     affaction: 0
-    CurrentdialogueNum: 254
+    CurrentdialogueNum: 0
     dialogueLineNum: 0
     dialogueFiles:
-    - {fileID: 6283971798180898224, guid: b4095f4c0bae90a489a60a6beb3d56cf, type: 3}
-    - {fileID: 6283971798180898224, guid: b4095f4c0bae90a489a60a6beb3d56cf, type: 3}
-    - {fileID: 6283971798180898224, guid: b4095f4c0bae90a489a60a6beb3d56cf, type: 3}
-    - {fileID: 6283971798180898224, guid: b4095f4c0bae90a489a60a6beb3d56cf, type: 3}
-    - {fileID: 6283971798180898224, guid: b4095f4c0bae90a489a60a6beb3d56cf, type: 3}
-    NextDialogueScript: {fileID: 6283971798180898224, guid: b4095f4c0bae90a489a60a6beb3d56cf, type: 3}
+    - {fileID: 3402244403113295920, guid: f656db47600c4514a83e69959365d66f, type: 3}
+    - {fileID: -7276314267081567121, guid: 5f515a025b5895f4b81fc96a96f791a3, type: 3}
+    NextDialogueScript: {fileID: 3402244403113295920, guid: f656db47600c4514a83e69959365d66f, type: 3}
     floor:
       floorNum: 2
       floorDetail: "\uCCA0\uC758 \uCE35"
@@ -35,7 +32,7 @@ MonoBehaviour:
     characterSpriteMap: {fileID: 11400000, guid: 8a9fe86d9b73f73419ebd880a5008e83, type: 2}
     characterAnim: {fileID: 11400000, guid: 3906d7db6884e9c49b4a175b7eac739d, type: 2}
     affaction: 1
-    CurrentdialogueNum: 8190
+    CurrentdialogueNum: 0
     dialogueLineNum: 0
     dialogueFiles:
     - {fileID: 6283971798180898224, guid: b4095f4c0bae90a489a60a6beb3d56cf, type: 3}
@@ -84,7 +81,7 @@ MonoBehaviour:
       floorDetail: "\uB098\uBB34\uC758 \uCE35"
   - id: 10
     characterName: Diana
-    characterSpriteMap: {fileID: 11400000, guid: d93a8ad15262d254985323d3c6e34073, type: 2}
+    characterSpriteMap: {fileID: 11400000, guid: 6a82d0a9e23c1214fa1fb1fcb9c070ed, type: 2}
     characterAnim: {fileID: 11400000, guid: 3906d7db6884e9c49b4a175b7eac739d, type: 2}
     affaction: 0
     CurrentdialogueNum: 0
