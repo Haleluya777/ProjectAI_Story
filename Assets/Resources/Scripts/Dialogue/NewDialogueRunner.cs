@@ -8,8 +8,6 @@ using System.Linq;
 using TMPro;
 using UnityEngine.Playables;
 using System.Text;
-using UnityEngine.AI;
-using Unity.VisualScripting;
 
 public class NewDialogueRunner : MonoBehaviour, DataInitializable
 {
@@ -110,8 +108,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
         if (Input.GetKey(KeyCode.LeftControl))
         {
             currentState = RunnerState.Skip;
-
-            ProccessNextLine();
+            //if (!isWaiting) ProccessNextLine();
         }
         else if (Input.GetKeyUp(KeyCode.LeftControl))
         {
@@ -205,7 +202,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
             ProccessNextLine();
         }
     }
-
+    //======================================================
     public void RunDialogue()
     {
         parser.Parse(DialogueFile.text);
@@ -236,7 +233,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
         Panel.SetActive(false); //대화 판넬 비활성화
         dataManager.ConsumeActionPoint(); //AP소모.
         GameManager.instance.uiManager.lobbyUIManager.UpdateAPSlider(); //슬라이더 업데이트
-        dataManager.CheckingFixedDialogue(dataManager.proccessDatas.Day, 0);//고정 대화가 있는지 체크 후 실행.
+        GameManager.instance.uiManager.FadeDailogueEnd(GameManager.instance.uiManager.dialogueUIManager.gameObject);
     }
     //------------------------------------------
     public void ProccessNextLine()

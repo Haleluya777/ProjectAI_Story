@@ -23,7 +23,7 @@ public class FloorSelector : MonoBehaviour
             string floor = characterData.floor.floorDetail;
 
             button.onClick.AddListener(() => CheckingFlags(characterData));
-            button.onClick.AddListener(() => StartDialogue(dialogueFile, characterDialogueNum));
+            button.onClick.AddListener(() => GameManager.instance.uiManager.FadeDialogueStart(StartDialogue));
 
             button.interactable = false;
         }
@@ -51,7 +51,7 @@ public class FloorSelector : MonoBehaviour
         }
     }
 
-    public void StartDialogue(TextAsset dialogue, int lineNum) //선택한 캐릭터와의 대화 상호작용 시작
+    public void StartDialogue() //선택한 캐릭터와의 대화 상호작용 시작
     {
         if (GameManager.instance.dataManager.proccessDatas.Routine <= 0) return;
         //DataManager에서 대화 스크립트의 중심 캐릭터의 ID값 설정.

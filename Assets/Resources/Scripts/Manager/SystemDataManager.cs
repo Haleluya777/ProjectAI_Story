@@ -76,8 +76,8 @@ public class SystemDataManager : MonoBehaviour, DataInitializable
         int result = fixedConversationList[day - 1] & mask;
         if (result >> time != 0)
         {
-            //ConsumeActionPoint();
-            Invoke("DialogueRun", .5f);
+            Debug.Log("고정 대화 있음.");
+            GameManager.instance.uiManager.FadeDialogueStart(FxiedDialogueRun);
         }
         else
         {
@@ -85,7 +85,7 @@ public class SystemDataManager : MonoBehaviour, DataInitializable
         }
     }
 
-    private void DialogueRun()
+    private void FxiedDialogueRun()
     {
         //Debug.Log("고정 대화 실행!");
         Debug.Log(fixedDialoguesMap.GetDialogues(proccessDatas.Day - 1, dailyRoutine.IndexOf(dailyRoutine.Get())).name);

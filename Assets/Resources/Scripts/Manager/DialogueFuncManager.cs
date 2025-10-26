@@ -86,9 +86,9 @@ public class DialogueFuncManager : MonoBehaviour, DataInitializable
                 characterTrack.Add(actorId, track);
             }
 
-            if (actorId == -1)
+            if (actorId == -1) //actor의 id가 -1일 경우, 전체 화면 페이드 인 아웃용 커버 오브젝트를 타임라인에 지정.
             {
-                GameManager.instance.timeLineBuilder.SetAnimator(characterTrack[actorId][0], GameManager.instance.uiManager.gameObject);
+                GameManager.instance.timeLineBuilder.SetAnimator(characterTrack[actorId][0], GameManager.instance.uiManager.transform.GetChild(1).gameObject);
             }
             else
             {
@@ -164,7 +164,16 @@ public class DialogueFuncManager : MonoBehaviour, DataInitializable
 
                 case "Fade":
                     {
-                        Debug.Log("페이드 인 아웃 연출 시작");
+                        string[] details = nodeSplit[2].Split('|');
+                        if (details[2].Trim() == "In")
+                        {
+                            Debug.Log("페이드 인 연출 시작");
+                            //GameManager.instance.uiManager.FadeIn();
+                        }
+                        else if (details[2].Trim() == "Out")
+                        {
+                            Debug.Log("페이드 아웃 연출 시작.");
+                        }
                         break;
                     }
 
@@ -176,6 +185,7 @@ public class DialogueFuncManager : MonoBehaviour, DataInitializable
 
                 default:
                     {
+                        Debug.LogWarning($"알 수 없는 명령어 : {nodeSplit[1]}");
                         break;
                     }
 

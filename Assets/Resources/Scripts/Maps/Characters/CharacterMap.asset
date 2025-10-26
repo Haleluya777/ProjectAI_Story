@@ -18,12 +18,11 @@ MonoBehaviour:
     characterSpriteMap: {fileID: 11400000, guid: 2be8663db9542c24284ca7a1b606d87c, type: 2}
     characterAnim: {fileID: 11400000, guid: 3906d7db6884e9c49b4a175b7eac739d, type: 2}
     affaction: 0
-    CurrentdialogueNum: 0
+    CurrentdialogueNum: 256
     dialogueLineNum: 0
     dialogueFiles:
-    - {fileID: 3402244403113295920, guid: f656db47600c4514a83e69959365d66f, type: 3}
-    - {fileID: -7276314267081567121, guid: 5f515a025b5895f4b81fc96a96f791a3, type: 3}
-    NextDialogueScript: {fileID: 3402244403113295920, guid: f656db47600c4514a83e69959365d66f, type: 3}
+    - {fileID: 942219552307467516, guid: 987d82a976757c44383085a54fc4159a, type: 3}
+    NextDialogueScript: {fileID: 942219552307467516, guid: 987d82a976757c44383085a54fc4159a, type: 3}
     floor:
       floorNum: 2
       floorDetail: "\uCCA0\uC758 \uCE35"
