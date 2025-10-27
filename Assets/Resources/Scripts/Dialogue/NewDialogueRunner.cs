@@ -68,6 +68,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
     private int currentLineNum = 0;
     int currentCharId; //현재 말하고 있는 캐릭터의 id값. 0은 나레이션.
     [SerializeField] private bool isWaiting;
+    [SerializeField] private bool isRunning;
 
     private void Start()
     {
@@ -81,6 +82,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
     {
         currentState = RunnerState.Normal;
         isWaiting = false;
+        isRunning = false;
 
         settedDialogueTextSpeed = .065f;
         settedAutoProccessTime = .6f;
@@ -100,28 +102,31 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
         //Debug.Log(currentCharId);
         DialogueStateAction();
 
-        if (Input.GetKeyDown(KeyCode.Z))
+        if (isRunning)
         {
-            Debug.Log(GameManager.instance.dataManager.runningCharacters[1]);
-        }
-
-        if (Input.GetKey(KeyCode.LeftControl))
-        {
-            currentState = RunnerState.Skip;
-            //if (!isWaiting) ProccessNextLine();
-        }
-        else if (Input.GetKeyUp(KeyCode.LeftControl))
-        {
-            currentState = RunnerState.Normal;
-        }
-
-        if (isWaiting) return;
-
-        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.KeypadEnter))
-        {
-            if (currentLineNum != 0)
+            if (Input.GetKeyDown(KeyCode.Z))
             {
-                ProccessNextLine();
+                Debug.Log(GameManager.instance.dataManager.runningCharacters[1]);
+            }
+
+            if (Input.GetKey(KeyCode.LeftControl))
+            {
+                currentState = RunnerState.Skip;
+                //if (!isWaiting) ProccessNextLine();
+            }
+            else if (Input.GetKeyUp(KeyCode.LeftControl))
+            {
+                currentState = RunnerState.Normal;
+            }
+
+            if (isWaiting) return;
+
+            if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.KeypadEnter))
+            {
+                if (currentLineNum != 0)
+                {
+                    ProccessNextLine();
+                }
             }
         }
     }
@@ -161,8 +166,9 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
         settedWaitDialogueAutoProccess = new WaitForSeconds(settedAutoProccessTime);
     }
 
-    public void CharacterInit(int index) //대화에 등장하는 모든 캐릭터 오브젝트 초기화.
+    public void CharacterInit(int index, string[] positions) //대화에 등장하는 모든 캐릭터 오브젝트 초기화.
     {
+        int num = 0;
         foreach (Transform character in characterParent)
         {
             character.gameObject.SetActive(false);
@@ -179,9 +185,12 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
                 character.name = data.characterName;
 
                 //character.SetActive(false);
-                character.GetComponent<RectTransform>().anchoredPosition = new Vector3(0, -150, 0); //y값 초기화.
-                if (GameManager.instance.dataManager.runningCharacters.ContainsKey(data.id)) continue;
+                character.GetComponent<RectTransform>().anchoredPosition = new Vector3(GameManager.instance.dialogueFunc.CalculatePos(positions[num]), -150, 0); //위치 초기화.
+                character.SetActive(false); //비활성화.
+                if (GameManager.instance.dataManager.runningCharacters.ContainsKey(data.id)) continue; //딕셔너리에 값이 존재하면 패스, 없으면 값 추가.
                 GameManager.instance.dataManager.runningCharacters.Add(data.id, new SystemDataManager.CharacterDatas { obj = character, characterData = data });
+
+                num++;
             }
         }
     }
@@ -205,6 +214,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
     //======================================================
     public void RunDialogue()
     {
+        isRunning = true;
         parser.Parse(DialogueFile.text);
         currentCharId = -1;
         if (DialogueFile != null)
@@ -214,7 +224,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
 
         Panel.SetActive(true);
         //임시.
-        CharacterInit(512);
+        //CharacterInit(512);
         //======
         ProccessNextLine();
     }
@@ -222,7 +232,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
     public void EndDialogue()
     {
         var dataManager = GameManager.instance.dataManager;
-
+        isRunning = false;
         dataManager.runningCharacters.Clear();
         currentLineNum = 0;
         currentCharId = -1;
@@ -230,10 +240,10 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
         dataManager.dialogueLog.Clear(); //지나간 대화 로그 삭제
         dataManager.proccessDatas.PlayerPosition.detail = "1층 로비 | 엘리베이터"; //플레이어 위치 로비로 변경(고정).
         GameManager.instance.uiManager.lobbyUIManager.PlayerPosUpdate(dataManager.proccessDatas.PlayerPosition.detail); //플레이어 위치 업데이트.
-        Panel.SetActive(false); //대화 판넬 비활성화
+        //Panel.SetActive(false); //대화 판넬 비활성화
         dataManager.ConsumeActionPoint(); //AP소모.
         GameManager.instance.uiManager.lobbyUIManager.UpdateAPSlider(); //슬라이더 업데이트
-        GameManager.instance.uiManager.FadeDailogueEnd(GameManager.instance.uiManager.dialogueUIManager.gameObject);
+        GameManager.instance.uiManager.FadeDailogueEnd(GameManager.instance.uiManager.dialogueUIManager.gameObject); //페이드 인아웃 연출 및 다음 고정 회화 확인.
     }
     //------------------------------------------
     public void ProccessNextLine()
@@ -252,44 +262,68 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
 
         switch (line.Action)
         {
+            case "Char":
+                {
+                    int numbers = int.Parse(line.Detail.condition.Trim());
+                    string[] positions = line.Detail.result.Split('|');
+                    Debug.Log("dfas");
+                    CharacterInit(numbers, positions);
+                    currentLineNum++;
+                    ProccessNextLine();
+                    return;
+                }
+
             case "T": //액션 노드가 T일 경우, 대사를 출력.
-                RunningDialogue(line);
-                break;
+                {
+                    RunningDialogue(line);
+                    break;
+                }
 
             case "If": //액션 노드가 If일 경우, 조건 체크 및 조건에 부합한지 부합하지 않은지 체크한 후, 줄 이동.
-                currentCharId = -1;
-                CheckingCondition(line.Detail.condition.Split('|'), line.Detail.result.Split('|'));
-                return;
+                {
+                    currentCharId = -1;
+                    CheckingCondition(line.Detail.condition.Split('|'), line.Detail.result.Split('|'));
+                    return;
+                }
 
             case "F": //분기점 체크. 개발 보류.
                 //CheckingFlag(line.Detail.condition, line.Detail.result.Split('|'));
                 break;
 
             case "S": //액션 노드가 S일 경우, 선택지를 제시한 후, 고른 선택지에 따라 줄 이동.
-                currentCharId = -1;
-                HandleChoices(line.Detail.condition.Split('|'), line.Detail.result.Split('|'), line);
-                return;
+                {
+                    currentCharId = -1;
+                    HandleChoices(line.Detail.condition.Split('|'), line.Detail.result.Split('|'), line);
+                    return;
+                }
+
 
             case "": //액션 노드에 아무것도 없는 경우. T행동의 연장선으로 간주, Detail의 Result를 출력한다. T행동의 연장이 아니더라도, 다른 노드를 실행.
-                if (currentCharId == -1) break;
-                StartCoroutine(TypingTxt(line.Detail.result)); //대사 출력.
-                CharacterEmphasis(currentCharId, line.Face); //화자 캐릭터 강조.
-                GameManager.instance.dataManager.dialogueLog.Add(line); //로그 추가.
-                break;
+                {
+                    if (currentCharId == -1) break;
+                    StartCoroutine(TypingTxt(line.Detail.result)); //대사 출력.
+                    CharacterEmphasis(currentCharId, line.Face); //화자 캐릭터 강조.
+                    GameManager.instance.dataManager.dialogueLog.Add(line); //로그 추가.
+                    break;
+                }
 
             case "J": //액션 노드가 J일 경우, 조건을 만족할 시, DialogueAsset을 변경, 조건을 만족하지 않으면 일정 줄 만큼 -이동.
-                currentCharId = -1;
-                JumpDialogue(line);
-                return;
+                {
+                    currentCharId = -1;
+                    JumpDialogue(line);
+                    return;
+                }
 
             default:
-                Debug.LogWarning($"알 수 없는 액션: {line.Action} (라인 {currentLineNum})");
-                currentLineNum++;
-                currentCharId = -1;
-                ProccessNextLine();
-                return;
+                {
+                    Debug.LogWarning($"알 수 없는 액션: {line.Action} (라인 {currentLineNum})");
+                    currentLineNum++;
+                    currentCharId = -1;
+                    ProccessNextLine();
+                    return;
+                }
         }
-        //Debug.Log("체킹!");
+        Debug.Log($"체킹! Action: {line.Action}, Line:{currentLineNum}");
         RunningOtherNode(line);
         currentLineNum++;
     }
@@ -360,9 +394,10 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
             character.GetComponent<Image>().color = new Color32(140, 140, 140, 255);
         }
 
-        var emphasisChar = GameManager.instance.dataManager.runningCharacters[id].obj.GetComponent<Image>();
-        emphasisChar.color = new Color32(255, 255, 255, 255);
-        emphasisChar.sprite = GameManager.instance.dataManager.runningCharacters[id].characterData.characterSpriteMap.sprites[emotion];
+        var emphasisChar = GameManager.instance.dataManager.runningCharacters[id].obj;
+        emphasisChar.SetActive(true);
+        emphasisChar.GetComponent<Image>().color = new Color32(255, 255, 255, 255);
+        emphasisChar.GetComponent<Image>().sprite = GameManager.instance.dataManager.runningCharacters[id].characterData.characterSpriteMap.sprites[emotion];
     }
 
     private void CheckingFlag(string condition, string[] results) //분기점 플래그 체크. 아직까지 사용예정 없음. 미완성.

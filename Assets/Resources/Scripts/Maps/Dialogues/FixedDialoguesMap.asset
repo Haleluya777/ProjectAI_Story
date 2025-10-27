@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dialogues:
   - assets:
-    - {fileID: 3402244403113295920, guid: f656db47600c4514a83e69959365d66f, type: 3}
-    - {fileID: -7276314267081567121, guid: 5f515a025b5895f4b81fc96a96f791a3, type: 3}
-    - {fileID: 6342606556181124406, guid: 5e1e4d6d7863b5f49ac4fe176c95a9b7, type: 3}
-    - {fileID: 7885284482938095363, guid: 1e373c2c142a0d743aac603c03891394, type: 3}
+    - {fileID: 3402244403113295920, guid: 17890bbb7f27d504f8b798efb094e00d, type: 3}
+    - {fileID: -7276314267081567121, guid: bd0fead512f2fe940a791de417222ce7, type: 3}
+    - {fileID: 6342606556181124406, guid: 49775e0327df9e3408b125b981dd8660, type: 3}
+    - {fileID: 7885284482938095363, guid: f88ac891b42447c4d93247ba29543030, type: 3}
   - assets:
     - {fileID: 0}
     - {fileID: 0}

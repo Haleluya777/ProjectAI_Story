@@ -47,6 +47,7 @@ public class SystemDataManager : MonoBehaviour, DataInitializable
     public List<string> currentTime = new List<string> { "아침", "오전 일과", "오후", "오후 일과", "저녁", "밤 일과", "휴식 시간" };
     public CirclularList<string> dailyRoutine { get; private set; }
     [SerializeField] private int[] fixedConversationList = { 23, 21, 21, 21 }; //6개의 비트(하루 루틴 6개)중, 어느 부분에 고정 대화를 실행할 지 체크(1이면 고정대화 존재. 0이면 없음(행동 가능))
+    public int fixedConversationNum;
     public int floorUnlock; //해금한 층 정보.
     public int repairUnlock; //장치 수리 해금 정보.
     //public List<int> characterDialogueNum = new List<int> { 0, 0, 0, 0, 0 }; //캐릭터의 대화 진행 상황. 2진수로 사용할 예정.
@@ -60,14 +61,11 @@ public class SystemDataManager : MonoBehaviour, DataInitializable
         proccessDatas.CurrentTime = dailyRoutine.Get();
         proccessDatas.Routine = dailyRoutine.Length() - 1;
         proccessDatas.Day = 1;
-        floorUnlock = 2;
-        repairUnlock = 2;
+        floorUnlock = 1;
+        repairUnlock = 1;
+        fixedConversationNum = 0;
 
         CheckingFixedDialogue(proccessDatas.Day, dailyRoutine.IndexOf(dailyRoutine.Get()));
-        // for (int i = 0; i < 5; i++)
-        // {
-        //     Debug.Log(fixedDialoguesMap.GetDialogues(proccessDatas.Day - 1, i).name);
-        // }
     }
 
     public void CheckingFixedDialogue(int day, int time)
@@ -78,6 +76,7 @@ public class SystemDataManager : MonoBehaviour, DataInitializable
         {
             Debug.Log("고정 대화 있음.");
             GameManager.instance.uiManager.FadeDialogueStart(FxiedDialogueRun);
+
         }
         else
         {
@@ -88,14 +87,16 @@ public class SystemDataManager : MonoBehaviour, DataInitializable
     private void FxiedDialogueRun()
     {
         //Debug.Log("고정 대화 실행!");
-        Debug.Log(fixedDialoguesMap.GetDialogues(proccessDatas.Day - 1, dailyRoutine.IndexOf(dailyRoutine.Get())).name);
-        Debug.Log(dailyRoutine.IndexOf(dailyRoutine.Get()));
-        GameManager.instance.dialogueRunner.DialogueFile = fixedDialoguesMap.GetDialogues(proccessDatas.Day - 1, dailyRoutine.IndexOf(dailyRoutine.Get()));
+        if (fixedConversationNum == fixedDialoguesMap.dialogues[proccessDatas.Day - 1].assets.Count) return;
+        GameManager.instance.dialogueRunner.DialogueFile = fixedDialoguesMap.GetDialogues(proccessDatas.Day - 1, fixedConversationNum);
         GameManager.instance.dialogueRunner.RunDialogue();
+
+        fixedConversationNum++;
     }
 
     void Update()
     {
+        Debug.Log(fixedConversationNum);
         //Debug.Log(dailyRoutine.Get());
         //Debug.Log(fixedConversationList[proccessDatas.Day - 1]);
         //Debug.Log(proccessDatas.Routine);
@@ -121,6 +122,7 @@ public class SystemDataManager : MonoBehaviour, DataInitializable
         proccessDatas.Routine = dailyRoutine.Length() - 1;
         proccessDatas.Day++;
         proccessDatas.CurrentTime = dailyRoutine.First(); //회전 리스트의 첫 번째 부분으로 강제 이동.
+        fixedConversationNum = 0;
     }
 
     public void ConsumeActionPoint()

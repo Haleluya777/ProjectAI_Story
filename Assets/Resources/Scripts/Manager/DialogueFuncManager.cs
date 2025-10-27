@@ -20,12 +20,12 @@ public class DialogueFuncManager : MonoBehaviour, DataInitializable
         multiParamMethod.Add("Add", (param) => Add(int.Parse((string)param[0])));
         multiParamMethod.Add("MultiParamTest", (param) => MultiParamTest(param[0].ToString(), int.Parse((string)param[1])));
         multiParamMethod.Add("TimeLineRun", (param) => TimeLineStart(int.Parse((string)param[0])));
-        multiParamMethod.Add("CharacterInit", (param) => CharacterInit(int.Parse((string)param[0])));
+        //multiParamMethod.Add("CharacterInit", (param) => CharacterInit(int.Parse((string)param[0])));
     }
 
     public void CharacterInit(int index)
     {
-        GameManager.instance.dialogueRunner.CharacterInit(index);
+        //GameManager.instance.dialogueRunner.CharacterInit(index);
     }
 
     public void TimeLineStart(int timeLineId)
@@ -221,7 +221,7 @@ public class DialogueFuncManager : MonoBehaviour, DataInitializable
 
     //===============================================================
 
-    private int CalculatePos(string positionCode)
+    public int CalculatePos(string positionCode)
     {
         return positionCode switch
         {
