@@ -238,7 +238,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
     //------------------------------------------
     public void ProccessNextLine()
     {
-        Debug.Log($"줄 시작{currentLineNum}");
+        //Debug.Log($"줄 시작{currentLineNum}");
         if (currentLineNum >= scriptLine.Count)
         {
             EndDialogue();

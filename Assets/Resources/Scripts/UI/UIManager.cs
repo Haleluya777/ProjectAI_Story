@@ -21,10 +21,11 @@ public class UIManager : MonoBehaviour
 
     public void FadeDailogueEnd(GameObject dialoguePanel)
     {
+        var dataManager = GameManager.instance.dataManager;
         Sequence sequence = DOTween.Sequence();
         sequence.Append(CoverPanel.DOFade(1, .75f)); //화면 어두워짐
         dialoguePanel.SetActive(false);
         sequence.Append(CoverPanel.DOFade(0, .75f)); //화면 밝아짐
-        GameManager.instance.dataManager.CheckingFixedDialogue(GameManager.instance.dataManager.proccessDatas.Day, 0);//고정 대화가 있는지 체크 후 실행.
+        dataManager.CheckingFixedDialogue(dataManager.proccessDatas.Day, dataManager.dailyRoutine.IndexOf(dataManager.dailyRoutine.Get()));//고정 대화가 있는지 체크 후 실행.
     }
 }
