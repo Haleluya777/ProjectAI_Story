@@ -35,7 +35,7 @@ public class FloorSelector : MonoBehaviour
         //character가 null이면 바로 메서드 종료.
         if (character == null) return;
 
-        var dialogueNum = BitGeneric.GetTopBit(character.CurrentdialogueNum);
+        var dialogueNum = BitGeneric.GetTopBit(character.CurrentdialogueNum); //최상위 비트 인덱스 번호를 반환.
         Debug.Log(dialogueNum);
         if (GameManager.instance.dialogueRunner.DialogueFile == character.dialogueFiles[dialogueNum]) return;
         GameManager.instance.dialogueRunner.DialogueFile = character.dialogueFiles[dialogueNum];

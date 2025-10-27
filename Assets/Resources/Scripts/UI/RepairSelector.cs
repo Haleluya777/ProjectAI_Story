@@ -53,7 +53,7 @@ public class RepairSelector : MonoBehaviour
     {
         if (GameManager.instance.dataManager.proccessDatas.Routine <= 0) return;
         var dataManager = GameManager.instance.dataManager;
-        dataManager.characterMap.GetCharacter(data.reactedCharacterID).CurrentdialogueNum |= (1 << data.progress);
+        dataManager.characterMap.GetCharacter(data.reactedCharacterID).CurrentdialogueNum |= (1 << data.progress); //관련된 캐릭터의 현 회화 번호의 다음 비트 1로 변경.
         data.progress++;
         //this.gameObject.SetActive(false);
         dataManager.ConsumeActionPoint(); //AP소모.
