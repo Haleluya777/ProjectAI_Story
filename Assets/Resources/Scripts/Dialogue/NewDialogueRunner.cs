@@ -8,6 +8,7 @@ using System.Linq;
 using TMPro;
 using UnityEngine.Playables;
 using System.Text;
+using Unity.VisualScripting;
 
 public class NewDialogueRunner : MonoBehaviour, DataInitializable
 {
@@ -205,11 +206,12 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
     {
         Debug.Log("대화 재개");
         isWaiting = false;
-        GameManager.instance.timeLineManager.TimeLinePause();
-        if ((currentState == RunnerState.Auto || currentState == RunnerState.Skip) && !isWaiting)
-        {
-            ProccessNextLine();
-        }
+        ProccessNextLine();
+        //GameManager.instance.timeLineManager.TimeLinePause();
+        //if ((currentState == RunnerState.Auto || currentState == RunnerState.Skip) && !isWaiting)
+        //{
+        //    ProccessNextLine();
+        //}
     }
     //======================================================
     public void RunDialogue()
@@ -238,7 +240,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
         currentCharId = -1;
         currentState = RunnerState.Normal; //대화 진행 모드 기본으로 변경.
         dataManager.dialogueLog.Clear(); //지나간 대화 로그 삭제
-        dataManager.proccessDatas.PlayerPosition.detail = "1층 로비 | 엘리베이터"; //플레이어 위치 로비로 변경(고정).
+        dataManager.proccessDatas.PlayerPosition.detail = "1층 로비"; //플레이어 위치 로비로 변경(고정).
         GameManager.instance.uiManager.lobbyUIManager.PlayerPosUpdate(dataManager.proccessDatas.PlayerPosition.detail); //플레이어 위치 업데이트.
         //Panel.SetActive(false); //대화 판넬 비활성화
         dataManager.ConsumeActionPoint(); //AP소모.
@@ -266,7 +268,6 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
                 {
                     int numbers = int.Parse(line.Detail.condition.Trim());
                     string[] positions = line.Detail.result.Split('|');
-                    Debug.Log("dfas");
                     CharacterInit(numbers, positions);
                     currentLineNum++;
                     ProccessNextLine();
@@ -352,6 +353,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
         if (line.Production != "") GameManager.instance.dialogueFunc.RunningProduction(line.Production);
         if (line.BGM != "") GameManager.instance.dialogueFunc.ChangeBGM(line.BGM);
         if (line.Affection != "") GameManager.instance.dialogueFunc.AffectionChange(line.Affection, line.Actor);
+        if (line.Place != "") GameManager.instance.dataManager.proccessDatas.PlayerPosition.detail = line.Place;
         //currentLineNum++;
     }
 

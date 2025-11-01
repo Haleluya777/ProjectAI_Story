@@ -27,7 +27,28 @@ public class UIManager : MonoBehaviour
         Sequence sequence = DOTween.Sequence();
         sequence.Append(CoverPanel.DOFade(1, .75f)); //화면 어두워짐
         sequence.AppendCallback(() => dialoguePanel.SetActive(false));
-        dataManager.CheckingFixedDialogue(dataManager.proccessDatas.Day, dataManager.dailyRoutine.IndexOf(dataManager.dailyRoutine.Get())); //고정 대화가 있는지 체크 후 실행.
+        dataManager.CheckingFixedDialogue(); //고정 대화가 있는지 체크 후 실행.
         sequence.Append(CoverPanel.DOFade(0, .75f)); //화면 밝아짐
+    }
+
+    public void TimeProccessProduction()
+    {
+        Sequence sequence = DOTween.Sequence();
+        GameManager.instance.dialogueRunner.DialoguePause();
+
+        sequence.Append(CoverPanel.DOFade(1, .75f));
+        sequence.Append(CoverPanel.DOFade(0, .75f));
+        sequence.AppendCallback(() => GameManager.instance.dialogueRunner.DialogueResume());
+    }
+
+    public void NextDayProduction()
+    {
+        var dataManager = GameManager.instance.dataManager;
+        Sequence sequence = DOTween.Sequence();
+
+        sequence.Append(CoverPanel.DOFade(1, .75f));
+        sequence.AppendCallback(() => lobbyUIManager.ProccessNextDay());
+        sequence.Append(CoverPanel.DOFade(0, .75f));
+        sequence.onComplete = () => dataManager.CheckingFixedDialogue();
     }
 }

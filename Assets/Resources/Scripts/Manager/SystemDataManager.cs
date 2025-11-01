@@ -65,14 +65,14 @@ public class SystemDataManager : MonoBehaviour, DataInitializable
         repairUnlock = 1;
         fixedConversationNum = 0;
 
-        CheckingFixedDialogue(proccessDatas.Day, dailyRoutine.IndexOf(dailyRoutine.Get()));
+        CheckingFixedDialogue();
     }
 
-    public void CheckingFixedDialogue(int day, int time)
+    public void CheckingFixedDialogue()
     {
-        int mask = 1 << time;
-        int result = fixedConversationList[day - 1] & mask;
-        if (result >> time != 0)
+        int mask = 1 << dailyRoutine.IndexOf(dailyRoutine.Get());
+        int result = fixedConversationList[proccessDatas.Day - 1] & mask;
+        if (result >> dailyRoutine.IndexOf(dailyRoutine.Get()) != 0)
         {
             Debug.Log("고정 대화 있음.");
             GameManager.instance.uiManager.FadeDialogueStart(FxiedDialogueRun);

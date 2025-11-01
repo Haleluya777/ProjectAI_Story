@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     public SystemDataManager dataManager;
     public SoundManager soundManager;
     public UIManager uiManager;
+    public EventManager eventManager;
     public GameObject debbuger; //디버깅 용 탭. 빌드 때 삭제 예정.
 
     private void Awake()

@@ -19,7 +19,4 @@ MonoBehaviour:
     - {fileID: 6342606556181124406, guid: 49775e0327df9e3408b125b981dd8660, type: 3}
     - {fileID: 7885284482938095363, guid: f88ac891b42447c4d93247ba29543030, type: 3}
   - assets:
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
+    - {fileID: 3402244403113295920, guid: 17890bbb7f27d504f8b798efb094e00d, type: 3}

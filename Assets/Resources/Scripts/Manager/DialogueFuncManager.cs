@@ -75,7 +75,7 @@ public class DialogueFuncManager : MonoBehaviour, DataInitializable
 
         for (int i = 0; i < blocks.Length; i++)
         {
-            Debug.Log($"RunningProduction trying to parse: {blocks[i]}");
+            //Debug.Log($"RunningProduction trying to parse: {blocks[i]}");
             string[] nodeSplit = blocks[i].Split('_');
             var actorId = int.Parse(nodeSplit[0]);
 
@@ -179,7 +179,15 @@ public class DialogueFuncManager : MonoBehaviour, DataInitializable
 
                 case "TimeProccess":
                     {
-                        Debug.Log("시간 지남.");
+                        // string[] details = nodeSplit[2].Split('|');
+
+                        // var startTime = float.Parse(details[0]); //타임라인 기준으로 애니메이션 클립이 시작되는 시간.
+                        // var duration = int.Parse(details[1]); //진행 시간.
+                        // var obj = GameManager.instance.uiManager.transform.GetChild(1).gameObject;
+
+                        // Debug.Log("시간 지남.");
+                        // GameManager.instance.timeLineBuilder.BuildingTimeLine(startTime, "TimeProccess", duration, null, obj, characterTrack[actorId][0], characterTrack[actorId][2]);
+                        GameManager.instance.uiManager.TimeProccessProduction();
                         break;
                     }
 
@@ -217,7 +225,6 @@ public class DialogueFuncManager : MonoBehaviour, DataInitializable
         GameManager.instance.dataManager.runningCharacters[actorId].characterData.affaction += value;
         Debug.Log($"{GameManager.instance.dataManager.runningCharacters[actorId].characterData.characterName}의 호감도가 {value}만큼 변동되었습니다. 현재 호감도 : {GameManager.instance.dataManager.runningCharacters[actorId].characterData.affaction}");
     }
-
 
     //===============================================================
 
