@@ -23,11 +23,17 @@ public class FloorSelector : MonoBehaviour
             string floor = characterData.floor.floorDetail;
 
             button.onClick.AddListener(() => CheckingFlags(characterData));
+            button.onClick.AddListener(() => InputMainCharacterData(characterData));
             button.onClick.AddListener(() => GameManager.instance.uiManager.FadeDialogueStart(StartDialogue));
 
             button.interactable = false;
         }
         UpdateFloorSelector();
+    }
+
+    private void InputMainCharacterData(CharacterData data)
+    {
+        GameManager.instance.dataManager.MainCharacterData = data;
     }
 
     private void CheckingFlags(CharacterData character) //CurrentDialgoueNum의 최상위 비트 번호 번째의 대화 파일로 변경.

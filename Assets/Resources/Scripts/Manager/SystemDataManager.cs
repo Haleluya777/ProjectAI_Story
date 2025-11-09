@@ -51,7 +51,7 @@ public class SystemDataManager : MonoBehaviour, DataInitializable
     public int floorUnlock; //해금한 층 정보.
     public int repairUnlock; //장치 수리 해금 정보.
     //public List<int> characterDialogueNum = new List<int> { 0, 0, 0, 0, 0 }; //캐릭터의 대화 진행 상황. 2진수로 사용할 예정.
-    public int MainCharacterID; //대화의 주체가 되는 중심 캐릭터 ID값. 대화 진행 중, 혹은 대화 마지막에 대화 스크립트 변경 시 CharacterMap에서 해당 캐릭터의 변수값을 변경할 접근용으로 사용. (캐릭터가 메인 로비에 있을 경우 값은 0)
+    public CharacterData MainCharacterData; //대화의 주체가 되는 중심 캐릭터 데이터. 대화 진행 중, 혹은 대화 마지막에 대화 스크립트 변경 시 CharacterMap에서 해당 캐릭터의 변수값을 변경할 접근용으로 사용. (캐릭터가 메인 로비에 있을 경우 값은 0)
 
     public void InitializeData()
     {

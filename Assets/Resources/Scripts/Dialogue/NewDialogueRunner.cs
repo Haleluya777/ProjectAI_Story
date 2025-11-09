@@ -246,6 +246,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
         dataManager.ConsumeActionPoint(); //AP소모.
         GameManager.instance.uiManager.lobbyUIManager.UpdateAPSlider(); //슬라이더 업데이트
         GameManager.instance.uiManager.FadeDailogueEnd(GameManager.instance.uiManager.dialogueUIManager.gameObject); //페이드 인아웃 연출 및 다음 고정 회화 확인.
+        dataManager.MainCharacterData = null;
     }
     //------------------------------------------
     public void ProccessNextLine()
