@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Hallelujah;
 
 public class RepairSelector : MonoBehaviour
 {
@@ -53,7 +54,9 @@ public class RepairSelector : MonoBehaviour
     {
         if (GameManager.instance.dataManager.proccessDatas.Routine <= 0) return;
         var dataManager = GameManager.instance.dataManager;
-        dataManager.characterMap.GetCharacter(data.reactedCharacterID).CurrentdialogueNum |= (1 << data.progress); //관련된 캐릭터의 현 회화 번호의 다음 비트 1로 변경.
+        var character = dataManager.characterMap.GetCharacter(data.reactedCharacterID);
+        //dataManager.characterMap.GetCharacter(data.reactedCharacterID).CurrentdialogueNum |= (1 << data.progress); //관련된 캐릭터의 현 회화 번호의 다음 비트 1로 변경.
+        character.CurrnetDialogueIndex = BitGeneric.GetTopBit(character.CurrentdialogueNum);
         data.progress++;
         //this.gameObject.SetActive(false);
         dataManager.ConsumeActionPoint(); //AP소모.

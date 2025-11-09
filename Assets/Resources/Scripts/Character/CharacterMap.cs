@@ -21,9 +21,10 @@ public class CharacterData
     public int CurrentdialogueNum; //현재까지 지나온 대화 스크립트의 번호를 2진수로 계산한 후, 10진수로 변환한 값.
                                    //이 값의 2진수가 00001101101이라면, 1,3,4,6,7번 째 대화 스크립트를 진행했다는 뜻이며, 현재 위치는 7번째 스크립트라는 뜻이다.
 
+    public int CurrnetDialogueIndex; //다음에 실행할 회화 인덱스 번호.
     public int dialogueLineNum; //현재 대화 진행도 내의 대사 진행도
     public List<TextAsset> dialogueFiles; //로비에서 캐릭터를 선택했을 때 하는 대화 스크립트들의 목록.
-    public TextAsset NextDialogueScript; //다음에 진행할 대화 스크립트.
+    //public TextAsset NextDialogueScript; //다음에 진행할 대화 스크립트.
     public FloorDetail floor; //캐릭터가 있는 층 이름.
     //public int[] flags; //현재 대화 스크립트에서 파생될 수 있는 스크립트 목록들.
 }
@@ -32,14 +33,6 @@ public class CharacterData
 public class CharacterMap : ScriptableObject
 {
     public CharacterData[] characters; //캐릭터 데이터
-
-    public void InitDialogue()
-    {
-        foreach (var character in characters)
-        {
-            character.NextDialogueScript = character.dialogueFiles[0];
-        }
-    }
 
     public CharacterData GetCharacter(int index)
     {
