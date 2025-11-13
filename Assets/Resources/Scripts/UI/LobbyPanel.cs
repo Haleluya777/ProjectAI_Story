@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,6 +11,9 @@ public class LobbyPanel : MonoBehaviour
     [SerializeField] private Slider actionPointSlider;
     [SerializeField] private TextMeshProUGUI playerPosition;
     [SerializeField] private TextMeshProUGUI day;
+
+    private const int SAVE_LOAD_SLOTCOUNT = 5;
+
     void Start()
     {
         floorSelector.InitFloorSelection();

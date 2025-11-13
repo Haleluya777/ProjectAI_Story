@@ -6,9 +6,7 @@ using UnityEngine.UI;
 using KoreanTyper;
 using System.Linq;
 using TMPro;
-using UnityEngine.Playables;
 using System.Text;
-using Unity.VisualScripting;
 
 public class NewDialogueRunner : MonoBehaviour, DataInitializable
 {
@@ -68,8 +66,8 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
     private List<NewDialogueParser.ParsedLine> scriptLine;
     private int currentLineNum = 0;
     int currentCharId; //현재 말하고 있는 캐릭터의 id값. 0은 나레이션.
-    [SerializeField] private bool isWaiting;
-    [SerializeField] private bool isRunning;
+    [SerializeField] private bool isWaiting; //대화 일시 정지
+    public bool isRunning; //대화가 진행중인지 체크하는 변수.
 
     private void Start()
     {
@@ -100,14 +98,14 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
 
     void Update()
     {
-        //Debug.Log(currentCharId);
+        //Debug.Log(currentLineNum);
         DialogueStateAction();
 
         if (isRunning)
         {
             if (Input.GetKeyDown(KeyCode.Z))
             {
-                Debug.Log(GameManager.instance.dataManager.runningCharacters[1]);
+                //Debug.Log(GameManager.instance.dataManager.runningCharacters[1]);
             }
 
             if (Input.GetKey(KeyCode.LeftControl))
@@ -186,7 +184,14 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
                 character.name = data.characterName;
 
                 //character.SetActive(false);
-                character.GetComponent<RectTransform>().anchoredPosition = new Vector3(GameManager.instance.dialogueFunc.CalculatePos(positions[num]), -150, 0); //위치 초기화.
+                if (num < positions.Length)
+                {
+                    character.GetComponent<RectTransform>().anchoredPosition = new Vector3(GameManager.instance.dialogueFunc.CalculatePos(positions[num]), -150, 0); //위치 초기화.
+                }
+                else
+                {
+                    character.GetComponent<RectTransform>().anchoredPosition = new Vector3(0, -150, 0); // 기본 위치
+                }
                 character.SetActive(false); //비활성화.
                 if (GameManager.instance.dataManager.runningCharacters.ContainsKey(data.id)) continue; //딕셔너리에 값이 존재하면 패스, 없으면 값 추가.
                 GameManager.instance.dataManager.runningCharacters.Add(data.id, new SystemDataManager.CharacterDatas { obj = character, characterData = data });
@@ -214,8 +219,9 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
         //}
     }
     //======================================================
-    public void RunDialogue()
+    public void RunDialogue(int lineNum)
     {
+        currentLineNum = lineNum;
         isRunning = true;
         parser.Parse(DialogueFile.text);
         currentCharId = -1;
@@ -242,10 +248,19 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
         dataManager.dialogueLog.Clear(); //지나간 대화 로그 삭제
         dataManager.proccessDatas.PlayerPosition.detail = "1층 로비"; //플레이어 위치 로비로 변경(고정).
         GameManager.instance.uiManager.lobbyUIManager.PlayerPosUpdate(dataManager.proccessDatas.PlayerPosition.detail); //플레이어 위치 업데이트.
+
         //Panel.SetActive(false); //대화 판넬 비활성화
+
         dataManager.ConsumeActionPoint(); //AP소모.
         GameManager.instance.uiManager.lobbyUIManager.UpdateAPSlider(); //슬라이더 업데이트
         GameManager.instance.uiManager.FadeDailogueEnd(GameManager.instance.uiManager.dialogueUIManager.gameObject); //페이드 인아웃 연출 및 다음 고정 회화 확인.
+
+        //사용한 대화 스크립트를 Used스크립트로 변경.
+        if (dataManager.MainCharacterData.id != 0)
+        {
+            dataManager.MainCharacterData.dialogueFiles[dataManager.MainCharacterData.CurrnetDialogueIndex] = dataManager.MainCharacterData.dialogueFiles[^1];
+        }
+
         dataManager.MainCharacterData = null;
     }
     //------------------------------------------
@@ -259,7 +274,6 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
         }
 
         if (isWaiting) return;
-
         NewDialogueParser.ParsedLine line = scriptLine[currentLineNum];
         //Debug.Log(line);
 
@@ -271,6 +285,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
                     string[] positions = line.Detail.result.Split('|');
                     CharacterInit(numbers, positions);
                     currentLineNum++;
+                    RunningOtherNode(line);
                     ProccessNextLine();
                     return;
                 }
@@ -303,9 +318,29 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
             case "": //액션 노드에 아무것도 없는 경우. T행동의 연장선으로 간주, Detail의 Result를 출력한다. T행동의 연장이 아니더라도, 다른 노드를 실행.
                 {
                     if (currentCharId == -1) break;
-                    StartCoroutine(TypingTxt(line.Detail.result)); //대사 출력.
-                    CharacterEmphasis(currentCharId, line.Face); //화자 캐릭터 강조.
-                    GameManager.instance.dataManager.dialogueLog.Add(line); //로그 추가.
+                    RunningDialogue(line);
+                    // Debug.Log(currentCharId);
+                    // StartCoroutine(TypingTxt(line.Detail.result)); //대사 출력.
+
+                    // if (line.Actor == "")
+                    // {
+                    //     SpeakerName.gameObject.transform.parent.gameObject.SetActive(false);
+                    // }
+                    // else
+                    // {
+                    //     SpeakerName.gameObject.transform.parent.gameObject.SetActive(true); //화자 이름이 있을 경우, 화자 이름 UI 활성화.
+                    //     string[] actorDetail = line.Actor.Split('_');
+                    //     if (actorDetail.Length <= 2) //'_'기준으로 Actor를 나눴을 때의 배열 길이가 2이하일 때. (캐릭터의 id와 이름만 있을 떄)
+                    //     {
+                    //         SpeakerName.text = actorDetail[1]; //화자 이름만 출력.
+                    //     }
+                    //     else if (actorDetail.Length > 2)//Actor칸이 ID_이름_이명 형식일 때.
+                    //     {
+                    //         SpeakerName.text = actorDetail[1] + " | " + actorDetail[2];
+                    //     }
+                    // }
+                    // CharacterEmphasis(currentCharId, line.Face); //화자 캐릭터 강조.
+
                     break;
                 }
 
@@ -313,6 +348,32 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
                 {
                     currentCharId = -1;
                     JumpDialogue(line);
+                    return;
+                }
+
+            case "Flag":
+                {
+                    var dataManager = GameManager.instance.dataManager;
+                    dataManager.MainCharacterData.CurrentdialogueNum |= 1 << int.Parse(line.Detail.condition);
+                    currentLineNum++;
+                    ProccessNextLine();
+                    break;
+                }
+            case "End":
+                {
+                    Debug.Log("끄읏");
+                    EndDialogue();
+                    return;
+                }
+
+            case "Random":
+                {
+                    List<int> numbers = line.Detail.condition.Split('|').Select(int.Parse).ToList();
+                    var jumpNum = numbers[UnityEngine.Random.Range(0, numbers.Count)];
+                    Debug.Log($"넘어가기전 줄 {currentLineNum}");
+                    currentLineNum += jumpNum;
+                    Debug.Log($"넘어갈 줄의 수 {jumpNum}, 현재 줄 : {currentLineNum}");
+                    ProccessNextLine();
                     return;
                 }
 
@@ -325,8 +386,14 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
                     return;
                 }
         }
-        Debug.Log($"체킹! Action: {line.Action}, Line:{currentLineNum}");
+        //Debug.Log($"체킹! Action: {line.Action}, Line:{currentLineNum}");
         RunningOtherNode(line);
+        if (GameManager.instance.dataManager.MainCharacterData.id != 0)
+        {
+            Debug.Log("메인 캐릭터 있음.");
+            GameManager.instance.dataManager.MainCharacterData.dialogueLineNum = currentLineNum;
+            Debug.Log(GameManager.instance.dataManager.MainCharacterData.dialogueLineNum);
+        }
         currentLineNum++;
     }
 
@@ -355,12 +422,21 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
         if (line.BGM != "") GameManager.instance.dialogueFunc.ChangeBGM(line.BGM);
         if (line.Affection != "") GameManager.instance.dialogueFunc.AffectionChange(line.Affection, line.Actor);
         if (line.Place != "") GameManager.instance.dataManager.proccessDatas.PlayerPosition.detail = line.Place;
+        if (line.CutScene != "")
+        {
+            GameManager.instance.uiManager.dialogueUIManager.CutSceneImg.gameObject.SetActive(true);
+            GameManager.instance.uiManager.dialogueUIManager.CutSceneImg.sprite = GameManager.instance.dataManager.MainCharacterData.characterCutScne.cutSceneMap[int.Parse(line.CutScene)];
+        }
+        else
+        {
+            GameManager.instance.uiManager.dialogueUIManager.CutSceneImg.gameObject.SetActive(false);
+        }
         //currentLineNum++;
     }
 
     private void RunningDialogue(NewDialogueParser.ParsedLine line)
     {
-        if (line.Detail.result.Contains("\\n")) line.Detail.result = line.Detail.result.Replace("\\n", "\n"); //대사에 \n이 포함되어 있을 경우, 줄바꿈 처리.
+        if (line.Detail.result.Contains("\\n")) line.Detail.condition = line.Detail.condition.Replace("\\n", "\n"); //대사에 \n이 포함되어 있을 경우, 줄바꿈 처리.
         /*Debug.Log(int.Parse(line.Actor.Split('_')[0]));*/
         if (line.Actor == "") //화자 이름이 없을 경우. 나레이션인 경우.
         {
@@ -385,7 +461,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
             CharacterEmphasis(currentCharId, line.Face); //화자 캐릭터 강조.
         }
 
-        StartCoroutine(TypingTxt(line.Detail.result)); //대사 출력.
+        StartCoroutine(TypingTxt(line.Detail.condition)); //대사 출력.
         GameManager.instance.dataManager.dialogueLog.Add(line); //대화 로그에 저장.
     }
 
@@ -553,6 +629,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
     public void GetDialogueLogs() //GameManager에 저장된 이전까지의 대화 로그.
     {
         List<NewDialogueParser.ParsedLine> logs = GameManager.instance.dataManager.dialogueLog;
+        Debug.Log(logs.Count);
         DialogueLogPanel.SetActive(true);
 
         foreach (Transform child in DialogueLogContainer)
@@ -564,28 +641,28 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
         {
             //대화 로그 오브젝트를 생성하는 명령어. 추후 오브젝트 풀링으로 변경 예정.
             var logObj = Instantiate(DialogueLogObj, DialogueLogContainer);
-            var speakerLogText = logObj.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+            //var speakerLogText = logObj.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
             var dialogueLogText = logObj.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
 
-            if (log.Actor == "")
-            {
-                speakerLogText.text = "나레이션";
-            }
+            //if (log.Actor == "")
+            //{
+            //    //speakerLogText.text = "나레이션";
+            //}
+            //
+            //else
+            //{
+            //    string[] actorDetail = log.Actor.Split('_');
+            //    if (actorDetail.Length <= 2) //'_'기준으로 Actor를 나눴을 때의 배열 길이가 2이하일 때. (캐릭터의 id와 이름만 있을 떄)
+            //    {
+            //        //speakerLogText.text = actorDetail[1]; //화자 이름만 출력.
+            //    }
+            //    else if (actorDetail.Length > 2)//Actor칸이 ID_이름_이명 형식일 때.
+            //    {
+            //        //speakerLogText.text = actorDetail[1] + " | " + actorDetail[2];
+            //    }
+            //}
 
-            else
-            {
-                string[] actorDetail = log.Actor.Split('_');
-                if (actorDetail.Length <= 2) //'_'기준으로 Actor를 나눴을 때의 배열 길이가 2이하일 때. (캐릭터의 id와 이름만 있을 떄)
-                {
-                    speakerLogText.text = actorDetail[1]; //화자 이름만 출력.
-                }
-                else if (actorDetail.Length > 2)//Actor칸이 ID_이름_이명 형식일 때.
-                {
-                    speakerLogText.text = actorDetail[1] + " | " + actorDetail[2];
-                }
-            }
-
-            dialogueLogText.text = log.Detail.result;
+            dialogueLogText.text = log.Detail.condition;
         }
     }
 

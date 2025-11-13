@@ -6,6 +6,7 @@ using Hallelujah;
 using System;
 using UnityEngine.UI;
 
+[ES3Serializable]
 public class SystemDataManager : MonoBehaviour, DataInitializable
 {
     //게임 시스템 데이터를 관리하는 매니저 스크립트.
@@ -32,26 +33,32 @@ public class SystemDataManager : MonoBehaviour, DataInitializable
         public string CurrentTime;
     }
 
-    private enum CurrentDialogueCharacter { Iron, Fire, Ground, Water, Wood }
-    public int maxAP;
-    [SerializeField] public CharacterMap characterMap; //캐릭터 데이터 베이스
-    [SerializeField] public RepairableEquipment equipmentMap; //수리 가능한 장비 데이터 베이스
+    public int maxAP; //[저장 필요]
+    [SerializeField] public CharacterMap characterMap; //캐릭터 데이터 베이스 [저장 필요]
+    [SerializeField] public RepairableEquipment equipmentMap; //수리 가능한 장비 데이터 베이스 [저장 필요]
+    public Dictionary<int, CharacterDatas> runningCharacters = new Dictionary<int, CharacterDatas>(); //현재 대화에 참여중인 캐릭터들만 [저장 필요]
+    public List<NewDialogueParser.ParsedLine> dialogueLog = new List<NewDialogueParser.ParsedLine>(); //지나간 대화 로그. [저장 필요]
+    public ProccessDatas proccessDatas = new ProccessDatas(); //현재 날짜, 플레이어 위치, 시간, 남은 ap [저장 필요]
+    public CirclularList<string> dailyRoutine { get; private set; } //하루 일과 [저장 필요.]
+    public int fixedConversationNum; //몇 번째 고정 대화를 실행할지 저장하는 정보 [저장 필요]
+    public int floorUnlock; //해금한 층 정보. [저장 필요]
+    public int repairUnlock; //장치 수리 해금 정보. [저장 필요]
+
+    //대화의 주체가 되는 중심 캐릭터 데이터. 대화 진행 중, 혹은 대화 마지막에 대화 스크립트 변경 시 CharacterMap에서 해당 캐릭터의 변수값을 변경할 접근용으로 사용. (캐릭터가 메인 로비에 있을 경우 값은 0)
+    //[저장 필요]
+    public CharacterData MainCharacterData;
+    public GameObject Test;
+
+    [ES3NonSerializable]
     public FixedDialoguesMap fixedDialoguesMap;
-    public Dictionary<int, CharacterDatas> runningCharacters = new Dictionary<int, CharacterDatas>(); //현재 대화에 참여중인 캐릭터들만
     public Dictionary<int, EquipmentDatas> repairableEquipment = new Dictionary<int, EquipmentDatas>(); //수리 장치 데이터
     public SerializedDic_BG backgroundMap; //배경 이미지 데이터 베이스
     public Dictionary<string, object> operandDic = new Dictionary<string, object>(); //조건 체크할 때 쓰는 피연산자.
-    public List<NewDialogueParser.ParsedLine> dialogueLog = new List<NewDialogueParser.ParsedLine>(); //지나간 대화 로그.
-    public ProccessDatas proccessDatas = new ProccessDatas(); //현재 날짜, 플레이어 위치, 시간, 남은 ap
     public List<string> dayOneTime = new List<string> { "새벽", "오전", "오후_1", "오후_2", "저녁", "휴식 시간" };
     public List<string> currentTime = new List<string> { "아침", "오전 일과", "오후", "오후 일과", "저녁", "밤 일과", "휴식 시간" };
-    public CirclularList<string> dailyRoutine { get; private set; }
     [SerializeField] private int[] fixedConversationList = { 23, 21, 21, 21 }; //6개의 비트(하루 루틴 6개)중, 어느 부분에 고정 대화를 실행할 지 체크(1이면 고정대화 존재. 0이면 없음(행동 가능))
-    public int fixedConversationNum;
-    public int floorUnlock; //해금한 층 정보.
-    public int repairUnlock; //장치 수리 해금 정보.
+
     //public List<int> characterDialogueNum = new List<int> { 0, 0, 0, 0, 0 }; //캐릭터의 대화 진행 상황. 2진수로 사용할 예정.
-    public CharacterData MainCharacterData; //대화의 주체가 되는 중심 캐릭터 데이터. 대화 진행 중, 혹은 대화 마지막에 대화 스크립트 변경 시 CharacterMap에서 해당 캐릭터의 변수값을 변경할 접근용으로 사용. (캐릭터가 메인 로비에 있을 경우 값은 0)
 
     public void InitializeData()
     {
@@ -89,14 +96,14 @@ public class SystemDataManager : MonoBehaviour, DataInitializable
         //Debug.Log("고정 대화 실행!");
         if (fixedConversationNum == fixedDialoguesMap.dialogues[proccessDatas.Day - 1].assets.Count) return;
         GameManager.instance.dialogueRunner.DialogueFile = fixedDialoguesMap.GetDialogues(proccessDatas.Day - 1, fixedConversationNum);
-        GameManager.instance.dialogueRunner.RunDialogue();
+        GameManager.instance.dialogueRunner.RunDialogue(0);
 
         fixedConversationNum++;
     }
 
     void Update()
     {
-        Debug.Log(fixedConversationNum);
+        //Debug.Log(fixedConversationNum);
         //Debug.Log(dailyRoutine.Get());
         //Debug.Log(fixedConversationList[proccessDatas.Day - 1]);
         //Debug.Log(proccessDatas.Routine);

@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class DialoguePanel : MonoBehaviour
 {
     public Image backGround;
+    public Image CutSceneImg;
     [SerializeField] private Transform menuParent; //Dialogue 씬의 메뉴 버튼들을 총괄하는 오브젝트.
     private List<RectTransform> menuChildsPos = new List<RectTransform>();
     private bool menuClosed;

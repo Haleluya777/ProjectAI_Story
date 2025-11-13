@@ -1,0 +1,18 @@
+Action	Detail	BG	Production	Face	Actor	BGM	SE	Affection	Place	Cut
+Char	1_C								철의 층	
+Random	1 | 7 | 10 									
+T	아직 하실 말씀이 더 남았나요?			Default	1_철 AI					
+S	응? 아...아니..._0									
+T	그럼 어서 자리로 돌아가 하셔야 할 일을 하세요.			Default	1_철 AI					
+	저도 한가하해서 당신을 상대하는 것은 아닙니다.			Default	1_철 AI					
+T	....어서 자리로 돌아가자.									
+End										
+T	다시 2층으로 돌아오니 나를 반기는 것은 정적과 싸늘한 공기뿐이었다.									
+S	...일단 돌아가자._0									
+End										
+T	...뭐죠? 벌써 시설 수리는 다 끝난 건가요?			Default	1_철 AI					
+S	아직 안 끝났어. 그냥 심심해서 와본 거야._0									
+T	그럼 어서 자리로 돌아가 하셔야 할 일을 하세요.			Default	1_철 AI					
+	저도 한가하해서 당신을 상대하는 것은 아닙니다.			Default	1_철 AI					
+T	....어서 자리로 돌아가자.									
+End										

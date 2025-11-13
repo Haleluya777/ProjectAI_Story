@@ -127,6 +127,7 @@ Transform:
   - {fileID: 7207581611958853574}
   - {fileID: 8356476303151380772}
   - {fileID: 4379924352099710309}
+  - {fileID: 5040732617563740599}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6733762140353773184
@@ -148,6 +149,8 @@ MonoBehaviour:
   dataManager: {fileID: 8933591989330819704}
   soundManager: {fileID: 2366822478074863440}
   uiManager: {fileID: 0}
+  eventManager: {fileID: 3677874674055580814}
+  saveLoadManager: {fileID: 487232787622414600}
   debbuger: {fileID: 0}
 --- !u!1 &2872552722295301870
 GameObject:
@@ -277,11 +280,23 @@ MonoBehaviour:
   - "\uC800\uB141"
   - "\uBC24 \uC77C\uACFC"
   - "\uD734\uC2DD \uC2DC\uAC04"
-  fixedConversationList: 17000000150000001500000015000000
+  fixedConversationList: 0000000017000000150000001500000015000000
   fixedConversationNum: 0
   floorUnlock: 1
   repairUnlock: 1
-  MainCharacterID: 0
+  MainCharacterData:
+    id: 0
+    characterName: 
+    characterSpriteMap: {fileID: 0}
+    characterAnim: {fileID: 0}
+    affaction: 0
+    CurrentdialogueNum: 0
+    CurrnetDialogueIndex: 0
+    dialogueLineNum: 0
+    dialogueFiles: []
+    floor:
+      floorNum: 0
+      floorDetail: 
 --- !u!1 &3948354313045034800
 GameObject:
   m_ObjectHideFlags: 0
@@ -479,6 +494,65 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+--- !u!1 &4743667682140013178
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5040732617563740599}
+  - component: {fileID: 3677874674055580814}
+  m_Layer: 0
+  m_Name: EventManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5040732617563740599
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4743667682140013178}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7709201228672278811}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3677874674055580814
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4743667682140013178}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 661cb9348927eba42be63afa0d4df7a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  FixedDialogueEvents:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8933591989330819704}
+        m_TargetAssemblyTypeName: SystemDataManager, Assembly-CSharp
+        m_MethodName: CheckingFixedDialogue
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &5051561859940480753
 GameObject:
   m_ObjectHideFlags: 0

@@ -77,7 +77,8 @@ public class DialogueFuncManager : MonoBehaviour, DataInitializable
         {
             //Debug.Log($"RunningProduction trying to parse: {blocks[i]}");
             string[] nodeSplit = blocks[i].Split('_');
-            var actorId = int.Parse(nodeSplit[0]);
+            int actorId;
+            int.TryParse(nodeSplit[0], out actorId);
 
             if (!characterTrack.ContainsKey(actorId))
             {

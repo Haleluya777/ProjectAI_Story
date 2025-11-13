@@ -17,12 +17,17 @@ MonoBehaviour:
     characterName: Iron
     characterSpriteMap: {fileID: 11400000, guid: 2be8663db9542c24284ca7a1b606d87c, type: 2}
     characterAnim: {fileID: 11400000, guid: 3906d7db6884e9c49b4a175b7eac739d, type: 2}
+    characterCutScne: {fileID: 11400000, guid: b51ac3ad1f6a8a94b97130772e50fb40, type: 2}
     affaction: 0
-    CurrentdialogueNum: 0
-    dialogueLineNum: 0
+    CurrentdialogueNum: 2
+    CurrnetDialogueIndex: 0
+    dialogueLineNum: 53
     dialogueFiles:
-    - {fileID: 942219552307467516, guid: 03f828cd86866bb4488054700f0f4223, type: 3}
-    NextDialogueScript: {fileID: 942219552307467516, guid: 03f828cd86866bb4488054700f0f4223, type: 3}
+    - {fileID: 2472717183154613711, guid: 766f70ed2ce169941871cb4fa67d48df, type: 3}
+    - {fileID: -8394633452836589220, guid: 1b482d8e26391274896a7005adbf3c10, type: 3}
+    - {fileID: -4544621569289118661, guid: f787c58fa98326e42a293ef921ac287b, type: 3}
+    - {fileID: -9060463273497943624, guid: 824da70af1b3891419af980dc839997a, type: 3}
+    - {fileID: 2472717183154613711, guid: 766f70ed2ce169941871cb4fa67d48df, type: 3}
     floor:
       floorNum: 2
       floorDetail: "\uCCA0\uC758 \uCE35"
@@ -30,12 +35,13 @@ MonoBehaviour:
     characterName: Fire
     characterSpriteMap: {fileID: 11400000, guid: 8a9fe86d9b73f73419ebd880a5008e83, type: 2}
     characterAnim: {fileID: 11400000, guid: 3906d7db6884e9c49b4a175b7eac739d, type: 2}
+    characterCutScne: {fileID: 0}
     affaction: 1
     CurrentdialogueNum: 0
+    CurrnetDialogueIndex: 0
     dialogueLineNum: 0
     dialogueFiles:
     - {fileID: 6283971798180898224, guid: b4095f4c0bae90a489a60a6beb3d56cf, type: 3}
-    NextDialogueScript: {fileID: 6283971798180898224, guid: b4095f4c0bae90a489a60a6beb3d56cf, type: 3}
     floor:
       floorNum: 3
       floorDetail: "\uBD88\uC758 \uCE35"
@@ -43,12 +49,13 @@ MonoBehaviour:
     characterName: Stone
     characterSpriteMap: {fileID: 11400000, guid: 306ac4871cc0cd747b9bf036aea88b3d, type: 2}
     characterAnim: {fileID: 11400000, guid: 3906d7db6884e9c49b4a175b7eac739d, type: 2}
+    characterCutScne: {fileID: 0}
     affaction: 0
     CurrentdialogueNum: 0
+    CurrnetDialogueIndex: 0
     dialogueLineNum: 0
     dialogueFiles:
-    - {fileID: 4900000, guid: 9170203dcefccbb41a2da85d540306b5, type: 3}
-    NextDialogueScript: {fileID: 4900000, guid: 9170203dcefccbb41a2da85d540306b5, type: 3}
+    - {fileID: 0}
     floor:
       floorNum: 4
       floorDetail: "\uBC14\uC704\uC758 \uCE35"
@@ -56,12 +63,13 @@ MonoBehaviour:
     characterName: Water
     characterSpriteMap: {fileID: 11400000, guid: 54b74d682718c074983788809f8d64fc, type: 2}
     characterAnim: {fileID: 11400000, guid: 3906d7db6884e9c49b4a175b7eac739d, type: 2}
+    characterCutScne: {fileID: 0}
     affaction: 0
     CurrentdialogueNum: 0
+    CurrnetDialogueIndex: 0
     dialogueLineNum: 0
     dialogueFiles:
-    - {fileID: -4789372409732899538, guid: 8941890bab7686d4595dc63f098a471c, type: 3}
-    NextDialogueScript: {fileID: -4789372409732899538, guid: 8941890bab7686d4595dc63f098a471c, type: 3}
+    - {fileID: 0}
     floor:
       floorNum: 5
       floorDetail: "\uBB3C\uC758 \uCE35"
@@ -69,12 +77,13 @@ MonoBehaviour:
     characterName: Wood
     characterSpriteMap: {fileID: 11400000, guid: d93a8ad15262d254985323d3c6e34073, type: 2}
     characterAnim: {fileID: 11400000, guid: 3906d7db6884e9c49b4a175b7eac739d, type: 2}
+    characterCutScne: {fileID: 0}
     affaction: 0
     CurrentdialogueNum: 0
+    CurrnetDialogueIndex: 0
     dialogueLineNum: 0
     dialogueFiles:
-    - {fileID: 4900000, guid: 9170203dcefccbb41a2da85d540306b5, type: 3}
-    NextDialogueScript: {fileID: 4900000, guid: 9170203dcefccbb41a2da85d540306b5, type: 3}
+    - {fileID: 0}
     floor:
       floorNum: 6
       floorDetail: "\uB098\uBB34\uC758 \uCE35"
@@ -82,12 +91,13 @@ MonoBehaviour:
     characterName: Diana
     characterSpriteMap: {fileID: 11400000, guid: 6a82d0a9e23c1214fa1fb1fcb9c070ed, type: 2}
     characterAnim: {fileID: 11400000, guid: 3906d7db6884e9c49b4a175b7eac739d, type: 2}
+    characterCutScne: {fileID: 0}
     affaction: 0
     CurrentdialogueNum: 0
+    CurrnetDialogueIndex: 0
     dialogueLineNum: 0
     dialogueFiles:
-    - {fileID: 4900000, guid: 9170203dcefccbb41a2da85d540306b5, type: 3}
-    NextDialogueScript: {fileID: 4900000, guid: 9170203dcefccbb41a2da85d540306b5, type: 3}
+    - {fileID: 0}
     floor:
       floorNum: 6
       floorDetail: "\uB098\uBB34\uC758 \uCE35"

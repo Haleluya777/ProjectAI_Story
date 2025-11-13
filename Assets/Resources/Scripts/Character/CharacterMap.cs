@@ -17,6 +17,7 @@ public class CharacterData
     //public Dictionary<string, Sprite> characterSprite = new Dictionary<string, Sprite>(); //캐릭터 스프라이트
     public SerializedDictionary characterSpriteMap; //캐릭터 스프라이트
     public SerializedDic_Anim characterAnim; //캐릭터 공유 애니메이션 효과
+    public SerializedDic_CutScene characterCutScne; //캐릭터 고유의 컷씬 모음.
     public int affaction; //캐릭터 호감도
     public int CurrentdialogueNum; //현재까지 지나온 대화 스크립트의 번호를 2진수로 계산한 후, 10진수로 변환한 값.
                                    //이 값의 2진수가 00001101101이라면, 1,3,4,6,7번 째 대화 스크립트를 진행했다는 뜻이며, 현재 위치는 7번째 스크립트라는 뜻이다.

@@ -24,25 +24,33 @@ public class FloorSelector : MonoBehaviour
 
             button.onClick.AddListener(() => CheckingFlags(characterData));
             button.onClick.AddListener(() => InputMainCharacterData(characterData));
-            button.onClick.AddListener(() => GameManager.instance.uiManager.FadeDialogueStart(StartDialogue));
+            button.onClick.AddListener(() => CheckingNStartDialogue()); //GameManager.instance.uiManager.FadeDialogueStart(StartDialogue));
 
             button.interactable = false;
         }
         UpdateFloorSelector();
     }
 
+    private void CheckingNStartDialogue()
+    {
+        if (GameManager.instance.dataManager.proccessDatas.Routine <= 0) return;
+        else GameManager.instance.uiManager.FadeDialogueStart(StartDialogue);
+    }
+
     private void InputMainCharacterData(CharacterData data)
     {
+        if (GameManager.instance.dataManager.proccessDatas.Routine <= 0) return;
         GameManager.instance.dataManager.MainCharacterData = data;
     }
 
     private void CheckingFlags(CharacterData character) //CurrentDialgoueNum의 최상위 비트 번호 번째의 대화 파일로 변경.
     {
         //character가 null이면 바로 메서드 종료.
-        if (character == null) return;
+        if (character == null || GameManager.instance.dataManager.proccessDatas.Routine <= 0) return;
 
         //var dialogueNum = BitGeneric.GetTopBit(character.CurrentdialogueNum); //최상위 비트 인덱스 번호를 반환.
         //Debug.Log(dialogueNum);
+        //Debug.Log(character.dialogueFiles[character.CurrnetDialogueIndex] == null);
         if (GameManager.instance.dialogueRunner.DialogueFile == character.dialogueFiles[character.CurrnetDialogueIndex]) return;
         GameManager.instance.dialogueRunner.DialogueFile = character.dialogueFiles[character.CurrnetDialogueIndex];
     }
@@ -59,7 +67,7 @@ public class FloorSelector : MonoBehaviour
 
     public void StartDialogue() //선택한 캐릭터와의 대화 상호작용 시작
     {
-        if (GameManager.instance.dataManager.proccessDatas.Routine <= 0) return;
+        //if (GameManager.instance.dataManager.proccessDatas.Routine <= 0) return;
         //DataManager에서 대화 스크립트의 중심 캐릭터의 ID값 설정.
         //GameManager.instance.dataManager.MainCharacterID = id;
 
@@ -71,7 +79,7 @@ public class FloorSelector : MonoBehaviour
         //UpdateAPSlider();
         //CharacterSelection.SetActive(false);
 
-        GameManager.instance.dialogueRunner.RunDialogue();
+        GameManager.instance.dialogueRunner.RunDialogue(0);
         //Actions.SetActive(true);
     }
 }

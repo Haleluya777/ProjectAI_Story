@@ -35,6 +35,7 @@ public class NewDialogueParser : MonoBehaviour
         public string SE;
         public string Affection;
         public string Place;
+        public string CutScene;
         public int LineNum;
     }
 
@@ -61,7 +62,7 @@ public class NewDialogueParser : MonoBehaviour
             List<string> parts = new List<string>(line.Split('	'));
             //Debug.Log(parts.Count);
 
-            while (parts.Count < 10)
+            while (parts.Count < 11)
             {
                 parts.Add("");
             }
@@ -84,8 +85,8 @@ public class NewDialogueParser : MonoBehaviour
             }
             else
             {
-                _condition = ""; //두번째 열에 '_'가 없을 경우, _condition은 빈 문자열로.
-                _result = parts[1]; //나머지 모든 내용은 _result에.
+                _condition = parts[1]; //두번째 열에 '_'가 없을 경우, _condition은 빈 문자열로.
+                _result = ""; //나머지 모든 내용은 _result에.
                 //Debug.Log(_result);
             }
 
@@ -107,6 +108,7 @@ public class NewDialogueParser : MonoBehaviour
                 SE = parts[7],
                 Affection = parts[8],
                 Place = parts[9],
+                CutScene = parts[10],
                 LineNum = i
             };
 

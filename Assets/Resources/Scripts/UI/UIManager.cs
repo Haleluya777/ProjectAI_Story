@@ -10,6 +10,16 @@ public class UIManager : MonoBehaviour
     public DialoguePanel dialogueUIManager;
     public LobbyPanel lobbyUIManager;
     [SerializeField] private Image CoverPanel;
+    [SerializeField] private GameObject SettingPanel;
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (SettingPanel.activeSelf) SettingPanel.SetActive(false);
+            else SettingPanel.SetActive(true);
+        }
+    }
 
     public void FadeDialogueStart(Action method)
     {

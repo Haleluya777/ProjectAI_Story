@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
     public SoundManager soundManager;
     public UIManager uiManager;
     public EventManager eventManager;
+    public SaveLoadManager saveLoadManager;
     public GameObject debbuger; //디버깅 용 탭. 빌드 때 삭제 예정.
 
     private void Awake()
@@ -42,21 +43,5 @@ public class GameManager : MonoBehaviour
             obj.InitializeData();
         }
         //Debug.Log(dataManager.operandDic["Level"]);
-    }
-
-    private void Update()
-    {
-        //디버깅 용 코드. 빌드 때 삭제 예정.
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            if (debbuger.GetComponent<RectTransform>().anchoredPosition.x == 0)
-            {
-                debbuger.GetComponent<RectTransform>().DOAnchorPosX(-1000, 0.5f).SetEase(Ease.Linear);
-            }
-            else
-            {
-                debbuger.GetComponent<RectTransform>().DOAnchorPosX(0, 0.5f);
-            }
-        }
     }
 }
