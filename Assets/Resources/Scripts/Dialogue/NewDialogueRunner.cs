@@ -68,6 +68,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
     int currentCharId; //현재 말하고 있는 캐릭터의 id값. 0은 나레이션.
     [SerializeField] private bool isWaiting; //대화 일시 정지
     public bool isRunning; //대화가 진행중인지 체크하는 변수.
+    public bool isPause;
 
     private void Start()
     {
@@ -204,13 +205,13 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
     public void DialoguePause()
     {
         Debug.Log("대화 일시정지");
-        isWaiting = true;
+        isPause = true;
     }
 
     public void DialogueResume()
     {
         Debug.Log("대화 재개");
-        isWaiting = false;
+        isPause = false;
         ProccessNextLine();
         //GameManager.instance.timeLineManager.TimeLinePause();
         //if ((currentState == RunnerState.Auto || currentState == RunnerState.Skip) && !isWaiting)
@@ -266,14 +267,13 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
     //------------------------------------------
     public void ProccessNextLine()
     {
-        //Debug.Log($"줄 시작{currentLineNum}");
         if (currentLineNum >= scriptLine.Count)
         {
             EndDialogue();
             return;
         }
 
-        if (isWaiting) return;
+        if (isWaiting || isPause) return;
         NewDialogueParser.ParsedLine line = scriptLine[currentLineNum];
         //Debug.Log(line);
 

@@ -44,8 +44,8 @@ public class UIManager : MonoBehaviour
     public void TimeProccessProduction()
     {
         Sequence sequence = DOTween.Sequence();
-        GameManager.instance.dialogueRunner.DialoguePause();
 
+        sequence.AppendCallback(() => GameManager.instance.dialogueRunner.DialoguePause());
         sequence.Append(CoverPanel.DOFade(1, .75f));
         sequence.Append(CoverPanel.DOFade(0, .75f));
         sequence.AppendCallback(() => GameManager.instance.dialogueRunner.DialogueResume());
