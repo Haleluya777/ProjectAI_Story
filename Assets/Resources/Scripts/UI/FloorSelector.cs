@@ -10,7 +10,7 @@ public class FloorSelector : MonoBehaviour
 
     public void InitFloorSelection()
     {
-        for (int i = 1; i <= GameManager.instance.dataManager.characterMap.characters.Length - 1; i++)
+        for (int i = 1; i <= 5; i++)
         {
             var characterButton = floorButtonParent.transform.GetChild(i - 1).gameObject;
             var button = characterButton.GetComponent<Button>();

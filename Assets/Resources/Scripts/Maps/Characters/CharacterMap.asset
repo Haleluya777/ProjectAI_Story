@@ -13,6 +13,19 @@ MonoBehaviour:
   m_Name: CharacterMap
   m_EditorClassIdentifier: 
   characters:
+  - id: 0
+    characterName: Null
+    characterSpriteMap: {fileID: 0}
+    characterAnim: {fileID: 0}
+    characterCutScne: {fileID: 0}
+    affaction: 0
+    CurrentdialogueNum: 0
+    CurrnetDialogueIndex: 0
+    dialogueLineNum: 2
+    dialogueFiles: []
+    floor:
+      floorNum: 6
+      floorDetail: "\uB098\uBB34\uC758 \uCE35"
   - id: 1
     characterName: Iron
     characterSpriteMap: {fileID: 11400000, guid: 2be8663db9542c24284ca7a1b606d87c, type: 2}
@@ -21,7 +34,7 @@ MonoBehaviour:
     affaction: 0
     CurrentdialogueNum: 2
     CurrnetDialogueIndex: 0
-    dialogueLineNum: 53
+    dialogueLineNum: 7
     dialogueFiles:
     - {fileID: 2472717183154613711, guid: 766f70ed2ce169941871cb4fa67d48df, type: 3}
     - {fileID: -8394633452836589220, guid: 1b482d8e26391274896a7005adbf3c10, type: 3}
@@ -101,3 +114,16 @@ MonoBehaviour:
     floor:
       floorNum: 6
       floorDetail: "\uB098\uBB34\uC758 \uCE35"
+  - id: 11
+    characterName: ???
+    characterSpriteMap: {fileID: 11400000, guid: edaa60776d01761409130d24d543f6d5, type: 2}
+    characterAnim: {fileID: 11400000, guid: 3906d7db6884e9c49b4a175b7eac739d, type: 2}
+    characterCutScne: {fileID: 0}
+    affaction: 0
+    CurrentdialogueNum: 0
+    CurrnetDialogueIndex: 0
+    dialogueLineNum: 0
+    dialogueFiles: []
+    floor:
+      floorNum: 0
+      floorDetail: 0

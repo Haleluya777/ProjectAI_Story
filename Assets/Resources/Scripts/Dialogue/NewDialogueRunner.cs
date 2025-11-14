@@ -257,7 +257,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
         GameManager.instance.uiManager.FadeDailogueEnd(GameManager.instance.uiManager.dialogueUIManager.gameObject); //페이드 인아웃 연출 및 다음 고정 회화 확인.
 
         //사용한 대화 스크립트를 Used스크립트로 변경.
-        if (dataManager.MainCharacterData.id != 0)
+        if (dataManager.MainCharacterData != null && dataManager.MainCharacterData.id != 0)
         {
             dataManager.MainCharacterData.dialogueFiles[dataManager.MainCharacterData.CurrnetDialogueIndex] = dataManager.MainCharacterData.dialogueFiles[^1];
         }
@@ -388,7 +388,8 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
         }
         //Debug.Log($"체킹! Action: {line.Action}, Line:{currentLineNum}");
         RunningOtherNode(line);
-        if (GameManager.instance.dataManager.MainCharacterData.id != 0)
+        Debug.Log(GameManager.instance.dataManager.MainCharacterData == null);
+        if (GameManager.instance.dataManager.MainCharacterData != null && GameManager.instance.dataManager.MainCharacterData.id != 0)
         {
             Debug.Log("메인 캐릭터 있음.");
             GameManager.instance.dataManager.MainCharacterData.dialogueLineNum = currentLineNum;

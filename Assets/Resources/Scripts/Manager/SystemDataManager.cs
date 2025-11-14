@@ -96,6 +96,7 @@ public class SystemDataManager : MonoBehaviour, DataInitializable
         //Debug.Log("고정 대화 실행!");
         if (fixedConversationNum == fixedDialoguesMap.dialogues[proccessDatas.Day - 1].assets.Count) return;
         GameManager.instance.dialogueRunner.DialogueFile = fixedDialoguesMap.GetDialogues(proccessDatas.Day - 1, fixedConversationNum);
+        MainCharacterData = characterMap.GetCharacter(0);
         GameManager.instance.dialogueRunner.RunDialogue(0);
 
         fixedConversationNum++;
