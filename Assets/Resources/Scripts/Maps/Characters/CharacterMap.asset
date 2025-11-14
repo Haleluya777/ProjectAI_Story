@@ -36,7 +36,7 @@ MonoBehaviour:
     CurrnetDialogueIndex: 0
     dialogueLineNum: 7
     dialogueFiles:
-    - {fileID: 2472717183154613711, guid: 766f70ed2ce169941871cb4fa67d48df, type: 3}
+    - {fileID: 942219552307467516, guid: 7d8d4a8403e27e840be3f2dd03d642b4, type: 3}
     - {fileID: -8394633452836589220, guid: 1b482d8e26391274896a7005adbf3c10, type: 3}
     - {fileID: -4544621569289118661, guid: f787c58fa98326e42a293ef921ac287b, type: 3}
     - {fileID: -9060463273497943624, guid: 824da70af1b3891419af980dc839997a, type: 3}

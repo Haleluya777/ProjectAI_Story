@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Hallelujah;
+using TMPro;
 
 public class RepairSelector : MonoBehaviour
 {
@@ -11,6 +12,11 @@ public class RepairSelector : MonoBehaviour
     [SerializeField] private Transform repairButtonParent;
     [SerializeField] private GameObject Lights; //해금된 시설의 상황을 알려주는 오브젝트
     private const int REPAIRCOUNT = 5;
+
+    void OnEnable()
+    {
+        UpdateRepairSelector();
+    }
 
     public void InitRepairSelection()
     {
@@ -25,6 +31,12 @@ public class RepairSelector : MonoBehaviour
             var button = repairButton.GetComponent<Button>(); //해당 자식에서 버튼 컴포넌트 가져옴.
             var equipmentData = equipmentDic[i]; //선언한 딕셔너리에서 데이터 가져옴.
 
+            var nameTxt = button.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+            var detailTxt = button.transform.GetChild(2).GetComponent<TextMeshProUGUI>();
+
+            nameTxt.text = equipmentData.name;
+            detailTxt.text = equipmentData.detail;
+
             //repairButton.transform.GetChild(0).GetComponent<Image>().sprite = equipmentData.sprite;
 
             button.onClick.AddListener(() => Repair(equipmentData)); //OnClick 이벤트 추가.
@@ -37,13 +49,14 @@ public class RepairSelector : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log($"아아아아아아아아 : {GameManager.instance.dataManager.repairUnlock}");
+        //Debug.Log($"아아아아아아아아 : {GameManager.instance.dataManager.repairUnlock}");
     }
 
     public void UpdateRepairSelector()
     {
-        Debug.Log($"[Debug] UpdateRepairSelector reading from Instance ID: {GameManager.instance.dataManager.GetInstanceID()}. repairUnlock value: {GameManager.instance.dataManager.repairUnlock}");
+        //Debug.Log($"[Debug] UpdateRepairSelector reading from Instance ID: {GameManager.instance.dataManager.GetInstanceID()}. repairUnlock value: {GameManager.instance.dataManager.repairUnlock}");
         if (GameManager.instance.dataManager.repairUnlock == 0) return;
+        //Debug.Log("할렐루야");
         for (int i = 0; i < GameManager.instance.dataManager.repairUnlock; i++)
         {
             var light = Lights.transform.GetChild(i);

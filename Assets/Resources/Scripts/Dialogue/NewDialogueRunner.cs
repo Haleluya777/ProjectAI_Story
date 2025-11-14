@@ -212,7 +212,11 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
     {
         Debug.Log("대화 재개");
         isPause = false;
-        ProccessNextLine();
+        if (currentState != RunnerState.Normal)
+        {
+            ProccessNextLine();
+        }
+        //ProccessNextLine();
         //GameManager.instance.timeLineManager.TimeLinePause();
         //if ((currentState == RunnerState.Auto || currentState == RunnerState.Skip) && !isWaiting)
         //{
@@ -408,12 +412,12 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
         }
         //Debug.Log($"체킹! Action: {line.Action}, Line:{currentLineNum}");
         RunningOtherNode(line);
-        Debug.Log(GameManager.instance.dataManager.MainCharacterData == null);
+        //Debug.Log(GameManager.instance.dataManager.MainCharacterData == null);
         if (GameManager.instance.dataManager.MainCharacterData != null && GameManager.instance.dataManager.MainCharacterData.id != 0)
         {
-            Debug.Log("메인 캐릭터 있음.");
+            //Debug.Log("메인 캐릭터 있음.");
             GameManager.instance.dataManager.MainCharacterData.dialogueLineNum = currentLineNum;
-            Debug.Log(GameManager.instance.dataManager.MainCharacterData.dialogueLineNum);
+            //Debug.Log(GameManager.instance.dataManager.MainCharacterData.dialogueLineNum);
         }
         currentLineNum++;
     }
@@ -439,7 +443,7 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
     private void RunningOtherNode(NewDialogueParser.ParsedLine line)
     {
         if (line.BG != "") GameManager.instance.dialogueFunc.ChangeBG(line.BG);
-        if (line.Production != "") GameManager.instance.dialogueFunc.RunningProduction(line.Production);
+        if (line.Production != "") { GameManager.instance.dialogueFunc.RunningProduction(line.Production); isPause = true; }
         if (line.BGM != "") GameManager.instance.dialogueFunc.ChangeBGM(line.BGM);
         if (line.Affection != "") GameManager.instance.dialogueFunc.AffectionChange(line.Affection, line.Actor);
         if (line.Place != "") GameManager.instance.dataManager.proccessDatas.PlayerPosition.detail = line.Place;

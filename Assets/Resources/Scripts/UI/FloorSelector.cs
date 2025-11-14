@@ -8,6 +8,11 @@ public class FloorSelector : MonoBehaviour
 {
     [SerializeField] private Transform floorButtonParent;
 
+    void OnEnable()
+    {
+        UpdateFloorSelector();
+    }
+
     public void InitFloorSelection()
     {
         for (int i = 1; i <= 5; i++)

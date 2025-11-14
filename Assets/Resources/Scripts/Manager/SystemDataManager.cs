@@ -5,6 +5,7 @@ using UnityEngine;
 using Hallelujah;
 using System;
 using UnityEngine.UI;
+using Unity.VisualScripting;
 
 [ES3Serializable]
 public class SystemDataManager : MonoBehaviour, DataInitializable
@@ -60,8 +61,26 @@ public class SystemDataManager : MonoBehaviour, DataInitializable
 
     //public List<int> characterDialogueNum = new List<int> { 0, 0, 0, 0, 0 }; //캐릭터의 대화 진행 상황. 2진수로 사용할 예정.
 
+    void Awake()
+    {
+        //characterDic.Add(1, new CharacterData { name = "Fire", affection = 0 });
+    }
+
+    void Update()
+    {
+        //Debug.Log($"수리 시설 해금 : {repairUnlock}");
+        //Debug.Log(fixedConversationNum);
+        //Debug.Log(dailyRoutine.Get());
+        //Debug.Log(fixedConversationList[proccessDatas.Day - 1]);
+        //Debug.Log(proccessDatas.Routine);
+        //Debug.Log($"날 : {proccessDatas.Day}, 현재 위치 : {proccessDatas.PlayerPosition}, 현재 시각 : {proccessDatas.Routine}");
+        //디버깅용 테스트코드
+        //Debug.Log(runningCharacters.ContainsKey(1));
+    }
+
     public void InitializeData()
     {
+        Debug.LogWarning($"[Debug] InitializeData called unexpectedly! Resetting repairUnlock to 1.");
         //characterMap.InitDialogue();
         dailyRoutine = new CirclularList<string>(dayOneTime);
         proccessDatas.PlayerPosition.detail = "1층 | 엘리베이터";
@@ -69,7 +88,7 @@ public class SystemDataManager : MonoBehaviour, DataInitializable
         proccessDatas.Routine = dailyRoutine.Length() - 1;
         proccessDatas.Day = 1;
         floorUnlock = 1;
-        repairUnlock = 5;
+        repairUnlock = 1;
         fixedConversationNum = 0;
 
         CheckingFixedDialogue();
@@ -102,22 +121,6 @@ public class SystemDataManager : MonoBehaviour, DataInitializable
         fixedConversationNum++;
     }
 
-    void Update()
-    {
-        //Debug.Log(fixedConversationNum);
-        //Debug.Log(dailyRoutine.Get());
-        //Debug.Log(fixedConversationList[proccessDatas.Day - 1]);
-        //Debug.Log(proccessDatas.Routine);
-        //Debug.Log($"날 : {proccessDatas.Day}, 현재 위치 : {proccessDatas.PlayerPosition}, 현재 시각 : {proccessDatas.Routine}");
-        //디버깅용 테스트코드
-        //Debug.Log(runningCharacters.ContainsKey(1));
-    }
-
-    void Awake()
-    {
-        //characterDic.Add(1, new CharacterData { name = "Fire", affection = 0 });
-    }
-
     public void ChangeRoutineTime()
     {
         if (proccessDatas.Day > 2) return;
@@ -135,9 +138,11 @@ public class SystemDataManager : MonoBehaviour, DataInitializable
 
         if (proccessDatas.Day > 1)
         {
-            floorUnlock = 6;
-            repairUnlock = 5;
-            GameManager.instance.eventManager.UIUpdateEvents.Invoke();
+            if (floorUnlock < 5 && repairUnlock < 5)
+            {
+                //floorUnlock = 5;
+                //repairUnlock = 5;
+            }
         }
     }
 

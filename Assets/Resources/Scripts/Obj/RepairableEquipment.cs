@@ -6,6 +6,7 @@ using UnityEngine;
 public class EquipmentDatas
 {
     public string name;
+    public string detail;
     public int progress;
     public Sprite sprite;
     public int reactedCharacterID;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.Timeline;
+using System.Collections;
 
 public class DialogueFuncManager : MonoBehaviour, DataInitializable
 {
@@ -135,16 +136,30 @@ public class DialogueFuncManager : MonoBehaviour, DataInitializable
 
                 case "Fall": //지쳐서 쓰러지는 표현
                     {
+                        var timeLineBuilder = GameManager.instance.timeLineBuilder;
                         string[] details = nodeSplit[2].Split('|');
                         var startTime = float.Parse(details[0]); //타임라인 트랙 시작 시간.
 
                         var characterDatas = GameManager.instance.dataManager.runningCharacters[actorId]; //캐릭터 데이터
                         var animClip = characterDatas.characterData.characterAnim.animationClips["Fall"]; //캐릭터 애니메이션 클립
-                        GameManager.instance.timeLineBuilder.BuildingTimeLine(startTime, "Falling", 1.5f, animClip, characterDatas.obj, characterTrack[actorId][0], characterTrack[actorId][4]);
 
+                        timeLineBuilder.BuildingTimeLine(startTime, "Falling", 1.5f, animClip, characterDatas.obj, characterTrack[actorId][0], characterTrack[actorId][4]);
+                        //timeLineBuilder.AddSignalInTrack(characterTrack[actorId][0], 3f, timeLineBuilder.DialogueResumeSignal);
                         break;
                     }
 
+                case "Blink":
+                    {
+                        var timeLineBuilder = GameManager.instance.timeLineBuilder;
+                        float startTime = float.Parse(nodeSplit[2]);
+                        var characterDatas = GameManager.instance.dataManager.runningCharacters[actorId];
+                        var animClip = characterDatas.characterData.characterAnim.animationClips["Blink"];
+
+                        timeLineBuilder.BuildingTimeLine(startTime, "Blinking", 3f, animClip, characterDatas.obj, characterTrack[actorId][0], characterTrack[actorId][4]);
+                        //timeLineBuilder.AddSignalInTrack(characterTrack[actorId][0], 3f, timeLineBuilder.DialogueResumeSignal);
+                        StartCoroutine(ResumeDialogue(3f));
+                        break;
+                    }
 
                 case "Walk": //걷는 것 처럼 위아래로 흔들리는 표현, 속도 조절 가능.(Loop Animation)
                     {
@@ -161,7 +176,6 @@ public class DialogueFuncManager : MonoBehaviour, DataInitializable
                         GameManager.instance.timeLineBuilder.BuildingTimeLine(startTime, "Walking", duration, animClip, characterDatas.obj, characterTrack[actorId][0], characterTrack[actorId][2]);
                         break;
                     }
-
 
                 case "Fade":
                     {
@@ -240,5 +254,11 @@ public class DialogueFuncManager : MonoBehaviour, DataInitializable
             "E" => (((Screen.width - 360) * 4) / 4) - 780,
             _ => -1
         };
+    }
+
+    private IEnumerator ResumeDialogue(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        GameManager.instance.dialogueRunner.DialogueResume();
     }
 }

@@ -13,7 +13,7 @@ public class TimeLineBuilder : MonoBehaviour
     public TimelineAsset timelineAsset;
     private Animator anim;
     private AnimationClip animClip; //빈 클립.
-    public SignalAsset signal;
+    public SignalAsset DialogueResumeSignal;
 
     private void Awake()
     {
@@ -39,9 +39,10 @@ public class TimeLineBuilder : MonoBehaviour
         }
     }
 
-    public void AddSignalInTrack(float time)
+    public void AddSignalInTrack(AnimationTrack track, float time, SignalAsset signal)
     {
-        
+        SignalEmitter signalEmitter = track.CreateMarker<SignalEmitter>(time);
+        signalEmitter.asset = signal;
     }
 
     public AnimationTrack[] TrackSetting(AnimationTrack[] tracks)

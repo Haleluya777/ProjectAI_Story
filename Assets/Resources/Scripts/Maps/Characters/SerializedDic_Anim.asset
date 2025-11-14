@@ -22,3 +22,5 @@ MonoBehaviour:
       Value: {fileID: 7400000, guid: 1082aba153d9435478728400978a4455, type: 2}
     - Key: TurnLeft
       Value: {fileID: 7400000, guid: 1885682c09392af4faf262ccfc9babd4, type: 2}
+    - Key: Blink
+      Value: {fileID: 7400000, guid: 9cc3bd946afdccf4bb2fccd0a0ef5436, type: 2}
