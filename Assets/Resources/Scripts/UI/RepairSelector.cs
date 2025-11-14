@@ -35,8 +35,14 @@ public class RepairSelector : MonoBehaviour
         UpdateRepairSelector();
     }
 
+    private void Update()
+    {
+        Debug.Log($"아아아아아아아아 : {GameManager.instance.dataManager.repairUnlock}");
+    }
+
     public void UpdateRepairSelector()
     {
+        Debug.Log($"[Debug] UpdateRepairSelector reading from Instance ID: {GameManager.instance.dataManager.GetInstanceID()}. repairUnlock value: {GameManager.instance.dataManager.repairUnlock}");
         if (GameManager.instance.dataManager.repairUnlock == 0) return;
         for (int i = 0; i < GameManager.instance.dataManager.repairUnlock; i++)
         {

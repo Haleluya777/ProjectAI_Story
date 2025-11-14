@@ -5,5 +5,5 @@ using UnityEngine.Events;
 
 public class EventManager : MonoBehaviour
 {
-    public UnityEvent FixedDialogueEvents;
+    public UnityEvent UIUpdateEvents;
 }

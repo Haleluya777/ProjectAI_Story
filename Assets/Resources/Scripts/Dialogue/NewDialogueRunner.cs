@@ -377,6 +377,26 @@ public class NewDialogueRunner : MonoBehaviour, DataInitializable
                     return;
                 }
 
+            case "CU":
+                {
+                    Debug.Log("캐릭터 삭제");
+                    int index;
+                    int.TryParse(line.Detail.condition, out index);
+
+                    for (int i = 0; i < 32; i++)
+                    {
+                        if (((index >> i) & 1) == 1)
+                        {
+                            Debug.Log($"해당 캐릭터 찾음. id값 : {i + 1}");
+                            GameManager.instance.dataManager.runningCharacters[i + 1].obj.SetActive(false);
+                            //Destroy(GameManager.instance.dataManager.runningCharacters[i + 1].obj);
+                        }
+                    }
+                    currentLineNum++;
+                    ProccessNextLine();
+                    break;
+                }
+
             default:
                 {
                     Debug.LogWarning($"알 수 없는 액션: {line.Action} (라인 {currentLineNum})");

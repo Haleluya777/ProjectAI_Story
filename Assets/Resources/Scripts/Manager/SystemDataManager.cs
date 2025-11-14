@@ -69,7 +69,7 @@ public class SystemDataManager : MonoBehaviour, DataInitializable
         proccessDatas.Routine = dailyRoutine.Length() - 1;
         proccessDatas.Day = 1;
         floorUnlock = 1;
-        repairUnlock = 1;
+        repairUnlock = 5;
         fixedConversationNum = 0;
 
         CheckingFixedDialogue();
@@ -126,11 +126,19 @@ public class SystemDataManager : MonoBehaviour, DataInitializable
 
     public void AddTurn() //날짜 증가.
     {
+        Debug.Log($"[Debug] AddTurn called on Instance ID: {GetInstanceID()}. Changing repairUnlock to 5.");
         ChangeRoutineTime();
         proccessDatas.Routine = dailyRoutine.Length() - 1;
         proccessDatas.Day++;
         proccessDatas.CurrentTime = dailyRoutine.First(); //회전 리스트의 첫 번째 부분으로 강제 이동.
         fixedConversationNum = 0;
+
+        if (proccessDatas.Day > 1)
+        {
+            floorUnlock = 6;
+            repairUnlock = 5;
+            GameManager.instance.eventManager.UIUpdateEvents.Invoke();
+        }
     }
 
     public void ConsumeActionPoint()
